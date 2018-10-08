@@ -56,14 +56,14 @@ tags: 其它
 * 开机F2或者其它键进入BIOS。关闭Secure Boot，选择UEFI，并设置启动盘为USB。
 * 退出BIOS，进入UEFI的安装界面。这种界面只会出现在以 UEFI模式 安装时，第一个是正常安装，第二个是检测安装，第三个是修复模式。上下键控制，选择第一个 lnstall CentOS 7 。按“e”进入编辑状态。
 
-![32](https://www.github.com/liao20081228/notebook/raw/master/图片/安装windows与Linux双系统/20161014195741883.jpg)
+![32](https://www.github.com/liao20081228/blog/raw/master/图片/安装windows与Linux双系统/1.jpg)
 >传统Leagcy 模式显示的是!
 >
->![32](https://www.github.com/liao20081228/notebook/raw/master/图片/安装windows与Linux双系统/20161014204220462.jpg)
+>![32](https://www.github.com/liao20081228/blog/raw/master/图片/安装windows与Linux双系统/2.jpg)
 
 * 进入 “lnstall CentOS 7” 的编辑状态后  把 ` linuxefi /images/pxeboot/vmlinuz inst.stage2=hd:LABEL=CentOS\x207\x20x86_64 quiet ` 改为：`linuxefi /images/pxdboot/vmlinuz linux dd quiet` ”
 
-![33](https://www.github.com/liao20081228/notebook/raw/master/图片/安装windows与Linux双系统/20161014200443433.jpg)
+![33](https://www.github.com/liao20081228/blog/raw/master/图片/安装windows与Linux双系统/3.jpg)
 * 按下CTRL+x，过一会后，显示结果如下，很明显我的U盘是 sda4 这个U盘名称  不是固定的，sd 代表硬盘，a代表第几块硬盘，4代表的的第几个分区（理论上U盘应该是sdc1，没办法系统要读成这样）。知道U盘在CentOS下的设备文件名之后按 “ c ”  回车，返回到安装选项界面 （如果还没退出 按ctrl + alt + delete 键退出）。
 * 返回到安装选项界面选择install centos7，按“e” 进入编辑 把：`linuxefi /images/pxeboot/vmlinuz inst.stage2=hd:LABEL=CentOS\x207\x20x86_64 quiet` 改为` linuxefi /images/pxdboot/vmlinuz inst.stage2=hd:/dev/sda4 quiet`, 按ctrl + x 键确认,进入图形安装界面,/dev/sda4是U盘所在的位置     /代表根,dev存放设备文件的目录 ,sda4 是U盘的设备文件名。（这里如果一开始选择 lnstall CentOS 7 按 “e” 查询到了U盘的设备名，这里就要到同一安装选项中输入设备路径，才可以进入图形安装界面，正常安装与检测安装中查出的所有设备名都不一致，这里不能乱，在哪里查就在哪里用，否则不能进入图形安装界面。）
 * 选择安装程序的语言
