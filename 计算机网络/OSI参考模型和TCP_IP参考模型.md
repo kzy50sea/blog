@@ -23,7 +23,7 @@ tags: 计算机网络
 |物理层|比特|建立、维护和取消物理连接|光纤、同轴电缆、双绞线、网卡、中继器、集线器|
 |&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;|&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;|&emsp;|&emsp;|
 
-![OSI](https://www.github.com/liao20081228/blog/raw/master/图片/OSI参考模型和TCP_IP参考模型/1.jpg "OSI参考模型")
+![1](https://www.github.com/liao20081228/blog/raw/master/图片/OSI参考模型和TCP_IP参考模型/1.jpg)
 
 ## 1.1 物理层（Physical Layer）
 &emsp;&emsp;物理层是OSI分层结构体系中最重要、最基础的一层，它建立在传输媒介基础上，起建立、维护和取消物理连接作用，实现设备之间的物理接口。物理层只接收和发送一串比特(bit)流，不考虑信息的意义和信息结构。
@@ -137,9 +137,9 @@ tags: 计算机网络
 * 应用层协议的代表包括：Telnet、FTP、HTTP、SNMP、DNS等。
 
 # 2 TCP/IP四层模型
-![tcp](https://www.github.com/liao20081228/blog/raw/master/图片/OSI参考模型和TCP_IP参考模型/2.jpg "TCP_IP模型")
+![2](https://www.github.com/liao20081228/blog/raw/master/图片/OSI参考模型和TCP_IP参考模型/2.jpg)
 
-![通信模型](https://www.github.com/liao20081228/blog/raw/master/图片/OSI参考模型和TCP_IP参考模型/3.jpg "通信模型")
+![3](https://www.github.com/liao20081228/blog/raw/master/图片/OSI参考模型和TCP_IP参考模型/3.jpg)
 
 * 应用层
 应用层对应于OSI参考模型的高层，为用户提供所需要的各种服务，例如：FTP、Telnet、DNS、SMTP等.
