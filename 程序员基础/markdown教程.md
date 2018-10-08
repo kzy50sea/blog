@@ -149,7 +149,7 @@ $$
 
 &emsp;&emsp;显示如下：
 
-![1](https://www.github.com/liao20081228/notebook/raw/master/图片/markdown教程/1.jpg)
+![1](https://www.github.com/liao20081228/blog/raw/master/图片/markdown教程/1.jpg)
 
 * `\begin{eqnarray} ...\end{eqnarray}`，使用&表示对齐位置
 
@@ -166,7 +166,7 @@ $$
 ```
 &emsp;&emsp;显示如下：
 
-![2](https://www.github.com/liao20081228/notebook/raw/master/图片/markdown教程/2.jpg)
+![2](https://www.github.com/liao20081228/blog/raw/master/图片/markdown教程/2.jpg)
 
 ### 2.2.3  矩阵
 
@@ -354,7 +354,7 @@ $$
 ```markdown
  $\bigl( \begin{smallmatrix} a & b \\ c & d \end{smallmatrix} \bigr)$
 ```
-&emsp;&emsp;显示如下：![3](https://www.github.com/liao20081228/notebook/raw/master/图片/markdown教程/3.jpg)
+&emsp;&emsp;显示如下：![3](https://www.github.com/liao20081228/blog/raw/master/图片/markdown教程/3.jpg)
 
 ### 2.2.4 数学符号
 * 希腊字母——如果使用大写的希腊字母，把命令的首字母变成大写即可，例如 \Gamma 输出的是 $\Gamma$。如果使用斜体大写希腊字母，再在大写希腊字母的LaTeX命令前加上var，例如\varGamma 生成$\varGamma$。
@@ -551,11 +551,11 @@ int b = 20;
 
 * 支持显示成思维脑图大纲:`[toc!]`,显示如下：
 
-![4](https://www.github.com/liao20081228/notebook/raw/master/图片/markdown教程/4.jpg)
+![4](https://www.github.com/liao20081228/blog/raw/master/图片/markdown教程/4.jpg)
 
 * 支持带参数 depth, 显示最深到几层`[toc!?depth=2]`，显示如下：
 
-![5](https://www.github.com/liao20081228/notebook/raw/master/图片/markdown教程/5.jpg)
+![5](https://www.github.com/liao20081228/blog/raw/master/图片/markdown教程/5.jpg)
 
 
 
@@ -597,7 +597,7 @@ int b = 20;
  	* `var >>++hello++<< = 'hello world'`
 
 	* 显示如下：
-![6](https://www.github.com/liao20081228/notebook/raw/master/图片/markdown教程/6.jpg)
+![6](https://www.github.com/liao20081228/blog/raw/master/图片/markdown教程/6.jpg)
 
 
 ## 2.10 标签
@@ -779,7 +779,7 @@ end
 ````
 显示如图：
 
-![7](https://www.github.com/liao20081228/notebook/raw/master/图片/markdown教程/7.jpg)
+![7](https://www.github.com/liao20081228/blog/raw/master/图片/markdown教程/7.jpg)
 ## 2.14 流程图
 
 ### 2.14.1 flow
@@ -1086,7 +1086,7 @@ Content Cell  | Content Cell| Content Cell|
 
 显示效果：
 
-![8](https://www.github.com/liao20081228/notebook/raw/master/图片/markdown教程/8.jpg)
+![8](https://www.github.com/liao20081228/blog/raw/master/图片/markdown教程/8.jpg)
 
 ### 2.16.4 html表格
 * `<table>...</table>` 定义表格
@@ -1190,7 +1190,7 @@ Content Cell  | Content Cell| Content Cell|
 
 ## 2.18 表情
 * 格式：`:表情名:`,如`:wink:, :crush:, :cry:, :tear:, :laughing:, :yum:`
-* 显示如下：![11](https://www.github.com/liao20081228/notebook/raw/master/图片/markdown教程/11.jpg)
+* 显示如下：![11](https://www.github.com/liao20081228/blog/raw/master/图片/markdown教程/11.jpg)
   
  ## 2.19  注音标示 
 语法格式为：
@@ -1203,7 +1203,7 @@ Content Cell  | Content Cell| Content Cell|
 [编号]: 注音标示`
   ```
   
-  显示效果： ![10](https://www.github.com/liao20081228/notebook/raw/master/图片/markdown教程/10.jpg)
+  显示效果： ![10](https://www.github.com/liao20081228/blog/raw/master/图片/markdown教程/10.jpg)
 
 
  ## 2.20 思维导图 
@@ -1229,7 +1229,7 @@ Content Cell  | Content Cell| Content Cell|
 *  root: 使用 encodeURI 编码的字符串，用户在思维脑图的根节点。如果用户的数据里已经有根节点，可以不需要指定。默认为 root
 
 显示效果：
-![9](https://www.github.com/liao20081228/notebook/raw/master/图片/markdown教程/9.jpg)
+![9](https://www.github.com/liao20081228/blog/raw/master/图片/markdown教程/9.jpg)
 
 
 ------
