@@ -13,7 +13,7 @@ tags: 其它
 # 1 磁盘分区格式
 &emsp;&emsp;一般来说，磁盘分区表有两种格式：MBR和GPT。
 ## 1.1 MBR
-![1](https://www.github.com/liao20081228/notebook/raw/master/图片/UEFI与BIOS、GPT与MBR的区别/20171208184355562.jpg)
+![1](https://www.github.com/liao20081228/blog/raw/master/图片/UEFI与BIOS、GPT与MBR的区别/1.jpg)
 
 * 磁盘的0号扇区（第一个扇区）也叫主引导扇区，它包含主引导程序、分区表DPT、硬盘有效标志。
 	* 早期磁盘的扇区大小为512B
@@ -46,7 +46,7 @@ tags: 其它
 &emsp;&emsp;因为过去一个扇区大小就是512bytes 而已，不过目前已经有 4K 的扇区设计出现！为了兼容于所有的磁盘，因此在扇区的定义上面，大多会使用所谓的**逻辑区块地址**( LBA)来处理。GPT 将磁盘所有区块以此 LBA(预设为 512B！) 来规划，而第一个 LBA 称为 LBA0 (从0 开始编号)。
 &emsp;&emsp;与 MBR 仅使用第一个 512bytes 区块来记录不同， GPT 使用了 34 个 LBA 区块来纪录分区信息！同时与过去MBR仅有一个扇区，被干掉就死光光的情况不同， GPT 除了前面 34 个 LBA 之外，整个磁盘的最后 33 个 LBA 也拿来作为备份！
 
-![2](https://www.github.com/liao20081228/notebook/raw/master/图片/UEFI与BIOS、GPT与MBR的区别/20171212211705557.jpg)
+![2](https://www.github.com/liao20081228/blog/raw/master/图片/UEFI与BIOS、GPT与MBR的区别/2.jpg)
 
 * **LBA0 (PMBR)**
 &emsp;&emsp;在GPT分区表的最开头，处于兼容性考虑仍然存储了一份传统的MBR（LBA 0），这个MBR叫做保护性MBR（Protective MBR）。
@@ -95,14 +95,14 @@ tags: 其它
 >&emsp;&emsp;
 >&emsp;&emsp;类型GUID为固定值，查阅资料可得。下图列举Windows、Linux下常见几种：
 >
->![3](https://www.github.com/liao20081228/notebook/raw/master/图片/UEFI与BIOS、GPT与MBR的区别/20180416214552114.png)
+>![3](https://www.github.com/liao20081228/blog/raw/master/图片/UEFI与BIOS、GPT与MBR的区别/3.png)
 >
->![4](https://www.github.com/liao20081228/notebook/raw/master/图片/UEFI与BIOS、GPT与MBR的区别/20180416214604121.png)
+>![4](https://www.github.com/liao20081228/blog/raw/master/图片/UEFI与BIOS、GPT与MBR的区别/4.png)
 >&emsp;&emsp;以Windows下基本数据分区为例说明：EBD0A0A2-B9E5-4433-87C0-68B6B72699C7。上述表示形式采用小端表示，其16位的串行表示为：A2A0D0EBE5B9334487C068B6B72699C7,即前三部分倒序表示。
 >&emsp;&emsp;
 >&emsp;&emsp;分区属性低位4字节表示与分区类型无关的属性，高位4字节表示与分区类型有关的属性。具体见下图：
 >
->![5](https://www.github.com/liao20081228/notebook/raw/master/图片/UEFI与BIOS、GPT与MBR的区别/20180416214617297.png)
+>![5](https://www.github.com/liao20081228/blog/raw/master/图片/UEFI与BIOS、GPT与MBR的区别/5.png)
 
 * **GPT分区优点**：
 	 * 可以在GPT分区表头自定义最大分区数； 
