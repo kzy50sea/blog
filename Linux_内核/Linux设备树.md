@@ -25,7 +25,7 @@ tags: Linux内核
 
 # 2 设备树组成
 
-![设备树](https://www.github.com/liao20081228/notebook/raw/master/图片/Linux设备树/devicetree.JPG "devicetree")
+![设备树](https://www.github.com/liao20081228/blog/raw/master/图片/Linux设备树/1.jpg "devicetree")
 
 * DTS(Device tree source)是设备树源文件，为了方便阅读及修改，采用文本格式。DTSI类似于C语言的头文件
 * DTC(Device tree compiler)是一个小工具，负责将DTS转换成DTB。
@@ -767,7 +767,7 @@ pci@0x10180000 {
 # 5 dtb
 &emsp;&emsp;经过Device Tree Compiler编译，Device Tree source file变成了Device Tree Blob（又称作flattened device tree）的格式。Device Tree Blob的数据组织如下图所示：
 
-![dtb结构图](https://www.github.com/liao20081228/notebook/raw/master/图片/Linux设备树/dtb结构.gif "dtb结构")
+![dtb结构图](https://www.github.com/liao20081228/blog/raw/master/图片/Linux设备树/2.gif "dtb结构")
 
 
 ## 5.1 DTB header
