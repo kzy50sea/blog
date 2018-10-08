@@ -62,8 +62,7 @@ binary
 	};
 };
 ```
-&emsp;&emsp;.dts（或者其include的.dtsi）由结点和属性组成，上述.dts文件并没有什么真实的用途，但它基本表征了一个Device Tree源文件的结构：
-
+.dts（或者其include的.dtsi）由结点和属性组成，上述.dts文件并没有什么真实的用途，但它基本表征了一个Device Tree源文件的结构：
 * 每个设备树都由一个根结点"/"开始，根节点只有一个；
 * 每个结点下面含一系列子结点，子节点下又含有一系列子结点；
 * 一个节点可以有多个子节点，但只有一个父节点；
@@ -83,98 +82,6 @@ binary
 	* 使用绝对路径full path
 	* 为节点设置一个标签label，然后用`&标签`来引用该节点
 
-
-<table class='table table-celled table-component' border='1' style='border-collapse: collapse; width: 78.8668%;' id='tinymcetable' > <tbody>
-<tr>
-<td style="width: 100%; text-align: center;"><strong>常见节点和属性</strong><br /><br />
-<table style="border-collapse: collapse; width: 97.8546%;" border="1">
-<tbody>
-<tr style="height: 20px;">
-<td style="width: 2.79165%; border-style: solid; height: 343px; vertical-align: middle;" rowspan="15">根节点<br />/</td>
-<td style="width: 12.5112%; height: 20px; vertical-align: middle;">节点</td>
-<td style="width: 11.6885%; height: 20px; vertical-align: middle;">属性</td>
-<td style="width: 47.9177%; height: 20px; vertical-align: middle;">属性说明</td>
-<td style="width: 22.9455%; height: 20px; vertical-align: middle;">节点说明</td>
-</tr>
-<tr style="height: 40px;">
-<td style="width: 12.5112%; height: 40px; vertical-align: middle;" rowspan="6">一般设备节点</td>
-<td style="width: 11.6885%; height: 40px; vertical-align: middle;">#address-cells</td>
-<td style="width: 47.9177%; height: 40px; vertical-align: middle;">子节点中的reg属性的地址的长度，也就是说需要用多少个u32的cell来描述该地址</td>
-<td style="width: 22.9455%; height: 40px; vertical-align: middle;">&nbsp;</td>
-</tr>
-<tr style="height: 20px;">
-<td style="width: 11.6885%; height: 20px; vertical-align: middle;">#size-cells</td>
-<td style="width: 47.9177%; height: 20px; vertical-align: middle;">子节点中的reg属性的大小的长度，也就是说需要用多少个u32的cell来描述该大小</td>
-<td style="width: 22.9455%; height: 20px; vertical-align: middle;">&nbsp;</td>
-</tr>
-<tr style="height: 20px;">
-<td style="width: 11.6885%; height: 20px; vertical-align: middle;">Compatible</td>
-<td style="width: 47.9177%; height: 20px; vertical-align: middle;">兼容性，格式为"&lt;制造商&gt;,&lt;模块&gt;"</td>
-<td style="width: 22.9455%; height: 20px; vertical-align: middle;">&nbsp;</td>
-</tr>
-<tr style="height: 20px;">
-<td style="width: 11.6885%; height: 20px; vertical-align: middle;">interrupt-parent</td>
-<td style="width: 47.9177%; height: 20px; vertical-align: middle;">用于标识能产生中断的设备连接到哪个中断控制器</td>
-<td style="width: 22.9455%; height: 20px; vertical-align: middle;">&nbsp;</td>
-</tr>
-<tr style="height: 40px;">
-<td style="width: 11.6885%; height: 40px; vertical-align: middle;">interrupts</td>
-<td style="width: 47.9177%; height: 40px; vertical-align: middle;">对于一个能产生中断的设备，必须定义interrupts这个属性。也可以定义interrupt-parent这个属性，如果不定义，则继承其parent node的interrupt-parent属性</td>
-<td style="width: 22.9455%; height: 40px; vertical-align: middle;">&nbsp;</td>
-</tr>
-<tr style="height: 20px;">
-<td style="width: 11.6885%; height: 20px; vertical-align: middle;">&nbsp;status</td>
-<td style="width: 47.9177%; height: 20px; vertical-align: middle;">&nbsp;</td>
-<td style="width: 22.9455%; height: 20px; vertical-align: middle;">&nbsp;</td>
-</tr>
-<tr style="height: 20px;">
-<td style="width: 12.5112%; height: 40px; vertical-align: middle;" rowspan="2">chosen</td>
-<td style="width: 11.6885%; height: 20px; vertical-align: middle;">bootargs</td>
-<td style="width: 47.9177%; height: 20px; vertical-align: middle;">传递命令行参数</td>
-<td style="width: 22.9455%; height: 40px; vertical-align: middle;" rowspan="2">描述由系统firmware指定的runtime parameter。如果存在chosen这个node，其parent node必须是根节点。</td>
-</tr>
-<tr style="height: 20px;">
-<td style="width: 11.6885%; height: 20px; vertical-align: middle;">initrd-start</td>
-<td style="width: 47.9177%; height: 20px; vertical-align: middle;">传递initrd的开始地址</td>
-</tr>
-<tr style="height: 20px;">
-<td style="width: 12.5112%; height: 40px; vertical-align: middle;" rowspan="2">memory</td>
-<td style="width: 11.6885%; height: 20px; vertical-align: middle;">device_type</td>
-<td style="width: 47.9177%; height: 20px; vertical-align: middle;">对于memory node，其device_type必须为memory</td>
-<td style="width: 22.9455%; height: 40px; vertical-align: middle;" rowspan="2">是所有设备树文件的必备节点，它定义了系统物理内存的布局</td>
-</tr>
-<tr style="height: 20px;">
-<td style="width: 11.6885%; height: 20px; vertical-align: middle;">reg</td>
-<td style="width: 47.9177%; height: 20px; vertical-align: middle;">该属性的值被解析成任意长度的（address，size）数组， address和size在其父节点中定义（#address-cells和#size-cells）。对于device node，reg描述了memory-mapped IO register的offset和length。对于memory node，定义了该memory的起始地址和长度。</td>
-</tr>
-<tr style="height: 20px;">
-<td style="width: 12.5112%; height: 43px; vertical-align: middle;" rowspan="2">interrupt-controller&nbsp;</td>
-<td style="width: 11.6885%; height: 20px; vertical-align: middle;">#interrupt-cells</td>
-<td style="width: 47.9177%; height: 20px; vertical-align: middle;">用多少个u32（即cells）来标识一个interrupt source</td>
-<td style="width: 22.9455%; height: 20px; vertical-align: middle;">&nbsp;</td>
-</tr>
-<tr style="height: 23px;">
-<td style="width: 11.6885%; height: 23px; vertical-align: middle;">interrupt-controller</td>
-<td style="width: 47.9177%; height: 23px; vertical-align: middle;">为空，表明该设备是一个中断控制器</td>
-<td style="width: 22.9455%; height: 23px; vertical-align: middle;">&nbsp;</td>
-</tr>
-<tr style="height: 20px;">
-<td style="width: 12.5112%; height: 20px; vertical-align: middle;">&nbsp;aliases</td>
-<td style="width: 11.6885%; height: 20px; vertical-align: middle;">&nbsp;</td>
-<td style="width: 47.9177%; height: 20px; vertical-align: middle;">定义了一些别名，方便引用节点时省写完整路径</td>
-<td style="width: 22.9455%; height: 20px; vertical-align: middle;">&nbsp;</td>
-</tr>
-<tr style="height: 20px;">
-<td style="width: 12.5112%; height: 20px; vertical-align: middle;">&nbsp;cpus</td>
-<td style="width: 11.6885%; height: 20px; vertical-align: middle;">&nbsp;</td>
-<td style="width: 47.9177%; height: 20px; vertical-align: middle;">对于cpus node，#address-cells 是1，而#size-cells是0。</td>
-<td style="width: 22.9455%; height: 20px; vertical-align: middle;">&nbsp;对于根节点，必须有一个cpus的child node来描述系统中的CPU信息。</td>
-</tr>
-</tbody>
-</table>
-</td>
-</tr>
-</tbody> </table>
 
 ## 3.2 dts基本语法
 &emsp;&emsp;为了帮助理解device tree的用法，我们从一个简单的计算机开始， 手把手创建一个device tree来描述它。假设有这样一台计算机（基于ARM Versatile）,由“Acme”制造并命名为"Coyote's Revenge"：
