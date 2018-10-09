@@ -53,7 +53,7 @@ s1->s11->s13->s14
 
 ## 1.5 uImage
 &emsp;&emsp;uImage是uboot专用的镜像文件，它是在zImage之前加上一个长度为64B的头信息(tag)，在头信息内说明了该镜像文件的类型、加载 位置、生成时间、大小等信息。换句话说，若直接从uImage的0x40位置开始执行，则zImage和uImage没有任何区别。命令格式是`make uImage`，这种格式的Linux镜像文件多存放在NAND 上。64字节的头结构如下：
-```
+```cpp
 typedef struct image_header 
 {
     uint32_tih_magic;
@@ -72,19 +72,20 @@ typedef struct image_header
 ```
 所以，uImage和zImage都是压缩后的内核映像。而uImage是用mkimage工具根据zImage制作而来的。mkimage工具介绍如下：u-boot里面的mkimage工具来生成uImage（u-boot源码包/tools/mkimage.c )
 
-&emsp;&emsp;**命令**：mkimage -l [uimage file name]
-&emsp;&emsp;&emsp;&emsp;&emsp;mkimage [options] -f [image tree source file] [uimage file name]
-&emsp;&emsp;&emsp;&emsp;&emsp;mkimage [options] -F [uimage file name]
-&emsp;&emsp;&emsp;&emsp;&emsp;mkimage [options] (legacy mode)
-&emsp;&emsp;**描述**：mkimage命令用于创建与 U-Boot引导加载程序一起使用的映像。这些映像可以包含linux内核，设备树blob，根文件系统映像，固件映像等，可以单独使用，也可以组合使用。mkimage支持两种不同的格式：
+
+### 1.5.1 uboot镜像创建工具——`mkimage`
+**命令**：mkimage -l [uimage file name]
+&emsp;&emsp;&emsp;mkimage [options] -f [image tree source file] [uimage file name]
+&emsp;&emsp;&emsp;mkimage [options] -F [uimage file name]
+&emsp;&emsp;&emsp;mkimage [options] (legacy mode)
+**描述**：mkimage命令用于创建与 U-Boot引导加载程序一起使用的映像。这些映像可以包含linux内核，设备树blob，根文件系统映像，固件映像等，可以单独使用，也可以组合使用。mkimage支持两种不同的格式：
 
 * 旧的传统镜像格式连接各个部分（例如，内核映像，设备树blob和ramdisk映像），并添加一个64字节的标头，其中包含有关目标体系结构，操作系统，图像类型，压缩方法，入口点，时间戳，校验和等。
 * 新的FIT（平面镜像树）格式允许更灵活地处理各种类型的镜像，并且还通过更强校验来增强镜像的完整性保护。 它还支持启动验证。
 
-      
-
+   
 |选项|描述|
-|--|--|
+|:--|:--|
 |l [[u]image file name]|显示[image_header结构体]中的头信息|
 |创建传统镜像|
 |-A [architecture]|设置体系架构。 
