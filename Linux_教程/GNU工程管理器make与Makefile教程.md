@@ -25,7 +25,7 @@ tags: Linux教程
 ## 1.2 make的退出码
 
 |退出码|描述|
-|--|--|
+|:--|:--|
 |0|表示成功执行。
 |1|使用make的“-q”选项时，如果指定目标需要更新，make退出码1，否则为0。
 |2| 如果make运行时出现任何错误
@@ -36,15 +36,14 @@ tags: Linux教程
 **命令**：make [options] [target] ...
 **描述**：根据Makefile自动编译。默认执行第一个目标。
 
-
 |短选项|长选项|描述|
-|:--|:--|--|
-|-b, -m||为了兼容性，忽略这些选项
-|-B|--always-make|无条件重建所有目标，即使目标是最新的
-|-C dir|--directory=dir|切换到dir目录，读取并执行makefile文件。默认当前目录。使用多个-C命令行选项时，后一个指定的目录是前一个指定的目录的子目录。
-|-d||打印大量调试信息。调试信息指出正在考虑重新创建哪些文件，正在比较哪些文件时间以及结果如何，哪些文件真的需要重编译，哪些隐式规则会被考虑并应用
-||--debug[=FLAGS]|打印各种调试信息。如果FLAGS被省略，则与-d相同。FLAGS为b适用于基本调试，v适用于更详细的基本调试，i适用于显示隐式规则，j适用于调用命令的详细信息，m适用于调试时重新生成文件。n禁用所有以前的调试标志。
-|-e|--environment-overrides|系统环境变量将覆盖 makefile 中定义的同名变量
+|:--|:--|:--|
+|-b, -m||为了兼容性，忽略这些选项|
+|-B|--always-make|无条件重建所有目标，即使目标是最新的|
+|-C dir|--directory=dir|切换到dir目录，读取并执行makefile文件。默认当前目录。使用多个-C命令行选项时，后一个指定的目录是前一个指定的目录的子目录。|
+|-d||打印大量调试信息。调试信息指出正在考虑重新创建哪些文件，正在比较哪些文件时间以及结果如何，哪些文件真的需要重编译，哪些隐式规则会被考虑并应用|
+||--debug[=FLAGS]|打印各种调试信息。如果FLAGS被省略，则与-d相同。FLAGS为b适用于基本调试，v适用于更详细的基本调试，i适用于显示隐式规则，j适用于调用命令的详细信息，m适用于调试时重新生成文件。n禁用所有以前的调试标志。|
+|-e|--environment-overrides|系统环境变量将覆盖 makefile 中定义的同名变量|
 |**-f FILE**| --file=file, --makefile=FILE|读取FILE作为一个makefile。默认读取GNUmakefile、makefile、Makefile
 |-h|打印帮助消息。
 |**-i**|--ignore-errors|执行某个命令时如果发生错误则忽略并继续往下执行，不指定该选项则停止
@@ -67,12 +66,14 @@ tags: Linux教程
 |-v| --version|打印 make 的版本号并退出。
 |-w|--print-directory |在其它处理前后打印工作目录。
 ||--no-print-directory|即使 -w 隐式开启，也要关闭 -w。
-|-W FILE|--what-if=file, --new-file=file, --assume-new=file|将 FILE 认作无限新。
+|-W FILE|--what-if=file, --new-file=file,<br> --assume-new=file|将 FILE 认作无限新。
 ||--warn-undefined-variables|当引用未定义的变量打印警告信息。
 |&emsp;&emsp;&emsp;&emsp;|&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;||
-#2 Makefile简介
+
+# 2 Makefile简介
 &emsp;&emsp;Makefile存储着工程管理器Make进行工作所需的编译规则命令。
-##2.1 简单示例
+
+## 2.1 简单示例
 &emsp;&emsp;例如，有 Makefile 文件，内容如下：
 ```
 main.exe:main.o func.o //有头文件时要加入头文件
@@ -90,7 +91,7 @@ func.o:func.cpp
 &emsp;&emsp;4. 在执行第 4 条命令时，`main.cpp`在文件makefile不再有依赖文件的定义，make程序不再继续往下匹配，而是执行第4条命令，产生目标文件`main.o`。目标文件 `func.o`按照上面的同样方式判断产生。
 &emsp;&emsp;5. 执行3、4产生完` main.o `和 `func.o `以后，则第 2 行的命令可以顺利地执行了，最终产生了第 1 行的目标文件` main.exe`。
 
-##2.2 Makefile组成
+## 2.2 Makefile组成
 
 * 规则
    * 显式规则。显式规则说明了，如何生成一个或多个目标文件。这是由Makefile的书写者明显指出，要生成的文件，文件的依赖文件，生成的命令。
