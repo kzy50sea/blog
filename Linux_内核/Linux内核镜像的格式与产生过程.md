@@ -13,19 +13,16 @@ tags: Linux内核
 # 1 Linux内核镜像格式
 
 &emsp;&emsp;Linux内核有多种格式的镜像，包括vmlinux、vmlinuz，Image、zImage、bzImage、uImage、xipImage、bootpImage等.
-```flow
-s1=>operation: vmlinux
-s11=>operation: Image
-s13=>operation: bzImage/zImage/vmlinuz
-s14=>operation: uImage
-s15=>operation: vmlinuz
 
-s1->s11->s13->s14
+![1](https://www.github.com/liao20081228/blog/raw/master/图片/Linux内核镜像的格式与产生过程/1.jpg)
 
-```
+
 ## 1.1 vmlinux
 &emsp;&emsp;vmlinuz是可引导的、可压缩的内核镜像，vm代表Virtual Memory。Linux支持虚拟内存，因此得名vm。它是由用户对内核源码编译得到，**实质是elf格式的文件**。也就是说，vmlinux是编译出来的最原始的内核文件，未压缩，比较大。这种格式的镜像文件多存放在PC机上，大约为50MB。
 >ELF，Executable and Linkable Format，可执行可链接格式，是UNIX实验室作为应用程序二进制接口而发布的，扩展名为elf。可以简单的认为，在elf格式的文件中，除二进制代码外，还包括该可执行文件的其它某些信息，并不是纯粹的二进制代码。
+
+
+
 
 ## 1.2 vmlinuz
 
