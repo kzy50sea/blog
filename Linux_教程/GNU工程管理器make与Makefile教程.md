@@ -914,11 +914,11 @@ make提供了一些函数来控制make的运行。通常，你需要检测一些
 	 * name.o目标自动依赖name.p 
 	 * 生成命令：`$(PC) $(PFLAGS) -c`
 * 编译Fortran/Ratfor程序的隐含规则:
- * name.o目标自动依赖name.r、name.F、name.f
- * 生成命令
-     * “.f”:  `$(FC) –c  $(FFLAGS)`
-     * “.F”: `$(FC) –c  $(FFLAGS) $(CPPFLAGS)`
-     * “.f”: `$(FC) –c  $(FFLAGS) $(RFLAGS)`
+	* name.o目标自动依赖name.r、name.F、name.f
+	* 生成命令
+		 * “.f”:  `$(FC) –c  $(FFLAGS)`
+		 * “.F”: `$(FC) –c  $(FFLAGS) $(CPPFLAGS)`
+		 * “.f”: `$(FC) –c  $(FFLAGS) $(RFLAGS)`
 * 预处理Fortran/Ratfor程序的隐含规则：
 	 * name.f目标自动依赖name.r 、name.F
 	 * 生成命令  
@@ -941,35 +941,35 @@ make提供了一些函数来控制make的运行。通常，你需要检测一些
 	 * name目标自动依赖name.o，通过运行C的编译器来运行链接程序（一般是“ld”）来生成目标
 	 * 生成命令：`$(CC) $(LDFLAGS) <n>.o $(LOADLIBES) $(LDLIBS)`。
 * Yacc C程序时的隐含规则:
- * name.c目标自动依赖name.y（yacc生成的文件）
- * 生成命令：`$(YACC) $(YFALGS)`
+	 * name.c目标自动依赖name.y（yacc生成的文件）
+	 * 生成命令：`$(YACC) $(YFALGS)`
 * Lex C程序时的隐含规则:
- * name.c目标自动依赖name.l（Lex生成的文件）
- * 生成命令：`$(LEX) $(LFALGS)`
+	 * name.c目标自动依赖name.l（Lex生成的文件）
+	 * 生成命令：`$(LEX) $(LFALGS)`
 
 * Lex Ratfor程序时的隐含规则:
- * name.r目标自动依赖name.l（Lex生成的文件）
- * 生成命令：`$(LEX) $(LFALGS)`
+	 * name.r目标自动依赖name.l（Lex生成的文件）
+	 * 生成命令：`$(LEX) $(LFALGS)`
 * 从C程序、Yacc文件或Lex文件创建Lint库的隐含规则:
- * name.ln（lint生成的文件）目标自动依赖name.c
- * 生成命令是：`$(LINT) $(LINTFALGS) $(CPPFLAGS) -i`。
- * 对于“<n>.y”和“<n>.l”也是同样的规则。
+	 * name.ln（lint生成的文件）目标自动依赖name.c
+	 * 生成命令是：`$(LINT) $(LINTFALGS) $(CPPFLAGS) -i`。
+	 * 对于“<n>.y”和“<n>.l”也是同样的规则。
 * TeX and Web
- * name.dvi目标自动依赖name.tex
- * 生成命令：`$(TEX)`
- * name.tex目标自动依赖name.web、name.ch
- * 生成命令：
-     * '.web': `$(WEAVE)`
-     * '.ch': `$(CWEAVE)`
- * name.p目标自动依赖name.web
- * 生成命令：`$(TANGL)`
- * name.c目标自动依赖name.w、name.ch
- * 生成命令：`$(CTANGL)`
+	 * name.dvi目标自动依赖name.tex
+	 * 生成命令：`$(TEX)`
+	 * name.tex目标自动依赖name.web、name.ch
+	 * 生成命令：
+		 * '.web': `$(WEAVE)`
+		 * '.ch': `$(CWEAVE)`
+	 * name.p目标自动依赖name.web
+	 * 生成命令：`$(TANGL)`
+	 * name.c目标自动依赖name.w、name.ch
+	 * 生成命令：`$(CTANGL)`
 * Texinfo and Info
- * name.dvi目标自动依赖name.texinfo、name.texi、name.txinfo
- * 生成命令：`$(TEXI2DVI) $(TEXI2DVI_FLAGS)`
- * name.info目标自动依赖name.texinfo, name.texi, name.txinfo
- * 生成命令：`$(MAKEINFO) $(MAKEINFO_FLAGS)`
+	 * name.dvi目标自动依赖name.texinfo、name.texi、name.txinfo
+	 * 生成命令：`$(TEXI2DVI) $(TEXI2DVI_FLAGS)`
+	 * name.info目标自动依赖name.texinfo, name.texi, name.txinfo
+	 * 生成命令：`$(MAKEINFO) $(MAKEINFO_FLAGS)`
 
 
 
@@ -1011,7 +1011,7 @@ make提供了一些函数来控制make的运行。通常，你需要检测一些
 .c.o:
 ```
 
-#12 更新库文件
+# 12 更新库文件
 ```
 libname1.a(name2.o name3.o):name.o
     command
@@ -1020,7 +1020,7 @@ libname1.a(name2.o name3.o):name.o
 * \$%为name2.o
 * 使用ar打包静态库文件时要用"-s"选项或者打包完成后使用`ranlib archivefile`更新文件符号表。
 
-#13 makefile约定
+# 13 makefile约定
 * 每个makefile应该包括`SHELL=/bin/sh`
 * makefile的命令应该运行在sh中
 * 为了构建和安装程序的configure脚本和Makefile规则 不应直接使用除以下程序：
@@ -1033,64 +1033,63 @@ mkdir mv printf pwd rm rmdir sed sleep sort tar test touch tr true`
 * 不要在makefile中创建符号链接
 * 编译程序及选项不应该直接使用，而应该通过预定义变量
 * 分阶段安装
- * 在实际安装路径前使用变量 DESTDIR，这样可以安装到其它目录
- * 不要在makefile文件中设置DESTDIR的值，而应由用户在make命令行用绝对路径指定
- * DESTDIR应该只在install和uninstall目标中有效
- * 安装目录变量
-  * 安装根目录
-     * prefix：数据文件根目录，默认为/usr/local/
-     * exec_prefix：可执行文件根目录，默认为/usr/local/
-  * 可执行文件目录
-      * bindir：安装普通用户可执行程序，默认为` $(exec_prefix)/bin`
-      * sbindir：安装非正常状态时可执行程序，默认为` $(exec_prefix)/sbin`
-      * libexecdir：安装由程序而不是用户调用的可执行文件，默认为`$(exec_prefix)/libexec`
-  * 数据文件目录
-     * datarootdir：安装与架构无关的只读数据，默认为`$(prefix)/share`
-     * datadir：安装与架构无关的只读数据，默认为`$(datarootdir)`
-     * sysconfdir：安装只读配置文件，该目录的文件应为文本文件，默认为`$(prefix)/etc`
-     * sharedstatedir：安装与架构无关且运行时可修改数据，默认为`$(prefix)/com`
-     * localstatedir：安装与特定机器有关的运行时可修改数据，`$(prefix)/var`
-     * runstatedir:安装与特定机器有关且不需要持久保存的运行时可修改数据，默认为`$(localstatedir)/run`
-     * includedir：安装GCC的C头文件，默认为`$(prefix)/include`
-     * oldincludedir：安装非GCC的头文件，默认为`/usr/include`
-     * docdir：安装文档，默认为`$(datarootdir)/doc/yourpkg`
-     * infodir：安装Info文件，默认为`$(datarootdir)/info`
-     * htmldir、dvidir、pdfdir、psdir：安装特殊格式的文档，默认为`$(docdir)`
-     * libdir：安装库文件，默认为`$(exec_prefix)/lib`
-     * lispdir：安装Emacs Lisp 文件，默认为`$(datarootdir)/emacs/site-lisp`
- * man文档目录
-     * mandir：man手册顶层目录， 默认为`$(datarootdir)/man`
-     * man1dir： 默认为`$(mandir)/man1`
-     * man2dir： 默认为`$(mandir)/man2`
-     * manext：man文件名扩展，默认为.1
-     * man1ext：man 1文件名扩展
-     * man2ext：man 2文件名扩展
-  * 源文件目录：srcdir
+	* 在实际安装路径前使用变量 DESTDIR，这样可以安装到其它目录
+	* 不要在makefile文件中设置DESTDIR的值，而应由用户在make命令行用绝对路径指定
+	* DESTDIR应该只在install和uninstall目标中有效
+	* 安装目录变量
+		* 安装根目录
+			* prefix：数据文件根目录，默认为/usr/local/
+			* exec_prefix：可执行文件根目录，默认为/usr/local/
+        * 可执行文件目录
+            * bindir：安装普通用户可执行程序，默认为` $(exec_prefix)/bin`
+            * sbindir：安装非正常状态时可执行程序，默认为` $(exec_prefix)/sbin`
+            * libexecdir：安装由程序而不是用户调用的可执行文件，默认为`$(exec_prefix)/libexec`
+       * 数据文件目录
+			* datarootdir：安装与架构无关的只读数据，默认为`$(prefix)/share`
+			* datadir：安装与架构无关的只读数据，默认为`$(datarootdir)`
+			* sysconfdir：安装只读配置文件，该目录的文件应为文本文件，默认为`$(prefix)/etc`
+			* sharedstatedir：安装与架构无关且运行时可修改数据，默认为`$(prefix)/com`
+			* localstatedir：安装与特定机器有关的运行时可修改数据，`$(prefix)/var`
+			* runstatedir:安装与特定机器有关且不需要持久保存的运行时可修改数据，默认为`$(localstatedir)/run`
+			* includedir：安装GCC的C头文件，默认为`$(prefix)/include`
+		    * oldincludedir：安装非GCC的头文件，默认为`/usr/include`
+			* docdir：安装文档，默认为`$(datarootdir)/doc/yourpkg`
+			* infodir：安装Info文件，默认为`$(datarootdir)/info`
+			* htmldir、dvidir、pdfdir、psdir：安装特殊格式的文档，默认为`$(docdir)`
+			* libdir：安装库文件，默认为`$(exec_prefix)/lib`
+			* lispdir：安装Emacs Lisp 文件，默认为`$(datarootdir)/emacs/site-lisp`
+		* man文档目录
+			* mandir：man手册顶层目录， 默认为`$(datarootdir)/man`
+			* man1dir： 默认为`$(mandir)/man1`
+			* man2dir： 默认为`$(mandir)/man2`
+			* manext：man文件名扩展，默认为.1
+			* man1ext：man 1文件名扩展
+			* man2ext：man 2文件名扩展
+		 * 源文件目录：srcdir
 * 标准目标
- * all：编译所有目标
- * install：安装程序
- * install-html、install-dvi、install-pdf、install-ps：以指定格式安装文档
- * uninstall：卸载程序
- * install-strip：安装程序，但是跳过可执行文件
- * clean：清除构建程序是创建的文件
- * distclean：清除配置或构建程序创建的文件
- * mostlyclean：类似clean,但是保留一些不想删除的文件 
- * maintainer-clean：删除所有可以用该Makefile构建的文件
- * TAGS：更新标签列表
- * info：生成需要的info文件
- * dvi、html、pdf、ps：生成指定格式的文档
- * dist：创建程序的发行版本
- * check：执行测试
- * installcheck：执行安装测试
- * installdirs：添加名为installdirs的目标来创建安装目录
-
+	 * all：编译所有目标
+	 * install：安装程序
+	 * install-html、install-dvi、install-pdf、install-ps：以指定格式安装文档
+	 * uninstall：卸载程序
+	 * install-strip：安装程序，但是跳过可执行文件
+	 * clean：清除构建程序是创建的文件
+	 * distclean：清除配置或构建程序创建的文件
+	 * mostlyclean：类似clean,但是保留一些不想删除的文件 
+	 * maintainer-clean：删除所有可以用该Makefile构建的文件
+	 * TAGS：更新标签列表
+	 * info：生成需要的info文件
+	 * dvi、html、pdf、ps：生成指定格式的文档
+	 * dist：创建程序的发行版本
+	 * check：执行测试
+	 * installcheck：执行安装测试
+	 * installdirs：添加名为installdirs的目标来创建安装目录
 * 安装命令分类
- * 普通命令：移动文件到合适位置，并设置mode。
- * 安装前命令
- * 安装后命令
+	 * 普通命令：移动文件到合适位置，并设置mode。
+	 * 安装前命令
+	 * 安装后命令
 
-#14 示例
-##14.1 普通makefile文件         
+# 14 示例
+## 14.1 普通makefile文件         
 ```
 test:main.o add.o sub.o mul.o div.o
     gcc $^  -o $@    
@@ -1101,16 +1100,16 @@ clean:
         rm -f *.o test
 ```
  
-##14.2 另一种makefile文件  
+## 14.2 另一种makefile文件  
 
 * 目录分类：
- 1. 功能目录，有几个创建几个，之下建立src,src之中放.c文件，在每个功能目录下都建一个makefile
- 2. include目录放头文件
- 3. scripts目录放脚本文件  在它之下也要放makefile 
- 5. bin 目录放可执行文件
- 6. lib 目录放库文件
- 7. doc 目录放文档信息   readme  使用说明
- 8. 顶层目录下放一个总控makefile文件
+	 1. 功能目录，有几个创建几个，之下建立src,src之中放.c文件，在每个功能目录下都建一个makefile
+	 2. include目录放头文件
+	 3. scripts目录放脚本文件  在它之下也要放makefile 
+	 5. bin 目录放可执行文件
+	 6. lib 目录放库文件
+	 7. doc 目录放文档信息   readme  使用说明
+	 8. 顶层目录下放一个总控makefile文件
 
 
 * 总控makefile文件
