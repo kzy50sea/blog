@@ -856,7 +856,7 @@ struct boot_param_header {
 
 
 
-## 5、DT strings block的格式描述
+## 5.4 DT strings block的格式描述
 
 device tree strings bloc定义了各个node中使用的属性的字符串表。由于很多属性会出现在多个node中，因此，所有的属性字符串组成了一个string block。这样可以压缩DTB的size。
 
@@ -935,6 +935,7 @@ struct property {
     unsigned long _flags; //标志
     unsigned int unique_id;
 };
+
 
 ------
 
