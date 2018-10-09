@@ -23,11 +23,13 @@ tags: Linux教程
 	* **调试效率高**。为了提高编译程序的效率，Make会检查每个源文件的修改时间（时间戳）。只有在上次编译之后被修改的源文件才会在接下来的编译过程中被编译和链接，这样就能避免多余的编译工作量。为了保证源文件具有正确的时间戳，必须保证操作系统时间的准确性。
 
 ## 1.2 make的退出码
+<style>table{word-break:initial;}</style>
+
 |退出码|描述|
-|:--|:--|
-|0|表示成功执行。
-|1|使用make的“-q”选项时，如果指定目标需要更新，make退出码1，否则为0。
-|2| 如果make运行时出现任何错误
+|--|--|
+|0|表示成功执行。|
+|1|使用make的“-q”选项时，如果指定目标需要更新，make退出码1，否则为0。|
+|2| 如果make运行时出现任何错误|
 
 
 
@@ -35,11 +37,12 @@ tags: Linux教程
 **命令**：make [options] [target] ...
 **描述**：根据Makefile自动编译。默认执行第一个目标。
 
+
 |短选项|长选项|描述|
 |:--|:--|:--|
 |-b, -m||为了兼容性，忽略这些选项|
 |-B|--always-make|无条件重建所有目标，即使目标是最新的|
-|-C dir|--directory=dir|切换到dir目录，读取并执行makefile文件。默认当前目录。使用多个-C命令行选项时，后一个指定的目录是前一个指定的目录的子目录。|
+|**-C dir**|--directory=dir|切换到dir目录，读取并执行makefile文件。默认当前目录。使用多个-C命令行选项时，后一个指定的目录是前一个指定的目录的子目录。|
 |-d||打印大量调试信息。调试信息指出正在考虑重新创建哪些文件，正在比较哪些文件时间以及结果如何，哪些文件真的需要重编译，哪些隐式规则会被考虑并应用|
 ||--debug[=FLAGS]|打印各种调试信息。如果FLAGS被省略，则与-d相同。FLAGS为b适用于基本调试，v适用于更详细的基本调试，i适用于显示隐式规则，j适用于调用命令的详细信息，m适用于调试时重新生成文件。n禁用所有以前的调试标志。|
 |-e|--environment-overrides|系统环境变量将覆盖 makefile 中定义的同名变量|
@@ -65,9 +68,9 @@ tags: Linux教程
 |-v| --version|打印 make 的版本号并退出。
 |-w|--print-directory |在其它处理前后打印工作目录。
 ||--no-print-directory|即使 -w 隐式开启，也要关闭 -w。
-|-W FILE|--what-if=file, --new-file=file,<br> --assume-new=file|将 FILE 认作无限新。
+|-W FILE|--what-if=file, --new-file=file,<br /> --assume-new=file|将 FILE 认作无限新。
 ||--warn-undefined-variables|当引用未定义的变量打印警告信息。
-|&emsp;&emsp;&emsp;&emsp;|&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;||
+|&emsp;&emsp;&emsp;&emsp;|&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;||
 
 
 
@@ -84,7 +87,7 @@ main.o:main.cpp
 func.o:func.cpp 
 	g++ -c func.cpp
 ```
-&emsp;&emsp;对于该 Makefile 文件,程序 make 处理过程如下:
+对于该 Makefile 文件,程序 make 处理过程如下:
 
 &emsp;&emsp;1. make程序首先读到第1行的目标文件`main.exe`和它的两个依赖文件`main.o`和`func.o`;然后比较文件`main.exe`和`main.o`、`func.o`的产生时间，如果 `main.exe` 比 `main.o`或`func.o` 旧的话，则执行第2行命令，以产生目标文件`main.exe`。
 &emsp;&emsp;2. 在执行第2行的命令前,它首先会查看makefile中的其他定义，看有没有以第1行` main.o `和 `func.o`为目标文件的依赖文件，如果有的话，继续按照1、2的方式匹配下去。
@@ -99,24 +102,26 @@ func.o:func.cpp
    * 隐式规则。由于我们的make有自动推导的功能，所以隐晦的规则可以让我们比较粗糙地简略地书写Makefile，这是由make所支持的。
 * 变量定义。在Makefile中我们要定义一系列的变量，变量一般都是字符串，当Makefile被执行时，其中的变量都会被扩展到相应的引用位置上。
 * 文件指令。其包括了三个部分，一个是在一个Makefile中引用另一个Makefile，就像C语言中的include一样；另一个是指根据某些情况指定Makefile中的有效部分，就像C语言中的预编译#if一样；还有就是定义一个多行的命令。
-* 注释。Makefile中只有行注释，和UNIX的Shell脚本一样，其注释是用“#”字符，如果你要在你的Makefile中使用“#”字符，可以用反斜框进行转义，如：“\#”。
+* 注释。Makefile中只有行注释，和UNIX的Shell脚本一样，其注释是用“#”字符，如果你要在你的Makefile中使用“#”字符，可以用反斜线进行转义，如：“\#”。
 
-##2.3 MakeFile长行分割
+## 2.3 MakeFile长行分割
 * Makefile使用`\`来进行长行分割。
 
-##2.4 Makefile文件名
+## 2.4 Makefile文件名
 &emsp;&emsp;默认的情况下，make命令会在当前目录下按顺序找寻文件名为“GNUmakefile”、“gnumakefile”，“makefile”、“Makefile”的文件。
 &emsp;&emsp;当然，你可以使用别的文件名来书写Makefile，比如：“xxxx”，但要用用make的“-f FILE”选项指定该文件为Makefile文件，如：`make -f xxxx`。
 
-##2.5 引入其它的Makefile
+## 2.5 引入其它的Makefile
 
 &emsp;&emsp;在Makefile使用include关键字可以把别的Makefile包含进来，这很像C语言的#include，被包含的文件会原模原样的放在当前文件的包含位置。include的语法是：
+```makefile
+include filename1 filename2... //filename可以保含路径和通配符(只适用于shell通配符)
 ```
-include filename1 filename2... //filename可以是当前操作系统Shell的文件名（可以保含路径和通配符）
-```
-&emsp;&emsp;make命令开始时，会把找寻include所指出的其它Makefile，并把其内容安置在当前的位置。就好像C/C++的#include一样。如果文件都没有指定绝对路径或是相对路径的话，make会在当前目录下首先寻找，如果当前目录下没有找到，那么，make还会在下面的几个目录下找：
-&emsp;&emsp;（1）如果make执行时，有`-I`或`--include-dir`参数，那么make就会在这个参数所指定的目录下去寻找。
-&emsp;&emsp;（2）如果目录`<prefix>/include`（一般是：`/usr/local/bin`或`/usr/include`）存在的话，make也会去找。
+&emsp;&emsp;make命令开始时，会找寻include所指出的其它Makefile，并把其内容安置在当前的位置。就好像C/C++的#include一样。如果文件都没有指定绝对路径或是相对路径的话，make会在当前目录下首先寻找，如果当前目录下没有找到，那么，make还会在下面的几个目录下找：
+
+* 如果make执行时，有`-I`或`--include-dir`参数，那么make就会在这个参数所指定的目录下去寻找。
+* 如果目录`<prefix>/include`（一般是：`/usr/local/bin`或`/usr/include`）存在的话，make也会去找。
+
 &emsp;&emsp;如果有文件没有找到的话，make会生成一条警告信息，但不会马上出现致命错误。它会继续载入其它的文件，一旦完成makefile的读取，make会再重试这些没有找到，或是不能读取的文件，如果还是不行，make才会出现一条致命信息。如果你想让make不理那些无法读取的文件，而继续执行，你可以在include前加一个减号“-”，表示无论include过程中出现什么错误，都不要报错继续执行，如 `-include <filename>`。
 
 ##2.6 环境变量MAKEFILES
