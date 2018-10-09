@@ -34,7 +34,7 @@ tags: Linux内核
 &emsp;&emsp;我们首先根据硬件修改DTS文件，然后在编译的时候通过DTC工具将DTS文件转换成 DTB文件，然后将DTB文件烧写到机器上(如emmc，磁盘等存储介质)。系统启动时，Bootloader在启动内核前将DTB文件读到内存中，跳转到内核执行的同时将DTB起始地址传给内核。之后内核会展开Device Tree并创建和注册相关的设备，因此arch/arm/mach-xxx和arch/arm/plat-xxx中大量的用于注册platform、I2C、SPI板级信息的代码被删除，而驱动也以新的方式和.dts中定义的设备结点进行匹配。
 binary
 
-# 3  DTS
+# 3  设备树源文件
 &emsp;&emsp;.dts文件是一种ASCII文本格式的Device Tree描述，此文本格式非常人性化，适合人类的阅读习惯。基本上，在ARM Linux在，一个.dts文件对应一个ARM的machine，一般放置在内核的arch/arm/boot/dts/目录。
 &emsp;&emsp;由于一个SoC可能对应多个machine（一个SoC可以对应多个产品和电路板），势必这些.dts文件需包含许多共同的部分，Linux内核为了简化，把SoC公用的部分或者多个machine共同的部分一般提炼为.dtsi，类似于C语言的头文件。其他的machine对应的.dts就include这个.dtsi。
 
@@ -217,7 +217,7 @@ binary
 
 * 每个可寻址的设备有一个reg属性，即以下面形式表示的元组列表：`reg = <address1 length1 [address2 length2] [address3 length3] ... >`
 * 每个元组表示该设备的地址范围。每个地址值由一个或多个32位整数列表组成，被称做cells。同样地，长度值也可以是cells列表或为空。
-* 由于address和length字段是大小可变的变量，父节点的`#address-cells`和`#size-cells`属性用来说明子节点的各个字段有多少个cells。换句话说，正确解释一个子节点的reg属性需要父节点的#address-cells和#size-cells值。让我们从CPU开始，添加编址属性到示例设备树。
+* 由于address和length字段是大小可变的变量，**父节点的`#address-cells`和`#size-cells`属性用来说明子节点的各个字段有多少个cells**。换句话说，正确解释一个子节点的reg属性需要父节点的#address-cells和#size-cells值。让我们从CPU开始，添加编址属性到示例设备树。
 
 ### 3.3.1 CPU编址
 
@@ -316,7 +316,7 @@ external-bus {
         };  
     }; 
 ```	
-&emsp;&emsp;外部总线用了2个cells来表示地址值;一个是片选号，一个是基于片选的偏移量。长度字段还是一个cell，这是因为只有地址的偏移部分需要一个范围。所以，在本例中，每个reg条目包含3个cell；片选号码，偏移，长度。由于地址范围包含节点及其子节点，父节点可以自由定义任何对该总线而言有意义的编址方案。直接父节点和子节点之外的其他节点，通常不关心本地节点地址域，因而地址不得不从一个域映射到另一个域。
+&emsp;&emsp;在上例中，外部总线用了2个cells来表示地址值;一个是片选号，一个是基于片选的偏移量。长度字段还是一个cell，这是因为只有地址的偏移部分需要一个范围。所以，在本例中，每个reg条目包含3个cell；片选号码，偏移，长度。由于地址范围包含节点及其子节点，父节点可以自由定义任何对该总线而言有意义的编址方案。直接父节点和子节点之外的其他节点，通常不关心本地节点地址域，因而地址不得不从一个域映射到另一个域。
 
 ### 3.3.3 非内存映射设备
 
@@ -350,7 +350,7 @@ i2c@1,0 {
     #size-cells = <1>;  
     ...  
     external-bus {  
-        #address-cells = <2>  
+        #address-cells = <2>;  
         #size-cells = <1>;  
         ranges = <0 0  0x10100000   0x10000     // Chipselect 1, Ethernet  
                1 0  0x10160000   0x10000     // Chipselect 2, i2c controller  
@@ -382,7 +382,7 @@ i2c@1,0 {
     };  
 }; 
 ```
-&emsp;&emsp;ranges是地址翻译表，由3个字段组成，即<子地址，父地址，区域大小>，分别对应子节点的`#address-cells`值，父节点的`#address-cells`值，子节点的`#size-cells`值确定。对于本例中的外部总线，子节点的地址是2个单元，父节点的地址是1个单元，子节点的区域大小是1个单元。3个ranges被转换：
+&emsp;&emsp;ranges是地址翻译表，由3个字段组成，即`<子地址，父地址，区域大小>`，分别对应子节点的`#address-cells`值，父节点的`#address-cells`值，子节点的`#size-cells`值确定。对于本例中的外部总线，子节点的地址是2个单元，父节点的地址是1个单元，子节点的区域大小是1个单元。3个ranges被转换：
 
 * 从片选0偏移0被映射到地址范围0x10100000~0x1010ffff
 * 从片选1偏移0被映射到地址范围0x10160000~0x1016ffff
@@ -762,15 +762,13 @@ pci@0x10180000 {
 </tr>
 </tbody> </table>
 
-# 4 dtc
-
-# 5 dtb
+# 4 设备树二进制文件
 &emsp;&emsp;经过Device Tree Compiler编译，Device Tree source file变成了Device Tree Blob（又称作flattened device tree）的格式。Device Tree Blob的数据组织如下图所示：
 
 ![dtb结构图](https://www.github.com/liao20081228/blog/raw/master/图片/Linux设备树/2.gif "dtb结构")
 
 
-## 5.1 DTB header
+## 4.1 DTB header
 &emsp;&emsp;DTB header主要描述设备树的一些基本信息，例如设备树大小，结构块偏移地址，字符串块偏移地址等。偏移地址是相对于设备树头的起始地址计算的。
 ```c
 struct boot_param_header {
@@ -801,67 +799,141 @@ struct boot_param_header {
 |dt_strings_size|	DT string block的size。它和off_dt_strings一起确定了strings block在内存中的位置
 |dt_struct_size|DT structure block的size。它和和off_dt_struct一起确定了device tree structure block在内存中的位置
 |&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;|&emsp;|
-[设备树头字段的作用]
-## 5.2 memory reserve map
+
+## 4.2 memory reserve map
 
 &emsp;&emsp;这个区域包括了若干的reserve memory描述符。每个reserve memory描述符是由address和size组成。其中address和size都是用U64来描述。
 
 
-## 5.3 DT structure block
+## 4.3 DT structure block
 
-&emsp;&emsp;device tree structure block区域是由若干的分片组成，每个分片开始位置都是保存了token，以此来描述该分片的属性和内容。共计有5种token：
+&emsp;&emsp;设备树结构块是一个线性化的结构体，是设备树的主体，以节点的形式保存了主板上的设备信息。在结构块中，以宏`OF_DT_BEGIN_NODE`标志一个节点的开始，以宏`OF_DT_END_NODE`标识一个节点的结束，整个结构块以宏`OF_DT_END` 结束。在`/kernel/include/linux/of_fdt.h`中有相关定义，我们把这些宏称之为token。共计有5种token，定义如下：
+```cpp
+#define FDT_MAGIC   0xd00dfeed 
+#define FDT_TAGSIZE sizeof(uint32_t)
 
-<2> 结构块（struct block）
-设备树结构块是一个线性化的结构体，是设备树的主体，以节点node的形式保存了目标单板上的设备信息。
-在结构块中以宏OF_DT_BEGIN_NODE标志一个节点的开始，以宏OF_DT_END_NODE标识一个节点的结束，整个结构块以宏OF_DT_END结束。一个节点主要由以下几部分组成。
-(1)节点开始标志：一般为OF_DT_BEGIN_NODE。
-(2)节点路径或者节点的单元名(version<3以节点路径表示，version>=0x10以节点单元名表示)
-(3)填充字段（对齐到四字节）
-(4)节点属性。每个属性以宏OF_DT_PROP开始，后面依次为属性值的字节长度(4字节)、属性名称在字符串块中的偏移量(4字节)、属性值和填充（对齐到四字节）。
-(5)如果存在子节点，则定义子节点。
-(6)节点结束标志OF_DT_END_NODE。
+#define FDT_BEGIN_NODE  0x1    /*描述一个node的开始位置，紧挨着该token的就是node name（包括unit address）*/
+#define FDT_END_NODE    0x2     /*描述了一个node的结束位置。*/
+#define FDT_PROP    0x3    /*描述了一个property的开始位置，该token之后是两个u32的数据，分别是length和name offset。length表示该property value data的size。name offset表示该属性字符串在device tree strings block的偏移值。length和name offset之后就是长度为length具体的属性值数据。*/
+#define FDT_NOP     0x4     
+#define FDT_END     0x9  /*标识了一个DTB的结束位置。*/
+
+#define FDT_V1_SIZE (7*sizeof(uint32_t))
+#define FDT_V2_SIZE (FDT_V1_SIZE + sizeof(uint32_t))
+#define FDT_V3_SIZE (FDT_V2_SIZE + sizeof(uint32_t))
+#define FDT_V16_SIZE    FDT_V3_SIZE
+#define FDT_V17_SIZE    (FDT_V16_SIZE + sizeof(uint32_t))
+
+```
+
+一个节点主要由以下几部分组成：
+
+1. 节点开始标志：一般为FDT_BEGIN_NODE。
+2. 节点路径或者节点的单元名(version小于3以节点全路径表示，version>=16以节点单元名表示)
+3. 填充字段（对齐到四字节）
+4. 节点属性。每个属性以宏OF_DT_PROP开始，后面依次为属性值的字节长度(4字节)、属性名称在字符串块中的偏移量(4字节)、属性值和填充（对齐到四字节）。
+5. 如果存在子节点，则定义子节点。
+6. 节点结束标志FDT_END_NODE。
 
 
-（1）FDT_BEGIN_NODE (0x00000001)。该token描述了一个node的开始位置，紧挨着该token的就是node name（包括unit address）
+![3](https://www.github.com/liao20081228/blog/raw/master/图片/Linux设备树/3.jpg)
 
-（2）FDT_END_NODE (0x00000002)。该token描述了一个node的结束位置。
 
-（3）FDT_PROP (0x00000003)。该token描述了一个property的开始位置，该token之后是两个u32的数据，分别是length和name offset。length表示该property value data的size。name offset表示该属性字符串在device tree strings block的偏移值。length和name offset之后就是长度为length具体的属性值数据。
-
-（4）FDT_NOP (0x00000004)。
-
-（5）FDT_END (0x00000009)。该token标识了一个DTB的结束位置。
-
-一个可能的DTB的结构如下：
-
-（1）若干个FDT_NOP（可选）
-
-（2）FDT_BEGIN_NODE
-
-              node name
-
-              paddings
-
-（3）若干属性定义。
-
-（4）若干子节点定义。（被FDT_BEGIN_NODE和FDT_END_NODE包围）
-
-（5）若干个FDT_NOP（可选）
-
-（6）FDT_END_NODE
-
-（7）FDT_END
+## 4.4 DT strings block
+&emsp;&emsp;通过节点的定义知道节点都有若干属性，而不同的节点的属性又有大量相同的属性名称，因此将这些属性名称提取出一张表，当节点需要应用某个属性名称时直接在属性名字段保存该属性名称在字符串块中的偏移量。
 
 
 
 
 
-## 5.4 DT strings block的格式描述
+# 5 设备树编译与调试
+&emsp;&emsp;DTC为编译工具，它可以将.dts文件编译成.dtb文件。DTC的源码位于内核的`scripts/dtc`目录，内核选中CONFIG_OF，编译内核的时候，主机可执行程序DTC就会被编译出来。 即scripts/dtc/Makefile中
+```makefile
+hostprogs-y := dtc
+always := $(hostprogs-y) 
+```
+&emsp;&emsp;在内核的arch/arm/boot/dts/Makefile中，若选中某种SOC，则与其对应相关的所有dtb文件都将编译出来。在linux下，make dtbs可单独编译dtb。以下截取了TEGRA平台的一部分。
+```makefile
+ifeq ($(CONFIG_OF),y)
+dtb-$(CONFIG_ARCH_TEGRA) += tegra20-harmony.dtb tegra30-beaver.dtb tegra114-dalmore.dtb tegra124-ardbeg.dtb 
+```
 
-device tree strings bloc定义了各个node中使用的属性的字符串表。由于很多属性会出现在多个node中，因此，所有的属性字符串组成了一个string block。这样可以压缩DTB的size。
 
 
-通过节点的定义知道节点都有若干属性，而不同的节点的属性又有大量相同的属性名称，因此将这些属性名称提取出一张表，当节点需要应用某个属性名称时直接在属性名字段保存该属性名称在字符串块中的偏移量。
+DTC编译.dts生成的二进制文件（.dtb），bootloader在引导内核时，会预先读取.dtb到内存，进而由内核解析。
+       
+在2.6.x版本内核中，在powerpc架构下，dtb文件可以单独进行编译，编译命令格式如下：
+
+
+dtc [-I input-format] [-O output-format][-o output-filename] [-V output_version] input_filename
+
+参数说明
+
+input-format：
+
+- “dtb”: “blob” format
+
+- “dts”: “source” format.
+
+- “fs” format.
+
+output-format：
+
+- “dtb”: “blob” format
+
+- “dts”: “source” format
+
+- “asm”: assembly language file
+
+output_version：
+
+定义”blob”的版本，在dtb文件的字段中有表示，支持1　2　3和16,默认是3,在16版本上有许多特性改变
+
+(1)  Dts编译生成dtb
+
+./dtc -I dts -O dtb -o B_dtb.dtb A_dts.dts
+
+把A_dts.dts编译生成B_dtb.dtb
+
+(2)  Dtb编译生成dts
+
+./dtc -I dtb -O dts -o A_dts.dts A_dtb.dtb
+
+把A_dtb.dtb反编译生成为A_dts.dts
+
+        在linux 3.x内核中，可以使用make的方式进行编译。
+
+---------------------
+
+本文来自 storyteller87 的CSDN 博客 ，全文地址请点击：https://blog.csdn.net/u014650722/article/details/79076352?utm_source=copy 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
  
 <5> machine_desc结构
