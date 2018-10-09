@@ -35,7 +35,6 @@ tags: Linux教程
 **命令**：make [options] [target] ...
 **描述**：根据Makefile自动编译。默认执行第一个目标。
 
-<style> table th:first-of-type { width: 100px; } </style>
 |短选项|长选项|描述|
 |:--|:--|:--|
 |-b, -m||为了兼容性，忽略这些选项|
