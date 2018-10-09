@@ -23,7 +23,6 @@ tags: Linux教程
 	* **调试效率高**。为了提高编译程序的效率，Make会检查每个源文件的修改时间（时间戳）。只有在上次编译之后被修改的源文件才会在接下来的编译过程中被编译和链接，这样就能避免多余的编译工作量。为了保证源文件具有正确的时间戳，必须保证操作系统时间的准确性。
 
 ## 1.2 make的退出码
-
 |退出码|描述|
 |:--|:--|
 |0|表示成功执行。
@@ -36,6 +35,7 @@ tags: Linux教程
 **命令**：make [options] [target] ...
 **描述**：根据Makefile自动编译。默认执行第一个目标。
 
+<style> table th:first-of-type { width: 100px; } </style>
 |短选项|长选项|描述|
 |:--|:--|:--|
 |-b, -m||为了兼容性，忽略这些选项|
@@ -69,6 +69,8 @@ tags: Linux教程
 |-W FILE|--what-if=file, --new-file=file,<br> --assume-new=file|将 FILE 认作无限新。
 ||--warn-undefined-variables|当引用未定义的变量打印警告信息。
 |&emsp;&emsp;&emsp;&emsp;|&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;||
+
+
 
 # 2 Makefile简介
 &emsp;&emsp;Makefile存储着工程管理器Make进行工作所需的编译规则命令。
