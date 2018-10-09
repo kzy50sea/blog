@@ -52,6 +52,7 @@ s1->s11->s13->s14
 
 
 ## 1.5 uImage
+### 1.5.1 uImage简介
 &emsp;&emsp;uImage是uboot专用的镜像文件，它是在zImage之前加上一个长度为64B的头信息(tag)，在头信息内说明了该镜像文件的类型、加载 位置、生成时间、大小等信息。换句话说，若直接从uImage的0x40位置开始执行，则zImage和uImage没有任何区别。命令格式是`make uImage`，这种格式的Linux镜像文件多存放在NAND 上。64字节的头结构如下：
 ```cpp
 typedef struct image_header 
@@ -73,41 +74,41 @@ typedef struct image_header
 所以，uImage和zImage都是压缩后的内核映像。而uImage是用mkimage工具根据zImage制作而来的。mkimage工具介绍如下：u-boot里面的mkimage工具来生成uImage（u-boot源码包/tools/mkimage.c )
 
 
-### 1.5.1 uboot镜像创建工具——`mkimage`
-**命令**：mkimage -l [uimage file name]
-&emsp;&emsp;&emsp;mkimage [options] -f [image tree source file] [uimage file name]
-&emsp;&emsp;&emsp;mkimage [options] -F [uimage file name]
+### 1.5.2 uImage创建工具——`mkimage`
+**命令**：mkimage -l uimage file name
+&emsp;&emsp;&emsp;mkimage [options] -f image_tree_source_file uimage_file_name
+&emsp;&emsp;&emsp;mkimage [options] -F uimage_file_name
 &emsp;&emsp;&emsp;mkimage [options] (legacy mode)
 **描述**：mkimage命令用于创建与 U-Boot引导加载程序一起使用的映像。这些映像可以包含linux内核，设备树blob，根文件系统映像，固件映像等，可以单独使用，也可以组合使用。mkimage支持两种不同的格式：
 
 * 旧的传统镜像格式连接各个部分（例如，内核映像，设备树blob和ramdisk映像），并添加一个64字节的标头，其中包含有关目标体系结构，操作系统，图像类型，压缩方法，入口点，时间戳，校验和等。
 * 新的FIT（平面镜像树）格式允许更灵活地处理各种类型的镜像，并且还通过更强校验来增强镜像的完整性保护。 它还支持启动验证。
 
-   
+<style>table{word-break:initial;}</style>
 |选项|描述|
 |:--|:--|
-|l [[u]image file name]|显示[image_header结构体]中的头信息|
-|创建传统镜像|
-|-A [architecture]|设置体系架构。 
-|-O [os]|设置操作系统。 u-boot的bootm命令按os类型更改引导方法。
-|-T [image type]|设置镜像类型。  
-|-C [compression type]|设置压缩类型。 
-|-a [load addess]| 设置十六进制的载入地址
-|-e [entry point]|设置十六进制的进入点
-|-n [image name]|设置镜像名称
-|-d [image data file]| 使用镜像数据来源
+|-l uimage_file_name|显示image_header结构体中的头信息|
+|**创建传统镜像**|
+|-A architecture|设置体系架构。 
+|-O os|设置操作系统。 u-boot的bootm命令按os类型更改引导方法。
+|-T image type|设置镜像类型。  
+|-C compression type|设置压缩类型。 
+|-a load addess| 设置十六进制的载入地址
+|-e entry point|设置十六进制的进入点
+|-n image name|设置镜像名称
+|-d image data file| 使用镜像数据来源
 |-x     |设置XIP旗标。即不进行文件的拷贝，在当前位置执行
-|创建FIT镜像|
-|-c [comment]|指定签名时要添加的注释。
-|-D [dtc options]| 为用于创建映像的设备树编译器提供特殊选项。
-|-f [image tree source file]|描述FIT镜像结构和内容的镜像树源文件
+|**创建FIT镜像**|
+|-c comment|指定签名时要添加的注释。
+|-D dtc_options| 为用于创建映像的设备树编译器提供特殊选项。
+|-f image_tree_source_file|描述FIT镜像结构和内容的镜像树源文件
 |-F |表示现有的FIT镜像应修改。不执行dtc编译，不应给出-f标志。这可用于在初始镜像创建后使用附加KEY对镜像进行签名。
-|-k [key_directory]| 指定含有用于签名的key的目录，该目录应该含有用于签名的私钥name.key和用于验证的整数name.crt
-|-K [key_destination]|指定dtb文件以写入公钥。
+|-k key_directory| 指定含有用于签名的key的目录，该目录应该含有用于签名的私钥name.key和用于验证的整数name.crt
+|-K key_destination|指定dtb文件以写入公钥。
 |-r  |指定用于签署FIT的密钥是必需的。 这意味着必须验证它们才能启动映像。 如果没有此选项，验证将是可选的。
-|&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;||
+|&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;||
 
-##1.6 xipImage
+## 1.6 xipImage
 &emsp;&emsp;这种格式的Linux镜像文件多存放在NorFlash上，且运行时不需要拷贝到内存SDRAM中，可以直接在NorFlash中运行。
 
 
