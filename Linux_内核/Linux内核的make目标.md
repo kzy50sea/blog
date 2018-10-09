@@ -161,7 +161,7 @@ tags: Linux内核
 	* `fdimage`      —— 创建 1.4MB软盘启动镜像 (arch/x86/boot/fdimage)
 	* `fdimage144`—— 创建 1.4MB软盘启动镜像 (arch/x86/boot/fdimage)
 	* `fdimage288`—— 创建 2.8MB软盘启动镜像 (arch/x86/boot/fdimage)
-	* `isoimage`—— 创建 CD-ROM启动镜像 (arch/x86/boot/image.iso)， bzdisk/fdimage*/isoimage可以跟随以下参数
+	* `isoimage`—— 创建 CD-ROM启动镜像 (arch/x86/boot/image.iso)， 可以跟随以下参数
 		* FDARGS="..." ——引导内核的参数 
 		* FDINITRD=file ——引导内核的initrd
 	*  `i386_defconfig`——  i386默认配置
