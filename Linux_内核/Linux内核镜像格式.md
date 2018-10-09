@@ -1,5 +1,5 @@
 ---
-title: Linux内核镜像格式
+title: Linux内核镜像的格式与产生过程
 tags: Linux内核
 ---
 
@@ -23,11 +23,11 @@ s15=>operation: vmlinuz
 s1->s11->s13->s14
 
 ```
-# 2 vmlinux
+## 1.1 vmlinux
 &emsp;&emsp;vmlinuz是可引导的、可压缩的内核镜像，vm代表Virtual Memory。Linux支持虚拟内存，因此得名vm。它是由用户对内核源码编译得到，实质是elf格式的文件。也就是说，vmlinux是编译出来的最原始的内核文件，未压缩，比较大。这种格式的镜像文件多存放在PC机上，大约为50MB。
 >ELF，Executable and Linkable Format，可执行可链接格式，是UNIX实验室作为应用程序二进制接口而发布的，扩展名为elf。可以简单的认为，在elf格式的文件中，除二进制代码外，还包括该可执行文件的某些信息，比如符号表等。
 
-# 3 vmlinuz
+## 1.2 vmlinuz
 
 &emsp;&emsp;vmlinuz是可引导的、压缩过的内核。“vm”代表“Virtual Memory”。vmlinuz是可执行 的Linux内核，它位于/boot/vmlinuz，它一般是一个软链接。vmlinuz的建立有两种方式:
 
@@ -37,11 +37,11 @@ s1->s11->s13->s14
 
 
 
-# 4 Image
+## 1.3 Image
 &emsp;&emsp;Image是经过objcopy处理的只包含二进制数据的内核代码，它已经不是elf格式了，但这种格式的内核镜像还没有经过压缩。
 >GNU使用工具程序objcopy作用是拷贝一个目标文件的内容到另一个目标文件中，也就是说，可以将一种格式的目标文件转换成另一种格式的目标文件。 通过使用binary作为输出目标(-o binary)，可产生一个原始的二进制文件，实质上是将所有的符号和重定位信息都将被抛弃，只剩下二进制数据。
 
-# 5 zImage和bzImage
+## 1.4 zImage和bzImage
 &emsp;&emsp;zImage是ARM linux常用的一种压缩镜像文件，它是由vmlinux加上解压代码经gzip压缩而成，命令格式是`make zImage`。这种格式的Linux镜像文件多存放在NAND上。
 
 &emsp;&emsp;bz表示big zImage,其格式与zImage类似，但采用了不同的压缩算法，注意，bzImage的压缩率更高。bzImage不是用bzip2压缩的,bz表示“big zImage”。 bzImage中的b是“big”意思。 
@@ -51,8 +51,8 @@ s1->s11->s13->s14
 &emsp;&emsp;内核文件中包含一个微型的gzip用于解压缩内核并引导它。两者的不同之处在于，老的zImage解压缩内核到低端内存(第一个 640K)，bzImage解压缩内核到高端内存(1M以上)。如果内核比较小，那么可以采用zImage或bzImage之一，两种方式引导的系统运行 时是相同的。大的内核采用bzImage，不能采用zImage。
 
 
-# 6 uImage
-## 6.1 uImage简介
+## 1.5 uImage
+### 1.5.1 uImage简介
 &emsp;&emsp;uImage是uboot专用的镜像文件，它是在zImage之前加上一个长度为64B的头信息(tag)，在头信息内说明了该镜像文件的类型、加载 位置、生成时间、大小等信息。换句话说，若直接从uImage的0x40位置开始执行，则zImage和uImage没有任何区别。命令格式是`make uImage`，这种格式的Linux镜像文件多存放在NAND 上。64字节的头结构如下：
 ```cpp
 typedef struct image_header 
@@ -74,7 +74,7 @@ typedef struct image_header
 所以，uImage和zImage都是压缩后的内核映像。而uImage是用mkimage工具根据zImage制作而来的。mkimage工具介绍如下：u-boot里面的mkimage工具来生成uImage（u-boot源码包/tools/mkimage.c )
 
 
-## 6.2 uImage创建工具——`mkimage`
+### 1.5.2 uImage创建工具——`mkimage`
 **命令**：mkimage -l uimage file name
 &emsp;&emsp;&emsp;mkimage [options] -f image_tree_source_file uimage_file_name
 &emsp;&emsp;&emsp;mkimage [options] -F uimage_file_name
@@ -108,9 +108,10 @@ typedef struct image_header
 |-r  |指定用于签署FIT的密钥是必需的。 这意味着必须验证它们才能启动映像。 如果没有此选项，验证将是可选的。
 |&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;||
 
-# 7 xipImage
+## 1.6 xipImage
 &emsp;&emsp;这种格式的Linux镜像文件多存放在NorFlash上，且运行时不需要拷贝到内存SDRAM中，可以直接在NorFlash中运行。
 
+# 2 内核镜像的产生过程
 &emsp;&emsp;在嵌入式Linux中，内核的启动过程分为两个阶段。其中，第一阶段启动代码放在arch/arm/kernel/head.S文件中，该文件与体系结构相关，与用户的开发板无关，主要是初始化ARM内核等。第二阶段启动代码是init目录下的main.c。现以执行命令`make zImage`为例来说明，arm-linux内核镜像的产生过程。
 
 * 当用户对Linux内核源码进行编译时，kernel的第1和2阶段代码会生成可执行文件vmlinux，该文件是未被压缩的镜像文件，非常大，不能直接下载到NAND中，通常放在PC机上，这也是最原始的Linux镜像文件。试验时该文件约50M。
