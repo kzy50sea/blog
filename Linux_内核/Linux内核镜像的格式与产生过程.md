@@ -24,12 +24,12 @@ s1->s11->s13->s14
 
 ```
 ## 1.1 vmlinux
-&emsp;&emsp;vmlinuz是可引导的、可压缩的内核镜像，vm代表Virtual Memory。Linux支持虚拟内存，因此得名vm。它是由用户对内核源码编译得到，实质是elf格式的文件。也就是说，vmlinux是编译出来的最原始的内核文件，未压缩，比较大。这种格式的镜像文件多存放在PC机上，大约为50MB。
->ELF，Executable and Linkable Format，可执行可链接格式，是UNIX实验室作为应用程序二进制接口而发布的，扩展名为elf。可以简单的认为，在elf格式的文件中，除二进制代码外，还包括该可执行文件的某些信息，比如符号表等。
+&emsp;&emsp;vmlinuz是可引导的、可压缩的内核镜像，vm代表Virtual Memory。Linux支持虚拟内存，因此得名vm。它是由用户对内核源码编译得到，**实质是elf格式的文件**。也就是说，vmlinux是编译出来的最原始的内核文件，未压缩，比较大。这种格式的镜像文件多存放在PC机上，大约为50MB。
+>ELF，Executable and Linkable Format，可执行可链接格式，是UNIX实验室作为应用程序二进制接口而发布的，扩展名为elf。可以简单的认为，在elf格式的文件中，除二进制代码外，还包括该可执行文件的其它某些信息，并不是纯粹的二进制代码。
 
 ## 1.2 vmlinuz
 
-&emsp;&emsp;vmlinuz是可引导的、压缩过的内核。“vm”代表“Virtual Memory”。vmlinuz是可执行 的Linux内核，它位于/boot/vmlinuz，它一般是一个软链接。vmlinuz的建立有两种方式:
+&emsp;&emsp;vmlinuz是可引导的、压缩过的内核。“vm”代表“Virtual Memory”。vmlinuz是可执行 的Linux内核，它位于/boot/vmlinuz，它是一个软链接。vmlinuz的建立有两种方式:
 
 * 一是编译内核时通过“make zImage”创建，手动拷贝到/boot目录下面。zImage适用于小内核的情况，它的存在是为了向后的兼容性。
 * 二是内核编译时通过命令make bzImage创建，然后手动拷贝至/boot目录下。
@@ -42,7 +42,7 @@ s1->s11->s13->s14
 >GNU使用工具程序objcopy作用是拷贝一个目标文件的内容到另一个目标文件中，也就是说，可以将一种格式的目标文件转换成另一种格式的目标文件。 通过使用binary作为输出目标(-o binary)，可产生一个原始的二进制文件，实质上是将所有的符号和重定位信息都将被抛弃，只剩下二进制数据。
 
 ## 1.4 zImage和bzImage
-&emsp;&emsp;zImage是ARM linux常用的一种压缩镜像文件，它是由vmlinux加上解压代码经gzip压缩而成，命令格式是`make zImage`。这种格式的Linux镜像文件多存放在NAND上。
+&emsp;&emsp;zImage是ARM linux常用的一种压缩镜像文件，它是由image加上解压代码经gzip压缩而成，命令格式是`make [b]zImage`。这种格式的Linux镜像文件多存放在NAND上。
 
 &emsp;&emsp;bz表示big zImage,其格式与zImage类似，但采用了不同的压缩算法，注意，bzImage的压缩率更高。bzImage不是用bzip2压缩的,bz表示“big zImage”。 bzImage中的b是“big”意思。 
 
@@ -57,18 +57,18 @@ s1->s11->s13->s14
 ```cpp
 typedef struct image_header 
 {
-    uint32_tih_magic;
-    uint32_tih_hcrc;
-    uint32_tih_time;
-    uint32_tih_size;
-    uint32_tih_load;
-    uint32_tih_ep;
-    uint32_tih_dcrc;
-    uint8_tih_os;
-    uint8_tih_arch;
-    uint8_tih_type;
-    uint8_tih_comp;
-    uint8_tih_name[IH_NMLEN];
+    uint32_t ih_magic;
+    uint32_t ih_hcrc;
+    uint32_t ih_time;
+    uint32_t ih_size;
+    uint32_t ih_load;
+    uint32_t ih_ep;
+    uint32_t ih_dcrc;
+    uint8_t ih_os;
+    uint8_t ih_arch;
+    uint8_t ih_type;
+    uint8_t ih_comp;
+    uint8_t ih_name[IH_NMLEN];
 } image_header_t;
 ```
 所以，uImage和zImage都是压缩后的内核映像。而uImage是用mkimage工具根据zImage制作而来的。mkimage工具介绍如下：u-boot里面的mkimage工具来生成uImage（u-boot源码包/tools/mkimage.c )
