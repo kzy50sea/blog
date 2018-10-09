@@ -114,15 +114,15 @@ tags: Linux内核
 * `binrpm-pkg`——构建只含二进制的rpm包
 * `deb-pkg`——构建包含源和二进制的deb包
 * `bindeb-pkg`——构建只含二进制的deb包
-* snap-pkg —— 构建只含二进制的snap包
-* tar-pkg —— 将内核打包，不压缩
-* targz-pkg—— 将内核打包，并用gzip压缩
-* tarbz2-pkg—— 将内核打包，并用bzip2压缩
-* tarxz-pkg—— 将内核打包，并用xz压缩
-* perf-tar-src-pkg—— 构建perf-version.tar 源码包，未压缩
-* perf-targz-src-pkg—— 构建 perf-version.tar.gz 源码压缩包，使用gzip压缩
-* perf-tarbz2-src-pkg—— 构建 perf-version.tar.bz2 源码压缩包，使用把bzip2压缩
-* perf-tarxz-src-pkg—— 构建 perf-version.tar.xz 源码压缩包，使用xz压缩
+* `snap-pkg` —— 构建只含二进制的snap包
+* `tar-pkg `—— 将内核打包，不压缩
+* `targz-pkg`—— 将内核打包，并用gzip压缩
+* `tarbz2-pkg`—— 将内核打包，并用bzip2压缩
+* `tarxz-pkg`—— 将内核打包，并用xz压缩
+* `perf-tar-src-pkg`—— 构建perf-version.tar 源码包，未压缩
+* `perf-targz-src-pkg`—— 构建 perf-version.tar.gz 源码压缩包，使用gzip压缩
+* `perf-tarbz2-src-pkg`—— 构建 perf-version.tar.bz2 源码压缩包，使用把bzip2压缩
+* `perf-tarxz-src-pkg`—— 构建 perf-version.tar.xz 源码压缩包，使用xz压缩
 
 # 8 文档目标
 * 指定内核文档的格式，默认输出位置为 Documentation/output
@@ -156,37 +156,22 @@ tags: Linux内核
   
 # 9 特定架构目标
 * x86
-* bzImage      - Compressed kernel image (arch/x86/boot/bzImage)
-  install      - Install kernel using
-                  (your) ~/bin/installkernel or
-                  (distribution) /sbin/installkernel or
-                  install to $(INSTALL_PATH) and run lilo
-  fdimage      - Create 1.4MB boot floppy image (arch/x86/boot/fdimage)
-  fdimage144   - Create 1.4MB boot floppy image (arch/x86/boot/fdimage)
-  fdimage288   - Create 2.8MB boot floppy image (arch/x86/boot/fdimage)
-  isoimage     - Create a boot CD-ROM image (arch/x86/boot/image.iso)
-                  bzdisk/fdimage*/isoimage also accept:
-                  FDARGS="..."  arguments for the booted kernel
-                  FDINITRD=file initrd for the booted kernel
+	* `bzImage`——压缩内核镜像 (arch/x86/boot/bzImage)
+    * `install` ——使用`~/bin/installkernel`或 ` (distribution) /sbin/installkernel `安装内核 或者安装到 `$(INSTALL_PATH)`并运行 lilo
+	* `fdimage`      —— 创建 1.4MB软盘启动镜像 (arch/x86/boot/fdimage)
+	* `fdimage144`—— 创建 1.4MB软盘启动镜像 (arch/x86/boot/fdimage)
+	* `fdimage288`—— 创建 2.8MB软盘启动镜像 (arch/x86/boot/fdimage)
+	* `isoimage`—— 创建 CD-ROM启动镜像 (arch/x86/boot/image.iso)， bzdisk/fdimage*/isoimage可以跟随以下参数
+		* FDARGS="..." ——引导内核的参数 
+		* FDINITRD=file ——引导内核的initrd
+	*  `i386_defconfig`——  i386默认配置
+	* `x86_64_defconfig`—— x86_64默认配置
 
-  i386_defconfig           - Build for i386
-  x86_64_defconfig         - Build for x86_64
-
-  make V=0|1 [targets] 0 => quiet build (default), 1 => verbose build
-  make V=2   [targets] 2 => give reason for rebuild of target
-  make O=dir [targets] Locate all output files in "dir", including .config
-  make C=1   [targets] Check re-compiled c source with $CHECK (sparse by default)
-  make C=2   [targets] Force check of all c source with $CHECK
-  make RECORDMCOUNT_WARN=1 [targets] Warn about ignored mcount sections
-  make W=n   [targets] Enable extra gcc checks, n=1,2,3 where
-		1: warnings which may be relevant and do not occur too often
-		2: warnings which occur quite often but may still be relevant
-		3: more obscure warnings, can most likely be ignored
-		Multiple levels can be combined with W=12 or W=123
+ 
 
 
-Architecture specific targets (arm):
-* zImage        - Compressed kernel image (arch/arm/boot/zImage)
+* arm
+* zImage——压缩内核镜像 (arch/arm/boot/zImage)
   Image         - Uncompressed kernel image (arch/arm/boot/Image)
 * xipImage      - XIP kernel image, if configured (arch/arm/boot/xipImage)
   uImage        - U-Boot wrapped zImage
@@ -318,13 +303,17 @@ Architecture specific targets (arm):
   zeus_defconfig           - Build for zeus
   zx_defconfig             - Build for zx
 
-  make V=0|1 [targets] 0 => quiet build (default), 1 => verbose build
-  make V=2   [targets] 2 => give reason for rebuild of target
-  make O=dir [targets] Locate all output files in "dir", including .config
-  make C=1   [targets] Check re-compiled c source with $CHECK (sparse by default)
-  make C=2   [targets] Force check of all c source with $CHECK
-  make RECORDMCOUNT_WARN=1 [targets] Warn about ignored mcount sections
-  make W=n   [targets] Enable extra gcc checks, n=1,2,3 where
+
+# 10 其它目标
+ * make V=0|1|2 [targets]
+	* 0 => quiet build (default), 
+	* 1 => verbose build
+	* 2 => give reason for rebuild of target
+*  make O=dir [targets] Locate all output files in "dir", including .config
+*  make C=1   [targets] Check re-compiled c source with $CHECK (sparse by default)
+* make C=2   [targets] Force check of all c source with $CHECK
+*  make RECORDMCOUNT_WARN=1 [targets] Warn about ignored mcount sections
+*  make W=n   [targets] Enable extra gcc checks, n=1,2,3 where
 		1: warnings which may be relevant and do not occur too often
 		2: warnings which occur quite often but may still be relevant
 		3: more obscure warnings, can most likely be ignored
@@ -332,8 +321,8 @@ Architecture specific targets (arm):
 
 
 
-————————————
+------
 
 &emsp;&emsp;<font color=blue>**_版权声明_**</font>：<font color=red>未经作者允许，<font color=blue>严禁用于商业出版</font>，否则追究法律责任。网络转载请注明出处，这是对原创者的起码的尊重！！！</font>
 
-————————————
+------
