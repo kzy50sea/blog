@@ -109,7 +109,7 @@ func.o:func.cpp
 
 ## 2.4 Makefile文件名
 &emsp;&emsp;默认的情况下，make命令会在当前目录下按顺序找寻文件名为“GNUmakefile”、“gnumakefile”，“makefile”、“Makefile”的文件。
-&emsp;&emsp;当然，你可以使用别的文件名来书写Makefile，比如：“xxxx”，但要用用make的“-f FILE”选项指定该文件为Makefile文件，如：`make -f xxxx`。
+&emsp;&emsp;当然，你可以使用别的文件名来书写Makefile，比如：“xxxx”，但要用make的“-f FILE”选项指定该文件为Makefile文件，如：`make -f xxxx`。
 
 ## 2.5 引入其它的Makefile
 
@@ -124,14 +124,14 @@ include filename1 filename2... //filename可以保含路径和通配符(只适�
 
 &emsp;&emsp;如果有文件没有找到的话，make会生成一条警告信息，但不会马上出现致命错误。它会继续载入其它的文件，一旦完成makefile的读取，make会再重试这些没有找到，或是不能读取的文件，如果还是不行，make才会出现一条致命信息。如果你想让make不理那些无法读取的文件，而继续执行，你可以在include前加一个减号“-”，表示无论include过程中出现什么错误，都不要报错继续执行，如 `-include <filename>`。
 
-##2.6 环境变量MAKEFILES
+## 2.6 环境变量MAKEFILES
 
 &emsp;&emsp;如果你的当前环境中定义了环境变量MAKEFILES，那么，make会把这个变量中的值做一个类似于include的动作。这个变量中的值是其它的Makefile，用空格分隔。只是，它和include不同的是，从这个环境变中引入的Makefile的“目标”不会起作用，如果环境变量中定义的文件发现错误，make也会不理。
 
 
 
 
-##2.7 覆盖其它Makefile的部分
+## 2.7 覆盖其它Makefile的部分
 有两种方式：
 
 * 对于`inlclude`引入的其它makefile，相同的规则（目标与依赖都相同），在后面展开的的会覆盖在前面展开的（）
@@ -139,7 +139,7 @@ include filename1 filename2... //filename可以保含路径和通配符(只适�
 
 
 
-##2.8 make如何读取Makefile
+## 2.8 make如何读取Makefile
 
 GNU的make工作时的执行步骤入下：
 
@@ -203,7 +203,7 @@ immediate : immediate ; deferred
     deferred
 ```
 
-##2.9 再次展开 
+## 2.9 再次展开 
 &emsp;&emsp;make可对依赖项在立即展开后再次展开，再次展开发生在第二阶段前。一般是因为第一次展开后make将其解释为字符串而不是make语法。`.SECONDEXPANSION`关键字表示将后面的内容多次展开。
 ```
 .SECONDEXPANSION:
@@ -224,7 +224,7 @@ main.exe:$(objs1) $$(objs2)
 gcc -o $@ $^
 ```
 
-#3 显式规则
+# 3 显式规则
 
 ```
 target: dependency  //目标项:依赖项
@@ -242,8 +242,8 @@ target: dependency_files; command1
 * 怎样更新目标项。
 * **依赖关系中最好加入头文件**。原因在于头文件改变，实现文件未改变时，不会重新编译目标。
 
-##3.1 目标项和依赖项
-###3.1.1 依赖项的类型
+## 3.1 目标项和依赖项
+### 3.1.1 依赖项的类型
 * 普通依赖项
 当普通依赖项新于目标项时，默认情况下目标项要更新。
 * 顺序依赖项
@@ -258,9 +258,9 @@ $(OBJDIR)/%.o:%.cc | $(OBJDIR)
 $(OBJDIR):
     mkdir $(OBJDIR)
 ```
-###3.1.2 使用通配符
+### 3.1.2 使用通配符
 |符号|含义|
-|--|--|
+|:--|:--|
 |*|匹配0个或多个字符|
 |?|匹配1个字符|
 |[abc]|匹配abc中的任意1个字符|
@@ -272,7 +272,7 @@ $(OBJDIR):
 * 用通配对变量赋值时解析为字符串
 * 通配符展开时，是把所有匹配的结果都展开。
 
-###3.1.3 设置依赖项的搜索路径
+### 3.1.3 设置依赖项的搜索路径
 * 使用make环境变量`VPATH=dir1:dir2`
 * 使用`vpath`关键字（注意，它是全小写的），它可以指定不同的文件在不同的搜索目录中。它的使用方法有三种：
  * `vpath <pattern> <directories>`
@@ -285,13 +285,13 @@ $(OBJDIR):
 * 搜索路径也适用于隐式规则
 * 如果依赖项是库`-lxxx`，则先搜索`-libxxx.so`再搜索`-libxxx.a`。
 
-###3.1.4 伪目标
+### 3.1.4 伪目标
 * 伪目标就是指不是文件名的目标。
 * `.PHONY`关键字表示它后面列表中的依赖项均为伪目标。
 * **伪目标可以有依赖项**。
 * 伪目标和相同的普通目标区别在于：
- * 伪目标的执行需要显式指定（除非只有伪目标），而后者则是默认执行
- * 当存在同名文件时，后者会认为目标始终最新而不执行命令，伪目标则会执行命令。
+   * 伪目标的执行需要显式指定（除非只有伪目标），而后者则是默认执行
+   * 当存在同名文件时，后者会认为目标始终最新而不执行命令，伪目标则会执行命令。
 ```
 //例main.c中使用了fun.c中的函数，Makefile如下：
 
@@ -312,14 +312,14 @@ $make clean   //表示执行目标 clean: 开始的命令段
 $make func.o  //表示执行目标 func.o: 开始的命令段
 $make rebuild //则先执行目标rebuild，先清除clean，再重新编译连接main.exe
 ```
-###3.1.5 不带依赖项或命令
+### 3.1.5 不带依赖项或命令
 * 普通目标和伪目标都可以不带依赖项
 * 普通目标和伪目标都可以不带依赖项和命令
 * 普通目标绝不能只带依赖项不带命令(除非使用了.DEFAULT)
 
-###3.1.6 特殊目标
+### 3.1.6 特殊目标
 |名字|描述|
-|--|--|
+|:--|:--|
 |.PHONY|依赖项被视为伪目标|
 |.SUFFIXES|其依赖项被用于定义隐式规则所需的后缀|
 |.DEFAULT|为所有不是显式或隐式规则的目标的依赖项设置默认命令
@@ -337,7 +337,7 @@ $make rebuild //则先执行目标rebuild，先清除clean，再重新编译连�
 |.POSIX|makefile将以符合POSIX的模式进行解析和运行
 
 
-###3.1.7 一个规则多个目标
+### 3.1.7 一个规则多个目标
 
 ```
 target1 tarhet2 : dependency
@@ -350,7 +350,7 @@ target1 : dependency
 tarhet2 : dependency
     command
 ```
-###3.1.8 一个目标多个规则
+### 3.1.8 一个目标多个规则
 &emsp;&emsp;一个目标可有可以有多个规则，所有的依赖项都合并为依赖项列表，但是如果有多个命令则只有最后一个命令会执行。
 ```
 target1 : dependency
@@ -359,7 +359,7 @@ target1 : dependency
 target1 : dependency
     command
 ```
-###3.1.9 静态模式
+### 3.1.9 静态模式
 ```
 targets...: target-pattern: prereq-patterns
    command
@@ -371,7 +371,7 @@ targets...: target-pattern: prereq-patterns
 *  与隐式规则的区别在于： 隐式规则适用于任何与目标模式匹配的目标，但要求有依赖项且没有命令。
  
 
-###3.1.10 双冒号规则
+### 3.1.10 双冒号规则
 ```
 target::dependency
    command
@@ -381,13 +381,13 @@ target::dependency
  * 普通规则只执行最后出现的规则的命令
  * 双冒号规则则会执行每个规则的命令，即使目标已经存在。
 
-###3.1.11 自动生成依赖项
+### 3.1.11 自动生成依赖项
 * gcc/g++会自动生成依赖关系
- * -M：生成依赖关系包括库文件
- * -MM：生成依赖关系不包括库文件
+   * -M：生成依赖关系包括库文件
+   * -MM：生成依赖关系不包括库文件
 
 
-##3.2 命令
+## 3.2 命令
 ```
 target: dependency  //目标项:依赖项
     command1           
@@ -399,54 +399,54 @@ target: dependency_files; command1
     command2
 ```
 * 基本语法
- * 必须以TAB键开头
- * 连续多行一TAB键开头的命令为同一规则的命令
- * 命令的基本语法和shell脚本一样
-     * 注释用#
-     * 长行分割用\
- * 命令中可以使用makefile变量
+	* 必须以TAB键开头
+	* 连续多行一TAB键开头的命令为同一规则的命令
+	* 命令的基本语法和shell脚本一样
+		* 注释用#
+		* 长行分割用\
+	* 命令中可以使用makefile变量
 * 命令显示
- * 命令以@开头表示只执行但不显示命令
- * make的-n选项表示只显示而不执行命令
- * -s选项表示执行时禁止显示所有命令
+	* 命令以@开头表示只执行但不显示命令
+	* make的-n选项表示只显示而不执行命令
+	* -s选项表示执行时禁止显示所有命令
 * 命令执行
- * 当依赖项新于目标项时（时间上新于或者依赖项不存在），就执行命令
- * make调用子shell执行命令
- * 每行命令调用一个shell（除非使用了`.ONESHELL`特殊目标）
- * 如果你要让上一条命令的结果应用在下一条命令，要将命令放在同一行，用分号分隔
- * 可以使用预定义变量SHELL来指定shell，用.SHELLFLAGS指定shell选项
- * 并行执行
-     * 正常情况，每次执行一条命令
-     * make的-j n选项可以设置一次执行的命令数，-l n 选项可以设置最大负载
-     * 特殊目标.NOTPARALLEL禁止并行执行命令
-     * 并行执行时，结果一产生就输出，因此可能变得混乱，可以通过make 的`-O[type]`选项执行输出方式
-         * 如果type被省略或type是target，则一但一个规则的所有命令执行完毕，则输出
-         * 如果type是line，则一行的所有命令执行完毕，则输出
-         * 如果type是recurse，则一但递归调用的所有命令执行完毕，则输出
-         * 如果不指定`-O`选项或type是none，则禁用输出同步，每个命令的结果一产生就输出。
+	* 当依赖项新于目标项时（时间上新于或者依赖项不存在），就执行命令
+	* make调用子shell执行命令
+	* 每行命令调用一个shell（除非使用了`.ONESHELL`特殊目标）
+	* 如果你要让上一条命令的结果应用在下一条命令，要将命令放在同一行，用分号分隔
+	* 可以使用预定义变量SHELL来指定shell，用.SHELLFLAGS指定shell选项
+	* 并行执行
+		* 正常情况，每次执行一条命令
+		* make的-j n选项可以设置一次执行的命令数，-l n 选项可以设置最大负载
+		* 特殊目标.NOTPARALLEL禁止并行执行命令
+		* 并行执行时，结果一产生就输出，因此可能变得混乱，可以通过make 的`-O[type]`选项执行输出方式
+			* 如果type被省略或type是target，则一但一个规则的所有命令执行完毕，则输出
+			* 如果type是line，则一行的所有命令执行完毕，则输出
+			* 如果type是recurse，则一但递归调用的所有命令执行完毕，则输出
+			* 如果不指定`-O`选项或type是none，则禁用输出同步，每个命令的结果一产生就输出。
 * 命令出错
- * 每当命令运行完后，make会检测每个命令的返回码，如果命令返回成功，那么make会执行下一条命令，当规则中所有的命令成功返回后，这个规则就算是成功完成了。如果一个规则中的某个命令出错了（命令退出码非零），那么make就会终止执行当前规则，这将有可能终止所有规则的执行。
- * 命令以-开头表示忽略命令执行过程中的错误
- * make选项`-i`，表示忽略所有命令执行过程中的错误
- * make选项`-k`，表示如果某规则中的命令出错了，那么就终目该规则的执行，但继续执行其它规则。
- * 特殊目标`.IGNORE`，表示忽略其依赖项所在规则的命令执行错误
+	* 每当命令运行完后，make会检测每个命令的返回码，如果命令返回成功，那么make会执行下一条命令，当规则中所有的命令成功返回后，这个规则就算是成功完成了。如果一个规则中的某个命令出错了（命令退出码非零），那么make就会终止执行当前规则，这将有可能终止所有规则的执行。
+	* 命令以-开头表示忽略命令执行过程中的错误
+	* make选项`-i`，表示忽略所有命令执行过程中的错误
+	* make选项`-k`，表示如果某规则中的命令出错了，那么就终目该规则的执行，但继续执行其它规则。
+	* 特殊目标`.IGNORE`，表示忽略其依赖项所在规则的命令执行错误
 * 递归执行make
- * 在一些大的工程中，我们会把我们不同模块或是不同功能的源文件放在不同的目录中，我们可以在每个目录中都书写一个该目录的Makefile，然后在工程目录上设置一个总控makefile
- * make调用
-     * 递归使用make意味着使用make作为makefile中的命令，但不是直接使用make而是使用预定义变量`MAKE`
-     * “-t”,“-n”,和“-q”会失效。
- * 变量传递
-     * 总控Makefile的变量可以传递到下级的Makefile中，但是不会覆盖下层的Makefile中所定义的变量，除非指定了“-e”参数。
-     * `export <variable...>`：传递变量到下级Makefile
-     * `unexport <variable...>`：禁止变量传递到下级Makefile
-     * `export`：传递所有的变量到下级Makefile
- * make选项传递
-     * 通过预定义变量`MAKEFLAGS`传递
-     * 选项“-C”,“-f”,“-h”“-o”和“-W”不会往下层传递
-     * 选项“-w”输出执行前后的目录。
-     * 选项“-C”来指定make下层Makefile，且“-w”会被自动打开的。
-     * 选项“-s”或“--no-print-directory”自动关闭“-w”。
-* 多行命令
+	* 在一些大的工程中，我们会把我们不同模块或是不同功能的源文件放在不同的目录中，我们可以在每个目录中都书写一个该目录的Makefile，然后在工程目录上设置一个总控makefile
+	* make调用
+		* 递归使用make意味着使用make作为makefile中的命令，但不是直接使用make而是使用预定义变量`MAKE`
+		* “-t”,“-n”,和“-q”会失效。
+	* 变量传递
+		* 总控Makefile的变量可以传递到下级的Makefile中，但是不会覆盖下层的Makefile中所定义的变量，除非指定了“-e”参数。
+		* `export <variable...>`：传递变量到下级Makefile
+		* `unexport <variable...>`：禁止变量传递到下级Makefile
+		* `export`：传递所有的变量到下级Makefile
+	* make选项传递
+		* 通过预定义变量`MAKEFLAGS`传递
+		* 选项“-C”,“-f”,“-h”“-o”和“-W”不会往下层传递
+		* 选项“-w”输出执行前后的目录。
+		* 选项“-C”来指定make下层Makefile，且“-w”会被自动打开的。
+		* 选项“-s”或“--no-print-directory”自动关闭“-w”。
+	* 多行命令
 ```
 define cmd_lable[=|+=|:=|?=]
     cmd1
@@ -455,9 +455,9 @@ define cmd_lable[=|+=|:=|?=]
 endef
 ```
 
-#4 特殊字符
+# 4 特殊字符
 |字符|描述|
-|--|--|
+|:--|:--|
 |\	|换行符或者转义符号|
 |#|#	注释符,一定要另起一行不然容易出错|
 |@|	如果命令以@开头则不显示当前执行的命令|
@@ -468,24 +468,24 @@ endef
 |$$	|$字符
 |$(var)|	取变量var的值
 
-#5 变量
+# 5 变量
 &emsp;&emsp;在Makefile中的定义的变量，就像是C/C++语言中的宏一样，他代表了一个文本字串，在Makefile中执行的时候其会自动原模原样地展开在所使用的地方。在Makefile中，变量可以使用在“目标”，“依赖目标”，“命令”或是Makefile的其它部分中。
 
 &emsp;&emsp;变量的命名字可以包含字符、数字，下划线（可以是数字开头），但不应该含有“:”、“#”、“=”或是空字符（空格、回车等）。推荐使用大小写搭配的变量名,可以避免和系统变量冲突。
 
 
-##5.1 变量定义和引用
+## 5.1 变量定义和引用
 
 * 定义变量和赋值
- * `变量名=值`：递规变量展开(几个变量共享一个值)，如`a=b；b=c；c=10；`，则执行时a就会与c相同
- * `变量名:=值`或 `变量名::=值`：简单变量展开。
- * `变量名?=值`：如果变量之前定义过，则什么也不做，否则，定义变量并赋值
+	* `变量名=值`：递规变量展开(几个变量共享一个值)，如`a=b；b=c；c=10；`，则执行时a就会与c相同
+	* `变量名:=值`或 `变量名::=值`：简单变量展开。
+	* `变量名?=值`：如果变量之前定义过，则什么也不做，否则，定义变量并赋值
 * 使用变量
- * `$(变量名)`或`${变量名}`  ：取某个变量的值
+	* `$(变量名)`或`${变量名}`  ：取某个变量的值
 
 * 变量值替换，不会改变原来变量的值
- * `$(var:.a=.b)`或`${var:.a=.b}`，变量“var”中所有以“.a”结尾的字符串中的“.a”替换成“.b”。
- * 使用模式规则：`$(var:%.a=%.b)`，变量“var”中所有和%.a匹配的字符串替换为和%.b匹配的字符串。
+	* `$(var:.a=.b)`或`${var:.a=.b}`，变量“var”中所有以“.a”结尾的字符串中的“.a”替换成“.b”。
+	* 使用模式规则：`$(var:%.a=%.b)`，变量“var”中所有和%.a匹配的字符串替换为和%.b匹配的字符串。
 * 把变量的值再当成变量：` var1 := $($(var2))`
 * 变量追加：`var+=value`或`var:=$(var) value`
      * 如果变量之前没有定义过，那么，“+=”会自动变成“=”，
@@ -502,11 +502,11 @@ endef
 ```
 * 取消变量定义：`undefine var`
 * 禁止继承变量：
- * `target:private 变量赋值`禁止依赖项继承目标变量，
- * `private 变量赋值`禁止任何规则和目标继承全局变量
+	* `target:private 变量赋值`禁止依赖项继承目标变量，
+	* `private 变量赋值`禁止任何规则和目标继承全局变量
 
 
-##5.2 变量分类
+## 5.2 变量分类
 * 普通变量：使用`variable-assignment`定义的变量，一般为全局变量
 * 特定目标变量：只在指定目标的规则中有效的变量。`target:[override] variable-assign`
 * 特定模式变量：就是将模式规则用于目标变量，`pattern: [override] variable-assignment`
@@ -514,7 +514,7 @@ endef
 * 自动变量：指在使用的时候，自动用特定的值替换。常用的有：
 
 |变量|	说明|
-|--|--|
+|:--|:--|
 |\$@|当前规则的目标文件。在多目标的模式规则中，它代表的是触发规则被执行的目标文件名
 |\$* |不包含扩展名的目标文件名称
 |\$%|规则的目标文件是一个库文件时，代表库的第一个成员名，如果目标不是函数库文件，其值为空。
@@ -528,8 +528,8 @@ endef
 |\$(*F)|不包含扩展名的目标文件名称的文件名部分。
 |\$(%D)|当以如`archive(member)`形式静态库为目标时，分别表示库文件成员`member`名中的目录部分
 |\$(%F)|当以如`archive(member)`形式静态库为目标时，分别表示库文件成员`member`名中的文件名部分。
-|\$(< D)|规则中第一个依赖文件的目录部分
-|\$(< F)|规则中第一个依赖文件的文件名部分
+|\$(<D)|规则中第一个依赖文件的目录部分
+|\$(<F)|规则中第一个依赖文件的文件名部分
 |\$(^D)|所有依赖文件的目录部分（不存在同一文件）
 |\$(^F)|所有依赖文件的文件名部分（不存在同一文件）。
 |\$(+D)|所有依赖文件的目录部分（可存在重复文件）。
@@ -539,12 +539,13 @@ endef
 
 
 * 预定义（默认）变量：内部事先定义好的变量，但是它的值是固定的，并且有些的值是为空的。
-|变量|	说明|变量|	说明|
-|--|--|
+
+|变量|说明|变量|	说明|
+|:--|:--|:--|:--|
 |AR|函数库打包程序，默认“ar”。|ARFLAGS|库打包程序参数，默认是“rv”。
 |AS|编译程序，默认是“as”|ASFLAGS|汇编程序参数
 |CC|c编译器，默认cc	|CFLAGS|c编译器参数
-|CXX|c++编译器，默认为 g++|	CXXFLAGS|c++编译器参数
+|CXX|cPP编译器，默认为 g++|	CXXFLAGS|cPP编译器参数
 |CPP|c预编译器，默认为$(CC) –E	|CPPFLAGS|c预编译器参数
 |CO |从RCS文件中扩展文件程序。默认为co。|COFLAGS|RCS命令参数
 |FC |Fortran 和 Ratfor的编译器和预处理器。默认是f77|FFLAGS|Fortran编译器参数|
@@ -567,8 +568,9 @@ endef
 
 
 * 环境变量：设置make运行环境的变量，包括系统环境变量。
+
 |变量|	说明|
-|--|--|
+|:--|:--|
 |VPATH|依赖项查找路径
 |MAKEFILES|引入的makefile所在路径
 |MAKE|make程序|
@@ -576,8 +578,9 @@ endef
 
 
 * 特殊变量
+
 |变量|	说明|
-|--|--|
+|:--|:--|
 |MAKEFILE_LIST|make解析的makefile文件名列表|
 |MAKE_RESTARTS|make重新开始的次数
 |MAKE_TERMOUT|标准输出设备|
@@ -594,7 +597,7 @@ endef
 
 
 
-#6 条件语句
+# 6 条件语句
 
 ```
 conditional-directive
@@ -620,18 +623,16 @@ text-if-one-and-two-are-false
 endif
 ```
 * 条件指令
- * `ifeq|ifneq (arg1, arg2)`
- * `ifeq|ifneq 'arg1' 'arg2'`
- * `ifeq|ifneq "arg1" "arg2"`
- * `ifeq|ifneq "arg1" 'arg2'`
- * `ifeq|ifneq 'arg1' "arg2"`
- * `ifdef|ifndef variable-name`
+	 * `ifeq|ifneq (arg1, arg2)`
+	 * `ifeq|ifneq 'arg1' 'arg2'`
+	 * `ifeq|ifneq "arg1" "arg2"`
+	 * `ifeq|ifneq "arg1" 'arg2'`
+	 * `ifeq|ifneq 'arg1' "arg2"`
+	 * `ifdef|ifndef variable-name`
 
-#7 函数
-##7.1 函数调用语法
-一、函数的调用语法
-
-```
+# 7 函数
+## 7.1 函数调用语法
+```makefile
 $(function arg1,arg2...)
 
 #或
@@ -639,261 +640,256 @@ $(function arg1,arg2...)
 ${function arg1,arg2...}
 ```
 
-##7.2 字符串处函数
+## 7.2 字符串处函数
 * `$(subst <from>,<to>,<text> )`
- * 名称：字符串替换函数——subst。
- * 功能：把字串`<text>`中的`<from>`字符串替换成`<to>`。
- * 返回：函数返回被替换过后的字符串。
- * 示例：`$(subst ee,EE,feet on the street)`，把“feet on the street”中的“ee”替换成“EE”，返回结果是“fEEt on the strEEt”。
-
+	 * 名称：字符串替换函数——subst。
+	 * 功能：把字串`<text>`中的`<from>`字符串替换成`<to>`。
+	 * 返回：函数返回被替换过后的字符串。
+	 * 示例：`$(subst ee,EE,feet on the street)`，把“feet on the street”中的“ee”替换成“EE”，返回结果是“fEEt on the strEEt”。
 * `$(patsubst <pattern>,<replacement>,<text> )`
- * 名称：模式字符串替换函数——patsubst。
- * 功能：查找`<text>`中的单词（单词以“空格”、“Tab”或“回车”“换行”分隔）是否符合模式`<pattern>`，如果匹配的话，则以`<replacement>`替换。这里，`<pattern>`可以包括通配符“%”，表示任意长度的字串。如果`<replacement>`中也包含“%”，那么，`<replacement>`中的这个“%”将是`<pattern>`中的那个“%”所代表的字串。（可以用“\”来转义，以“\%”来表示真实含义的“%”字符）
- * 返回：函数返回被替换过后的字符串。
- * 示例：`$(patsubst %.c,%.o,x.c.c bar.c)`，把字串“x.c.c bar.c”符合模式[%.c]的单词替换成[%.o]，返回结果是“x.c.o bar.o”
+	 * 名称：模式字符串替换函数——patsubst。
+	 * 功能：查找`<text>`中的单词（单词以“空格”、“Tab”或“回车”“换行”分隔）是否符合模式`<pattern>`，如果匹配的话，则以`<replacement>`替换。这里，`<pattern>`可以包括通配符“%”，表示任意长度的字串。如果`<replacement>`中也包含“%”，那么，`<replacement>`中的这个“%”将是`<pattern>`中的那个“%”所代表的字串。（可以用“\”来转义，以“\%”来表示真实含义的“%”字符）
+	 * 返回：函数返回被替换过后的字符串。
+	 * 示例：`$(patsubst %.c,%.o,x.c.c bar.c)`，把字串“x.c.c bar.c”符合模式[%.c]的单词替换成[%.o]，返回结果是“x.c.o bar.o”
 * `$(strip <string>)`
- * 名称：去空格函数——strip。
- * 功能：去掉`<string>`字串中开头和结尾的空字符。
- * 返回：返回被去掉空格的字符串值。
- * 示例：`$(strip a b c )`,把字串“a b c ”去到开头和结尾的空格，结果是“a b c”。
+	* 名称：去空格函数——strip。
+	* 功能：去掉`<string>`字串中开头和结尾的空字符。
+	* 返回：返回被去掉空格的字符串值。
+	* 示例：`$(strip a b c )`,把字串“a b c ”去到开头和结尾的空格，结果是“a b c”。
 * `$(findstring <find>,<in> )`
- * 名称：查找字符串函数——findstring。
- * 功能：在字串`<in>`中查找`<find>`字串。
- * 返回：如果找到，那么返回`<find>`，否则返回空字符串。
- * 示例：` $(findstring a,a b c)`返回“a”字符串。
+	 * 名称：查找字符串函数——findstring。
+	 * 功能：在字串`<in>`中查找`<find>`字串。
+	 * 返回：如果找到，那么返回`<find>`，否则返回空字符串。
+	 * 示例：` $(findstring a,a b c)`返回“a”字符串。
 * `$(filter <pattern...>,<text> )`
- * 名称：过滤函数——filter。
- * 功能：以`<pattern>`模式过滤`<text>`字符串中的单词，保留符合模式`<pattern>`的单词。可以有多个模式。
- * 返回：返回符合模式`<pattern>`的字串。
- * 示例：`$(filter %.c %.s,foo.c bar.c baz.s ugh.h)` 返回“foo.c bar.c baz.s”。
+	 * 名称：过滤函数——filter。
+	 * 功能：以`<pattern>`模式过滤`<text>`字符串中的单词，保留符合模式`<pattern>`的单词。可以有多个模式。
+	 * 返回：返回符合模式`<pattern>`的字串。
+	 * 示例：`$(filter %.c %.s,foo.c bar.c baz.s ugh.h)` 返回“foo.c bar.c baz.s”。
 * `$(filter-out <pattern...>,<text> )`
-名称：反过滤函数——filter-out。
-功能：以`<pattern>`模式过滤`<text>`字符串中的单词，去除符合模式`<pattern>`的单词。可以有多个模式。
- * 返回：返回不符合模式`<pattern>`的字串。
- * 示例：`$(filter-out %.c %.s,foo.c bar.c baz.s ugh.h)` 返回“ugh.h”。
+	* 名称：反过滤函数——filter-out。
+	* 功能：以`<pattern>`模式过滤`<text>`字符串中的单词，去除符合模式`<pattern>`的单词。可以有多个模式。
+	* 返回：返回不符合模式`<pattern>`的字串。
+	* 示例：`$(filter-out %.c %.s,foo.c bar.c baz.s ugh.h)` 返回“ugh.h”。
 * `$(sort <list>)`
- * 名称：排序函数——sort。
- * 功能：给字符串`<list>`中的单词排序（升序）。
- * 返回：返回排序后的字符串。
- * 示例：`$(sort foo bar lose)`返回“bar foo lose” 。
- * 备注：sort函数会去掉`<list>`中相同的单词。
+	 * 名称：排序函数——sort。
+	 * 功能：给字符串`<list>`中的单词排序（升序）。
+	 * 返回：返回排序后的字符串。
+	 * 示例：`$(sort foo bar lose)`返回“bar foo lose” 。
+	 * 备注：sort函数会去掉`<list>`中相同的单词。
 * `$(word <n>,<text> )`
- * 名称：取单词函数——word。
- * 功能：取字符串`<text>`中第`<n>`个单词。（从一开始）
- * 返回：返回字符串`<text>`中第`<n>`个单词。如果`<n>`比`<text>`中的单词数要大，那么返回空字符串。
- * 示例：`$(word 2, foo bar baz)`返回值是“bar”。
+	 * 名称：取单词函数——word。
+	 * 功能：取字符串`<text>`中第`<n>`个单词。（从一开始）
+	 * 返回：返回字符串`<text>`中第`<n>`个单词。如果`<n>`比`<text>`中的单词数要大，那么返回空字符串。
+	 * 示例：`$(word 2, foo bar baz)`返回值是“bar”。
 * `$(wordlist <s>,<e>,<text> )`
- * 名称：取单词串函数——wordlist。
- * 功能：从字符串`<text>`中取从`<s>`开始到`<e>`的单词串。`<s>`和`<e>`是一个数字。
- * 返回：返回字符串`<text>`中从`<s>`到`<e>`的单词字串。如果`<s>`比`<text>`中的单词数要大，那么返回空字符串。如果`<e>`大于`<text>`的单词数，那么返回从`<s>`开始，到`<text>`结束的单词串。
- * 示例：` $(wordlist 2, 3, foo bar baz)`返回值是“bar baz”。
+	 * 名称：取单词串函数——wordlist。
+	 * 功能：从字符串`<text>`中取从`<s>`开始到`<e>`的单词串。`<s>`和`<e>`是一个数字。
+	 * 返回：返回字符串`<text>`中从`<s>`到`<e>`的单词字串。如果`<s>`比`<text>`中的单词数要大，那么返回空字符串。如果`<e>`大于`<text>`的单词数，那么返回从`<s>`开始，到`<text>`结束的单词串。
+	 * 示例：` $(wordlist 2, 3, foo bar baz)`返回值是“bar baz”。
 * `$(words <text> )`
- * 名称：单词个数统计函数——words。
- * 功能：统计`<text>`中字符串中的单词个数。
- * 返回：返回`<text>`中的单词数。
- * 示例：`$(words, foo bar baz)`返回值是“3”。
- * 备注：如果我们要取`<text>`中最后的一个单词，我们可以这样：`$(word 
- $(words<text>),<text> )`。
+	 * 名称：单词个数统计函数——words。
+	 * 功能：统计`<text>`中字符串中的单词个数。
+	 * 返回：返回`<text>`中的单词数。
+	 * 示例：`$(words, foo bar baz)`返回值是“3”。
+	 * 备注：如果我们要取`<text>`中最后的一个单词，我们可以这样：`$(word 
+	 $(words<text>),<text> )`。
 * `$(firstword <text>)`
- * 名称：首单词函数——firstword。
- * 功能：取字符串`<text>`中的第一个单词。
- * 返回：返回字符串`<text>`的第一个单词。
- * 示例：`$(firstword foo bar)`返回值是“foo”。
- * 备注：这个函数可以用word函数来实现：`$(word 1,<text> )`。
+	 * 名称：首单词函数——firstword。
+	 * 功能：取字符串`<text>`中的第一个单词。
+	 * 返回：返回字符串`<text>`的第一个单词。
+	 * 示例：`$(firstword foo bar)`返回值是“foo”。
+	 * 备注：这个函数可以用word函数来实现：`$(word 1,<text> )`。
 * `$(lastword <text>)`
- * 名称：末单词函数——lastword。
- * 功能：取字符串`<text>`中的最后一个单词。
- * 返回：返回字符串`<text>`的最后一个单词。
- * 示例：`$(lastword foo bar)`返回值是“bar”。
- * 备注：这个函数可以用word函数来实现：`$(word $(words <text>),<text> )`。
+	 * 名称：末单词函数——lastword。
+	 * 功能：取字符串`<text>`中的最后一个单词。
+	 * 返回：返回字符串`<text>`的最后一个单词。
+	 * 示例：`$(lastword foo bar)`返回值是“bar”。
+	 * 备注：这个函数可以用word函数来实现：`$(word $(words <text>),<text> )`。
 
-##7.3 文件名操作函数
+## 7.3 文件名操作函数
 * `$(dir <names...> )`
- * 名称：取目录函数——dir。
- * 功能：从文件名序列`<names>`中取出目录部分。目录部分是指最后一个反斜杠（“/”）之前的部分。如果没有反斜杠，那么返回“./”。
- * 返回：返回文件名序列`<names>`的目录部分。
- * 示例： `$(dir src/foo.c hacks)`返回值是“src/ ./”。
+	 * 名称：取目录函数——dir。
+	 * 功能：从文件名序列`<names>`中取出目录部分。目录部分是指最后一个反斜杠（“/”）之前的部分。如果没有反斜杠，那么返回“./”。
+	 * 返回：返回文件名序列`<names>`的目录部分。
+	 * 示例： `$(dir src/foo.c hacks)`返回值是“src/ ./”。
 * `$(notdir <names...> )`
- * 名称：取文件函数——notdir。
- * 功能：从文件名序列`<names>`中取出非目录部分。非目录部分是指最后一个反斜杠（“/”）之后的部分。
- * 返回：返回文件名序列`<names>`的非目录部分。
- * 示例： `$(notdir src/foo.c hacks)`返回值是“foo.c hacks”。
+	 * 名称：取文件函数——notdir。
+	 * 功能：从文件名序列`<names>`中取出非目录部分。非目录部分是指最后一个反斜杠（“/”）之后的部分。
+	 * 返回：返回文件名序列`<names>`的非目录部分。
+	 * 示例： `$(notdir src/foo.c hacks)`返回值是“foo.c hacks”。
 * `$(suffix <names...> )`
- * 名称：取后缀函数——suffix。
- * 功能：从文件名序列`<names>`中取出各个文件名的后缀。
- * 返回：返回文件名序列`<names>`的后缀序列，如果文件没有后缀，则返回空字串。
- * 示例：`$(suffix src/foo.c src-1.0/bar.c hacks)`返回值是“.c .c”。
+	 * 名称：取后缀函数——suffix。
+	 * 功能：从文件名序列`<names>`中取出各个文件名的后缀。
+	 * 返回：返回文件名序列`<names>`的后缀序列，如果文件没有后缀，则返回空字串。
+	 * 示例：`$(suffix src/foo.c src-1.0/bar.c hacks)`返回值是“.c .c”。
 * `$(basename <names...> )`
- * 名称：取前缀函数——basename。
- * 功能：从文件名序列`<names>`中取出各个文件名的前缀部分,包括目录。
- * 返回：返回文件名序列`<names>`的前缀序列，如果文件没有前缀，则返回空字串。
- * 示例：`$(basename src/foo.c src-1.0/bar.c hacks)`返回值是“src/foo src-1.0/bar”。
+	 * 名称：取前缀函数——basename。
+	 * 功能：从文件名序列`<names>`中取出各个文件名的前缀部分,包括目录。
+	 * 返回：返回文件名序列`<names>`的前缀序列，如果文件没有前缀，则返回空字串。
+	 * 示例：`$(basename src/foo.c src-1.0/bar.c hacks)`返回值是“src/foo src-1.0/bar”。
 * `$(addsuffix <suffix>,<names...> )`
- * 名称：加后缀函数——addsuffix。
- * 功能：把后缀`<suffix>`加到`<names>`中的每个单词后面。
- * 返回：返回加过后缀的文件名序列。
- * 示例：`$(addsuffix .c,foo bar)`返回值是“foo.c bar.c”。
+	 * 名称：加后缀函数——addsuffix。
+	 * 功能：把后缀`<suffix>`加到`<names>`中的每个单词后面。
+	 * 返回：返回加过后缀的文件名序列。
+	 * 示例：`$(addsuffix .c,foo bar)`返回值是“foo.c bar.c”。
 * `$(addprefix <prefix>,<names...> )`
- * 名称：加前缀函数——addprefix。
- * 功能：把前缀`<prefix>`加到`<names>`中的每个单词后面。
- * 返回：返回加过前缀的文件名序列。
- * 示例：`$(addprefix src/,foo bar)`返回值是“src/foo src/bar”。
-
+	 * 名称：加前缀函数——addprefix。
+	 * 功能：把前缀`<prefix>`加到`<names>`中的每个单词后面。
+	 * 返回：返回加过前缀的文件名序列。
+	 * 示例：`$(addprefix src/,foo bar)`返回值是“src/foo src/bar”。
 * `$(wildcard <patter>)`
- * 名称：加前缀函数——addprefix。
- * 功能：把前缀`<prefix>`加到`<names>`中的每个单词后面。
- * 返回：返回加过前缀的文件名序列。
- * 示例：`$(addprefix src/,foo bar)`返回值是“src/foo src/bar”。
- 
-* `$(join <list1>,<list2> )`
- * 名称：连接函数——join。
- * 功能：把`<list2>`中的单词**对应**地加到`<list1>`的单词后面。如果`<list1>`的单词个数要比`<list2>`的多，那么，`<list1>`中的多出来的单词将保持原样。如果`<list2>`的单词个数要比<list1>多，那么，`<list2>`多出来的单词将被复制到`<list2>`中。
- * 返回：返回连接过后的字符串。
- * 示例：`$(join aaa bbb , 111 222 333)`返回值是“aaa111 bbb222 333”。
+	 * 名称：加前缀函数——addprefix。
+	 * 功能：把前缀`<prefix>`加到`<names>`中的每个单词后面。
+	 * 返回：返回加过前缀的文件名序列。
+	 * 示例：`$(addprefix src/,foo bar)`返回值是“src/foo src/bar”。
+ * `$(join <list1>,<list2> )`
+	 * 名称：连接函数——join。
+	 * 功能：把`<list2>`中的单词**对应**地加到`<list1>`的单词后面。如果`<list1>`的单词个数要比`<list2>`的多，那么，`<list1>`中的多出来的单词将保持原样。如果`<list2>`的单词个数要比<list1>多，那么，`<list2>`多出来的单词将被复制到`<list2>`中。
+	 * 返回：返回连接过后的字符串。
+	 * 示例：`$(join aaa bbb , 111 222 333)`返回值是“aaa111 bbb222 333”。
 * `$(wildcard <pattern>)`
- * 名称：当前目录文件搜索函数——addprefix。
- * 功能：使用通配符搜索当前目录下匹配`<pattern>`的文件，文件名以空格间隔。
- * 返回：返回匹配`<pattern>`的文件名。
- * 示例：假设当前目录下有`main.c add.c `,`$(wildcard m*.c)`返回值是“main.c”。
-
+	 * 名称：当前目录文件搜索函数——addprefix。
+	 * 功能：使用通配符搜索当前目录下匹配`<pattern>`的文件，文件名以空格间隔。
+	 * 返回：返回匹配`<pattern>`的文件名。
+	 * 示例：假设当前目录下有`main.c add.c `,`$(wildcard m*.c)`返回值是“main.c”。
 * `$(realpath <name>)`
- * 名称：真实路径函数——realpath。
- * 功能：计算`<name>`的真实路径（绝对路径且跟随符号链接），以空格间隔。`<name>`支持通配符。
- * 返回：返回`<name>`的真实路径，以空格间隔。
- * 示例：假设用户主目录下有`main.c`链接到该目录下的`test.c` , `$(realpath main.c)`返回值是“/home/usrname/test.c”。
+	 * 名称：真实路径函数——realpath。
+	 * 功能：计算`<name>`的真实路径（绝对路径且跟随符号链接），以空格间隔。`<name>`支持通配符。
+	 * 返回：返回`<name>`的真实路径，以空格间隔。
+	 * 示例：假设用户主目录下有`main.c`链接到该目录下的`test.c` , `$(realpath main.c)`返回值是“/home/usrname/test.c”。
 * `$(abspath <name>)`
- * 名称：绝对路径函数——abspath。
- * 功能：计算`<name>`的绝对路径（不跟随符号链接），以空格间隔。`<name>`支持通配符。
- * 返回：返回`<name>`的绝对路径，以空格间隔。
- * 示例：假设用户主目录下有`main.c`链接到该目录下的`test.c` , `$(realpath main.c)`返回值是“/home/usrname/main.c”。
+	 * 名称：绝对路径函数——abspath。
+	 * 功能：计算`<name>`的绝对路径（不跟随符号链接），以空格间隔。`<name>`支持通配符。
+	 * 返回：返回`<name>`的绝对路径，以空格间隔。
+	 * 示例：假设用户主目录下有`main.c`链接到该目录下的`test.c` , `$(realpath main.c)`返回值是“/home/usrname/main.c”。
  
 
-##7.4 条件函数
+## 7.4 条件函数
 
 * `$(if <condition>,<then-part>[,<else-part>])`
- * 名称：如果函数——if。
- * 功能：if函数可以包含“else-part”部分，或是不含。`<condition>`参数是if的表达式，如果其返回的为非空字符串，那么这个表达式就相当于返回真，于是，`<then-part>`会被计算，否则`<else-part>` 会被计算。
- * 返回：如果`<condition>`为真（非空字符串），那个`<then- part>`会是整个函数的返回值，如果`<condition>`为假（空字符串），那么`<else-part>`会是整个函数的返回值，此时如果`<else-part>`没有被定义，那么，整个函数返回空字串。
- * 示例：`$(if a,b,c)`返回"b"。
-
+	 * 名称：如果函数——if。
+	 * 功能：if函数可以包含“else-part”部分，或是不含。`<condition>`参数是if的表达式，如果其返回的为非空字符串，那么这个表达式就相当于返回真，于是，`<then-part>`会被计算，否则`<else-part>` 会被计算。
+	 * 返回：如果`<condition>`为真（非空字符串），那个`<then- part>`会是整个函数的返回值，如果`<condition>`为假（空字符串），那么`<else-part>`会是整个函数的返回值，此时如果`<else-part>`没有被定义，那么，整个函数返回空字串。
+	 * 示例：`$(if a,b,c)`返回"b"。
 * `$(or condition1[,condition2[,condition3…]])`
- * 名称：或函数——or。
- * 功能：对每个进行逻辑或操作，可短路。
- * 返回：如果某个`<condition>`为非空则返回该`<condition>`，否则返回空字符串
- * 示例：`$(or a,b,c)`返回"a"。
+	 * 名称：或函数——or。
+	 * 功能：对每个进行逻辑或操作，可短路。
+	 * 返回：如果某个`<condition>`为非空则返回该`<condition>`，否则返回空字符串
+	 * 示例：`$(or a,b,c)`返回"a"。
 * `$(and condition1[,condition2[,condition3…]])`
- * 名称：且函数——and。
- * 功能：对每个进行逻辑且操作，可短路。
- * 返回：如果某个`<condition>`为空则返回空字符串，否则返回最后一个`<condition>`。
- * 示例：`$(and a,b,c)`返回"c"。
+	 * 名称：且函数——and。
+	 * 功能：对每个进行逻辑且操作，可短路。
+	 * 返回：如果某个`<condition>`为空则返回空字符串，否则返回最后一个`<condition>`。
+	 * 示例：`$(and a,b,c)`返回"c"。
 
-##7.5 foreach函数
+## 7.5 foreach函数
 
 * `$(foreach <var>,<list>,<text> )`
- * 名称：遍历函数——foreach。
- * 功能：把参数`<list>`中的单词逐一取出放到参数`<var>`所指定的变量中，然后再执行`<text>`所包含的表达式。每一次`<text>`会返回一个字符串，循环过程中，`<text>`的所返回的每个字符串会以空格分隔，最后当整个循环结束时，`<text>`所返回的每个字符串所组成的整个字符串（以空格分隔）将会是foreach函数的返回值。所以，`<var>`最好是一个变量名，`<list>`可以是一个表达式，而`<text>`中一般会使用`<var>`这个参数来依次枚举`<list>`中的单词。
- * 返回：`<text>`每次返回的值得组合，以空格隔开。
- * 示例：` $(foreach n,a b c d,$(n).o)`返回“a.o b.o c.o d.o”。
- * 备注：foreach中的<var>参数是一个临时的局部变量，foreach函数执行完后，参数<var>的变量将不在作用，其作用域只在foreach函数当中。
+	 * 名称：遍历函数——foreach。
+	 * 功能：把参数`<list>`中的单词逐一取出放到参数`<var>`所指定的变量中，然后再执行`<text>`所包含的表达式。每一次`<text>`会返回一个字符串，循环过程中，`<text>`的所返回的每个字符串会以空格分隔，最后当整个循环结束时，`<text>`所返回的每个字符串所组成的整个字符串（以空格分隔）将会是foreach函数的返回值。所以，`<var>`最好是一个变量名，`<list>`可以是一个表达式，而`<text>`中一般会使用`<var>`这个参数来依次枚举`<list>`中的单词。
+	 * 返回：`<text>`每次返回的值得组合，以空格隔开。
+	 * 示例：` $(foreach n,a b c d,$(n).o)`返回“a.o b.o c.o d.o”。
+	 * 备注：foreach中的<var>参数是一个临时的局部变量，foreach函数执行完后，参数<var>的变量将不在作用，其作用域只在foreach函数当中。
 
-##7.6 file函数
+## 7.6 file函数
 * `$(file op filename[,text])`
- * 名称：文件读写函数——file。
- * 功能：进行文件读写。
-     * op为<，读文件filename，text应省略；
-     * op为>，将text写入到filename，且filename中的内容将清除
-     * op为>>，将text追加到filename。
- * 返回：读取时，返回文件内容，如果filename不存在，返回空字符串；写入时返回空字符串。
- * 示例：` $(file >>,main.c,int main(void))`返回空字符串。
+	* 名称：文件读写函数——file。
+	* 功能：进行文件读写。
+		* op为<，读文件filename，text应省略；
+		* op为>，将text写入到filename，且filename中的内容将清除
+		* op为>>，将text追加到filename。
+	* 返回：读取时，返回文件内容，如果filename不存在，返回空字符串；写入时返回空字符串。
+	* 示例：` $(file >>,main.c,int main(void))`返回空字符串。
  
 
 
 
 
-##7.7 call函数
+## 7.7 call函数
 
 * `$(call <expression>,<parm1>,<parm2>,<parm3>...)`
- * 名称：参数化函数——call。
- * 功能：用来创建新的参数化的函数。当 make执行这个函数时，`<expression>`参数中的变量，`$(1)，$(2)，$(3)`等，会被参数`<parm1>`，`<parm2>`，`<parm3>`依次取代。
- * 返回：`<expression>`被`<parm2>`取代后的值。
- * 示例：`ret=$(1) $(2);$(call $(1) $(2),love,you)`返回"love you"。
+	 * 名称：参数化函数——call。
+	 * 功能：用来创建新的参数化的函数。当 make执行这个函数时，`<expression>`参数中的变量，`$(1)，$(2)，$(3)`等，会被参数`<parm1>`，`<parm2>`，`<parm3>`依次取代。
+	 * 返回：`<expression>`被`<parm2>`取代后的值。
+	 * 示例：`ret=$(1) $(2);$(call $(1) $(2),love,you)`返回"love you"。
 
-##7.8 取值函数
+## 7.8 取值函数
 * `$(value varname)`
- * 名称：取值函数——value。
- * 功能：获取varname的值。`$(value varname)`等价于`$(varname)`。
- * 返回：varname的值。
- * 示例：`$(value CXX)`返回"g++"。
+	 * 名称：取值函数——value。
+	 * 功能：获取varname的值。`$(value varname)`等价于`$(varname)`。
+	 * 返回：varname的值。
+	 * 示例：`$(value CXX)`返回"g++"。
 
-##7.9 eval函数
+## 7.9 eval函数
 * `$(eval string)`
- * 名称：——eval。
- * 功能:将string作为Makefile语法进行解析并执行。“eval”函数执行时会对它的参数进行两次展开。第一次展开过程发是由函数本身完成的，第二次是函数展开后的结果被作为Makefile内容时由make解析时展开的。明确这一过程对于使用“eval”函数非常重要。理解了函数“eval”二次展开的过程后。实际使用时，如果在函数的展开结果中存在引用（格式为：$(x)），那么在函数的参数中应该使用“$$”来代替“$”。
- * 返回：空，也可以说没有返回值。
- * 示例：`$(eval main:$$(OBJ);gcc -o main $$(OBJ))`。
+	 * 名称：——eval。
+	 * 功能:将string作为Makefile语法进行解析并执行。“eval”函数执行时会对它的参数进行两次展开。第一次展开过程发是由函数本身完成的，第二次是函数展开后的结果被作为Makefile内容时由make解析时展开的。明确这一过程对于使用“eval”函数非常重要。理解了函数“eval”二次展开的过程后。实际使用时，如果在函数的展开结果中存在引用（格式为：$(x)），那么在函数的参数中应该使用“$$”来代替“$”。
+	 * 返回：空，也可以说没有返回值。
+	 * 示例：`$(eval main:$$(OBJ);gcc -o main $$(OBJ))`。
 
 
 
-##7.10 origin函数
+## 7.10 origin函数
 
 * `$(origin <variable> )`
- * 名称：原始函数——origin。
- * 功能:获取变量的来源。
- * 返回：
-     * “undefined”：未定义变量。
-     * “default”：预定义变量。
-     * “environment”：环境变量
-     * "environment override"，被环境变量覆盖的同名变量
-     * “file”,定义在Makefile中的变量。
-     * “command line”,变量是被命令行定义的。
-     * “override”,变量被override定义的。
-     * “automatic”,自动化变量。
- * 示例：`$(origin CXX)`返回。
- * 备注：`<variable>`是变量的名字，不应该是引用。
+	 * 名称：原始函数——origin。
+	 * 功能:获取变量的来源。
+	 * 返回：
+		 * “undefined”：未定义变量。
+		 * “default”：预定义变量。
+		 * “environment”：环境变量
+		 * "environment override"，被环境变量覆盖的同名变量
+		 * “file”,定义在Makefile中的变量。
+		 * “command line”,变量是被命令行定义的。
+		 * “override”,变量被override定义的。
+		 * “automatic”,自动化变量。
+	* 示例：`$(origin CXX)`返回。
+	* 备注：`<variable>`是变量的名字，不应该是引用。
 
-##7.11 falvor函数
+## 7.11 falvor函数
 * `$(flavor <variable> )`
- * 名称：类型函数——flavor。
- * 功能:获取变量的类型。
- * 返回：
-     * “undefined”：未定义变量。
-     * “recursive”：递归展开的变量。
-     * “simple”：简单变量。
-     * 示例：`$(flavor CXX)`返回“recursive”。
- * 备注：`<variable>`是变量的名字，不应该是引用。
+	* 名称：类型函数——flavor。
+	* 功能:获取变量的类型。
+	* 返回：
+		* “undefined”：未定义变量。
+		* “recursive”：递归展开的变量。
+		* “simple”：简单变量。
+    * 示例：`$(flavor CXX)`返回“recursive”。
+	* 备注：`<variable>`是变量的名字，不应该是引用。
  
 
-##7.12 make控制函数
+## 7.12 make控制函数
 make提供了一些函数来控制make的运行。通常，你需要检测一些运行Makefile时的运行时信息，并且根据这些信息来决定，你是让make继续执行，还是停止。
 
 * `$(error <text ...> )`
- * 名称：错误函数——error。
- * 功能:获取变量的类型。
- * 返回：
- * 备注：`<variable>`是变量的名字，不应该是引用。产生一个致命的错误，<text...>是错误信息。注意，error函数不会在一被使用就会产生错误信息，所以如果你把其定义在某个变量中，并在后续的脚本中使用这个变量，那么也是可以的。例如：
+	 * 名称：错误函数——error。
+	 * 功能:获取变量的类型。
+	 * 返回：
+	 * 备注：`<variable>`是变量的名字，不应该是引用。产生一个致命的错误，<text...>是错误信息。注意，error函数不会在一被使用就会产生错误信息，所以如果你把其定义在某个变量中，并在后续的脚本中使用这个变量，那么也是可以的。例如：
 
 * `$(warning <text ...> )`
-这个函数很像error函数，只是它并不会让make退出，只是输出一段警告信息，而make继续执行。
+	这个函数很像error函数，只是它并不会让make退出，只是输出一段警告信息，而make继续执行。
 * `$(info <text ...>)`
- 
+	 这个函数很像error函数，只是它并不会让make退出，只是输出一段警告信息，而make继续执行。
 
-##7.13 shell函数
+## 7.13 shell函数
 
 * `$(shell shell_cmd)`
- * 名称：shell函数——shell。
- * 功能: 生成一个shell来执行shell_cmd，等效于命令替换。
- * 返回：shell_cmd的输出
- * 示例：`$(shell date)`返回“018年 05月 09日 星期三 23:01:42 CST"
+	 * 名称：shell函数——shell。
+	 * 功能: 生成一个shell来执行shell_cmd，等效于命令替换。
+	 * 返回：shell_cmd的输出
+	 * 示例：`$(shell date)`返回“018年 05月 09日 星期三 23:01:42 CST"
 
-##7.14 guile函数
+## 7.14 guile函数
 * `$(guile guile_expr)`
- * 名称：guile函数——guile。
- * 功能: 执行GNU guile表达式。
- * 返回：执行结果
- * 备注：需要make支持才行  
+	 * 名称：guile函数——guile。
+	 * 功能: 执行GNU guile表达式。
+	 * 返回：执行结果
+	 * 备注：需要make支持才行  
 
 
-#8 隐式规则
+# 8 隐式规则
 * 隐式规则即不需要显示指出的规则。
 * 隐含规则链
  * 有些时候，一个目标可能被一系列的隐含规则所作用。例如，一个[.o]的文件生成，可能会是先被Yacc的[.y]文件先成[.c]，然后再被C的编译器生成。我们把这一系列的隐含规则叫做“隐含规则链”。
