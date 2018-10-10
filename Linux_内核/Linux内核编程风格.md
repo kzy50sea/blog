@@ -103,11 +103,12 @@ if (condition) {
 ```cpp
 int system_is_up（void）
 {
-return system_state == SYSTEM_RUNNING;
+	return system_state == SYSTEM_RUNNING;
 }
 EXPORT_SYMBOL（system_is_up）;
 ```
 * 在函数原型中，包含形参的参数名称及其数据类型。尽管C语言不需要这样做。
+
 # 7 集中退出函数
 
 * 编译器经常以无条件跳转指令的形式使用等效的goto语句。
