@@ -79,7 +79,7 @@ tags: Linux教程
 
 ## 2.1 简单示例
 &emsp;&emsp;例如，有 Makefile 文件，内容如下：
-```
+```makefile
 main.exe:main.o func.o //有头文件时要加入头文件
 	g++ -o main.exe main.o func.o 
 main.o:main.cpp 
@@ -160,7 +160,7 @@ GNU的make工作时的执行步骤入下：
 * 延后展开：直到构建上下文出现或者第二阶段才发生的展开。
 
 * 变量赋值
-```
+```makefile
 immediate = deferred
 immediate ?= deferred
 immediate := immediate
@@ -198,18 +198,18 @@ endef
 ```
 * 条件指令：immediate
 * 规则定义：显式规则，模式规则，后缀规则，静态模式规则和简单的先决条件定义
-```
+```makefile
 immediate : immediate ; deferred
     deferred
 ```
 
 ## 2.9 再次展开 
 &emsp;&emsp;make可对依赖项在立即展开后再次展开，再次展开发生在第二阶段前。一般是因为第一次展开后make将其解释为字符串而不是make语法。`.SECONDEXPANSION`关键字表示将后面的内容多次展开。
-```
+```makefile
 .SECONDEXPANSION:
 ...
 ```
-```
+```makefile
 #不能运行
 objs1:=main.o
 objs2:=add.o
@@ -226,7 +226,7 @@ gcc -o $@ $^
 
 # 3 显式规则
 
-```
+```makefile
 target: dependency  //目标项:依赖项
     command1           
     command2  //必须以Tab键开头，command为更新目标的命令，支持shell脚本
@@ -248,7 +248,7 @@ target: dependency_files; command1
 当普通依赖项新于目标项时，默认情况下目标项要更新。
 * 顺序依赖项
 用`普通依赖项|顺序依赖项`表示，其仅表示一个先执行的操作，当顺序依赖项新于目标项时，目标项不需要更新。例如：将目标文件放在单独的目录中，因此需要先创建目录，但是任何对目录项的操作都会引起目录时间更新，如果目录不是顺序依赖项，则会导致目标由于目录的更新而重新编译。
-```
+```makefile
 OBJDIR := objdir                                                     
 OBJS := objdir/add.o objdir/main.o
 $(OBJDIR)/main.exe:$(OBJS)
@@ -292,7 +292,7 @@ $(OBJDIR):
 * 伪目标和相同的普通目标区别在于：
    * 伪目标的执行需要显式指定（除非只有伪目标），而后者则是默认执行
    * 当存在同名文件时，后者会认为目标始终最新而不执行命令，伪目标则会执行命令。
-```
+```makefile
 //例main.c中使用了fun.c中的函数，Makefile如下：
 
 main.exe:main.o func.o 
@@ -339,7 +339,7 @@ $make rebuild //则先执行目标rebuild，先清除clean，再重新编译连�
 
 ### 3.1.7 一个规则多个目标
 
-```
+```makefile
 target1 tarhet2 : dependency
     command
     
@@ -352,7 +352,7 @@ tarhet2 : dependency
 ```
 ### 3.1.8 一个目标多个规则
 &emsp;&emsp;一个目标可有可以有多个规则，所有的依赖项都合并为依赖项列表，但是如果有多个命令则只有最后一个命令会执行。
-```
+```makefile
 target1 : dependency
     command
     
@@ -360,7 +360,7 @@ target1 : dependency
     command
 ```
 ### 3.1.9 静态模式
-```
+```makefile
 targets...: target-pattern: prereq-patterns
    command
 ```
@@ -372,7 +372,7 @@ targets...: target-pattern: prereq-patterns
  
 
 ### 3.1.10 双冒号规则
-```
+```makefile
 target::dependency
    command
 ```
@@ -388,7 +388,7 @@ target::dependency
 
 
 ## 3.2 命令
-```
+```makefile
 target: dependency  //目标项:依赖项
     command1           
     command2  //必须以Tab键开头，command为更新目标的命令，支持shell脚本
@@ -447,7 +447,7 @@ target: dependency_files; command1
 		* 选项“-C”来指定make下层Makefile，且“-w”会被自动打开的。
 		* 选项“-s”或“--no-print-directory”自动关闭“-w”。
 	* 多行命令
-```
+```makefile
 define cmd_lable[=|+=|:=|?=]
     cmd1
     cmd2
@@ -493,7 +493,7 @@ endef
      * 如果前一次的是“:=”，那么“+=”会以“:=”作为其赋值符。
 * 覆盖make命令行变量：在变量定义前加上关键字`override`
 * 多行变量
-```
+```makefile
 define var_lable[=|+=|:=|?=]
 var1
 var2
@@ -599,7 +599,7 @@ endef
 
 # 6 条件语句
 
-```
+```makefile
 conditional-directive
 text-if-one-is-true
 endif
@@ -991,19 +991,19 @@ make提供了一些函数来控制make的运行。通常，你需要检测一些
 
 # 11 重载隐式规则
 * 使用模式规则来重载隐式规则。如：
-```
+```makefile
 %.o : %.c
             $(CC) -c $(CPPFLAGS) $(CFLAGS) -D$(date)
 ```
 * 使用后缀规则来重载隐式规则。如：
-```
+```makefile
 .SUFFIXES:.c .o     #自定义后缀
 .c.o:
     $(CC) -c $(CPPFLAGS) $(CFLAGS) -D$(date)
 
 ```
 * 取消内建的隐含规则，只要不在后面写命令就行。如：
-```
+```makefile
 %.o : %.s
    
    # 或
@@ -1012,7 +1012,7 @@ make提供了一些函数来控制make的运行。通常，你需要检测一些
 ```
 
 # 12 更新库文件
-```
+```makefile
 libname1.a(name2.o name3.o):name.o
     command
 ```
@@ -1024,7 +1024,7 @@ libname1.a(name2.o name3.o):name.o
 * 每个makefile应该包括`SHELL=/bin/sh`
 * makefile的命令应该运行在sh中
 * 为了构建和安装程序的configure脚本和Makefile规则 不应直接使用除以下程序：
-```
+```makfile
 awk cat cmp cp diff echo egrep expr false grep install-info ln ls
 mkdir mv printf pwd rm rmdir sed sleep sort tar test touch tr true`
 ```
@@ -1090,7 +1090,7 @@ mkdir mv printf pwd rm rmdir sed sleep sort tar test touch tr true`
 
 # 14 示例
 ## 14.1 普通makefile文件         
-```
+```makefile
 test:main.o add.o sub.o mul.o div.o
     gcc $^  -o $@    
 %.o:%.c
@@ -1113,7 +1113,7 @@ clean:
 
 
 * 总控makefile文件
-```
+```makefile
 include scripts/Makefile
 
 modules_make = $(MAKE) -C $(1);
@@ -1136,7 +1136,7 @@ clean : mc
     @echo clean done!                                            '
 ```    
 * scripts下的makefile文件      
-```
+```makefile
 CC := gcc
 CFLAGS := -Wall -O3
 Libs = -lpthread
