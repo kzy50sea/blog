@@ -1,6 +1,6 @@
 ---
 title: Linux二进制文件查看
-tags: 未分类
+tags: Linux教程
 ---
 
 ------
