@@ -12,7 +12,7 @@ tags: Linux教程
 
 # 1 查看文件内容
 ## 1.1 查看未压缩文件
-<style 
+<style></style>
 ### 1.1.1 `cat`
 **命令**：cat [OPTION]... [FILE]...
 **描述**：顺序将FILE输出到标准输出。没有FILE或FILE为-则读取标准输入。
