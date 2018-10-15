@@ -821,8 +821,8 @@ struct boot_param_header {
 #define FDT_V1_SIZE (7*sizeof(uint32_t))
 #define FDT_V2_SIZE (FDT_V1_SIZE + sizeof(uint32_t))
 #define FDT_V3_SIZE (FDT_V2_SIZE + sizeof(uint32_t))
-#define FDT_V16_SIZE    FDT_V3_SIZE
-#define FDT_V17_SIZE    (FDT_V16_SIZE + sizeof(uint32_t))
+#define FDT_V16_SIZE FDT_V3_SIZE
+#define FDT_V17_SIZE (FDT_V16_SIZE + sizeof(uint32_t))
 
 ```
 
@@ -831,9 +831,14 @@ struct boot_param_header {
 1. 节点开始标志：一般为FDT_BEGIN_NODE。
 2. 节点路径或者节点的单元名(version小于3以节点全路径表示，version>=16以节点单元名表示)
 3. 填充字段（对齐到四字节）
-4. 节点属性。每个属性以宏OF_DT_PROP开始，后面依次为属性值的字节长度(4字节)、属性名称在字符串块中的偏移量(4字节)、属性值和填充（对齐到四字节）。
+4. 节点属性。每个属性以宏FDT_PROP开始，后面依次为属性值的字节长度(4字节)、属性名称在字符串块中的偏移量(4字节)、属性值和填充（对齐到四字节）。
 5. 如果存在子节点，则定义子节点。
 6. 节点结束标志FDT_END_NODE。
+
+节点和属性都是按照tag，string，value来记录和组织数据，但对于节点来说没有string和value。
+* tag：五个token之一
+* string：节点名或属性名
+* value：属性值
 
 
 ![3](https://www.github.com/liao20081228/blog/raw/master/图片/Linux设备树/3.jpg)
@@ -926,9 +931,14 @@ dtb-$(CONFIG_ARCH_TEGRA) += tegra20-harmony.dtb tegra30-beaver.dtb tegra114-da
 
 
 ## 5.3 fdtdump
-**命令**：fdtdump [options] DTB_file_name
+* **命令**：fdtdump [options] DTB_file_name
+* **描述**：输出二进制设备树的可读版本
+* **示例**：
+	*  	浏览设备树文件
+		* `fdtdump filename.dtb` 	
+	*  	解码文件时转储调试信息
+		* `ftddump -d filename.dtb`  	
 
-**描述**：输出二进制设备树的可读版本
 |短选项|长选项|描述|
 |:--|:--|:--|
 |-d| --debug |解码文件时转储调试信息|
