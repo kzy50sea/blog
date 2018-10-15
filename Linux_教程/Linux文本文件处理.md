@@ -13,45 +13,55 @@ tags: Linux教程
 # 1 查看文件内容
 ## 1.1 查看未压缩文件
 ### 1.1.1 `cat`
-&emsp;&emsp;**命令**：cat [OPTION]... [FILE]...
-&emsp;&emsp;**描述**：顺序将FILE输出到标准输出。
->|常用选项|作用|
-|:----|--|
-|-A|等效于 -vET
-|-b|列出行号，仅针对非空白行做行号显示，空白行不标行号！
-|-e |等效于 -vE
-|-E|在每一行后添加\$
-|-n|显示行号
-|-s|当遇到有连续两行以上的空白行，就代换为一行的空白行
-|-t|等效于 -vT
-|-T|以^I显示TAB键
-|-v|运用 ^ 和 M- 引证，除了 LFD 和 TAB 之外
-|**更多信息**|<http://linux.51yip.com/search/> 和 man 手册|
-|&emsp;&emsp;&emsp;&emsp;|<http://man.linuxde.net/>|
+**命令**：cat [OPTION]... [FILE]...
+**描述**：顺序将FILE输出到标准输出。没有FILE或FILE为-则读取标准输入。
+**版本**：8.25
+|短选项|长选项|描述|
+|:---|:--|:--|
+|-A|--show-all|等效于 -vET
+|-b|--number-nonblank|列出行号，仅针对非空白行做行号显示，覆盖-n选项
+|-e ||等效于 -vE
+|-E|--show-ends|在每一行后添加\$
+|-n|--number|显示行号
+|-s|--squeeze-blank|当遇到有连续两行以上的空白行，就代换为一行的空白行
+|-t||等效于 -vT
+|-T|--show-tabs|以^I显示TAB字符
+|-u||忽略该选项
+|-v|--show-nonprinting|运用 ^ 和 M- 标记，除了 LFD 和 TAB 之外|
+||--help|帮助
+||--version|显示版本
+|**更多信息**||<http://linux.51yip.com/search/> 和 man 手册|
+|&emsp;&emsp;&emsp;&emsp;||<http://man.linuxde.net/>|
 
 
 ### 1.1.2 `tac`
-&emsp;&emsp;**命令**：tac [OPTION]... [FILE]...
-&emsp;&emsp;**描述**：按行逆序将FILE输出到标准输出。 
->|常用选项|tac|
-|:----|--|
-|**更多信息**|<http://linux.51yip.com/search/> 和 man 手册|
-|&emsp;&emsp;&emsp;&emsp;|<http://man.linuxde.net/>|
+**命令**：tac [OPTION]... [FILE]...
+**描述**：按行逆序将FILE输出到标准输出。 没有FILE或FILE为-则读取标准输入。
+**版本**：8.25
+|短选项|长选项|描述|
+|:--|:--|:--|
+| -b|--before|将末尾的换行符显示在开始
+| -r|--regex|将换行符解析为正则表达式|
+| -s STRING|--separator=STRING|使用STRING代替\n作为换行符|
+||--help|帮助
+||--version|显示版本
+|**更多信息**||<http://linux.51yip.com/search/> 和 man 手册|
+|&emsp;&emsp;&emsp;&emsp;||<http://man.linuxde.net/>|
 
 ### 1.1.3 `nl`
-&emsp;&emsp;**命令**： nl [OPTION]... [FILE]...
-&emsp;&emsp;**描述**：将FILE输出到标准输出，并加上行号。
+**命令**： nl [OPTION]... [FILE]...
+**描述**：将FILE输出到标准输出，并加上行号。
 >|常用选项|作用|
 |:----|--|
 |-b STYLE|按照STYLE显示行号，a全部显示行号，t空行不显示行号，n不显示行号，pBRE含有正则表达式BRE匹配的行显示行号|
 |-n FORMAT|根据FORMAT设置行号样式，ln向左对齐，前面不加零补位，rn 向右对齐，前面不加零补位，rz 向右对齐，前面加零补位
 |-w NUMBER|设置行号的位数
-|**更多信息**|<http://linux.51yip.com/search/nl> 和 man 手册|
-|&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;|<http://man.linuxde.net/nl>|
+|**更多信息**||<http://linux.51yip.com/search/nl> 和 man 手册|
+|&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;||<http://man.linuxde.net/nl>|
 
 ### 1.1.4 `more`
-&emsp;&emsp;**命令**：more [options] file...
-&emsp;&emsp;**描述**：将FILE按页输出到标准输出。
+**命令**：more [options] file...
+**描述**：将FILE按页输出到标准输出。
 >|常用选项|作用|
 |:----|--|
 |-d |提示使用者，在画面下方显示 [Press space to continue, 'q' to quit.] ，如果使用者按错键，则会显示 [Press 'h' for instructions.] 而不是 '哔' 声
@@ -89,8 +99,8 @@ tags: Linux教程
 |&emsp;&emsp;&emsp;&emsp;|<http://man.linuxde.net/more>|
 
 ### 1.1.5 `less`
-&emsp;&emsp;**命令**：less [options] file...
-&emsp;&emsp;**描述**：将FILE按页输出到标准输出。
+**命令**：less [options] file...
+**描述**：将FILE按页输出到标准输出。
 >|常用选项|无|
 |:----|--|
 |**更多信息**|<http://linux.51yip.com/search/less> 和 man 手册|
@@ -113,8 +123,8 @@ tags: Linux教程
 |&emsp;&emsp;&emsp;&emsp;|<http://man.linuxde.net/less>|
 
 ### 1.1.6 `head`
-&emsp;&emsp;**命令**：head [OPTION]... [FILE]...
-&emsp;&emsp;**描述**：默认将每个FILE的前10行输出到标准输出。
+**命令**：head [OPTION]... [FILE]...
+**描述**：默认将每个FILE的前10行输出到标准输出。
 >|常用选项|作用|
 |:----|--|
 |-c [-]NUM|输出每个文件的前NUM字节，如果带有-，则输出除最后NUM字节以外的所有内容，NUM可以有前缀单位，如KB，GB
@@ -123,8 +133,8 @@ tags: Linux教程
 |&emsp;&emsp;&emsp;&emsp;&emsp;|<http://man.linuxde.net/head>|
 
 ### 1.1.7 `tail`
-&emsp;&emsp;**命令**：tail [OPTION]... [FILE]...
-&emsp;&emsp;**描述**：默认将每个FILE的后10行输出到标准输出。
+**命令**：tail [OPTION]... [FILE]...
+**描述**：默认将每个FILE的后10行输出到标准输出。
 >|常用选项|作用|
 |:----|--|
 |-c [+]NUM|输出每个文件的后NUM字节，如果带有+，则输出除前NUM字节以外的所有内容，NUM可以有前缀单位，如KB
@@ -135,10 +145,10 @@ tags: Linux教程
 
 
 ### 1.1.8 `od`
-&emsp;&emsp;**命令**：od [OPTION]... [FILE]...
-&emsp;&emsp;&emsp;&emsp;&emsp;od [-abcdfilosx]... [FILE] [[+]OFFSET[.][b]]
-&emsp;&emsp;&emsp;&emsp;&emsp;od --traditional [OPTION]... [FILE] [[+]OFFSET[.][b] [+][LABEL][.][b]]
-&emsp;&emsp;**描述**：查看非纯文本文档。
+**命令**：od [OPTION]... [FILE]...
+&emsp;&emsp;&emsp;od [-abcdfilosx]... [FILE] [[+]OFFSET[.][b]]
+&emsp;&emsp;&emsp;od --traditional [OPTION]... [FILE] [[+]OFFSET[.][b] [+][LABEL][.][b]]
+**描述**：查看非纯文本文档。
 >|常用选项&emsp;|作用|
 |:----|--|
 |-t TYPE |a 利用默认的字符来输出；c 使用 ASCII 字符来输出;d[size]利用十进制来输出数据，每个整数占用 size bytes ；f[size] 利用浮点数来输出数据，每个数占用 size bytes ；o[size] 利用八进制来输出数据，每个整数占用 size bytes ；x[size] 利用十六进制来输出数据，每个整数占用 size bytes ；
@@ -148,9 +158,9 @@ tags: Linux教程
 ## 1.2 查看压缩文件
 
 ### 1.2.1 查看压缩文件——`zcat`、`bzcat`、`xzcat`
-&emsp;&emsp;**命令**：zcat [ -fhLV ] [ name ...  ]
+**命令**：zcat [ -fhLV ] [ name ...  ]
 
-&emsp;&emsp;**描述**：等同于`压缩工具 -d -c`。不解压文件查看文件内容。
+**描述**：等同于`压缩工具 -d -c`。不解压文件查看文件内容。
 > |常用选项|作用|备注|
 |:--|--|:--:
 |-c|将压缩的数据输出到屏幕上
@@ -176,10 +186,10 @@ tags: Linux教程
 ||man 手册|
 
 ### 1.2.2 查看压缩文件——`zmore`、`bzmore` `xzmore`
-&emsp;&emsp;**命令**：zmore  [file...]
-&emsp;&emsp;&emsp;&emsp;&emsp;bzmore  [file...]
-&emsp;&emsp;&emsp;&emsp;&emsp;xzmore  [file...]
-&emsp;&emsp;**描述**：查看压缩文件，但只能向后查看。
+**命令**：zmore  [file...]
+&emsp;&emsp;&emsp;bzmore  [file...]
+&emsp;&emsp;&emsp;xzmore  [file...]
+**描述**：查看压缩文件，但只能向后查看。
 > |常用选项|无|
 |:--|--|
 |**更多信息**|<http://linux.51yip.com/search/zmore> |
@@ -191,10 +201,10 @@ tags: Linux教程
 ||man 手册|
 
 ### 1.2.3 查看压缩文件——`zless`、`bzless` `xzless`
-&emsp;&emsp;**命令**：zless  [file...]
-&emsp;&emsp;&emsp;&emsp;&emsp;bzless  [file...]
-&emsp;&emsp;&emsp;&emsp;&emsp;xzless  [file...]
-&emsp;&emsp;**描述**：查看压缩文件，可以向前向后查看。
+**命令**：zless  [file...]
+&emsp;&emsp;&emsp;bzless  [file...]
+&emsp;&emsp;&emsp;xzless  [file...]
+**描述**：查看压缩文件，可以向前向后查看。
 > |常用选项|无|
 |:--|--|
 |**更多信息**|<http://linux.51yip.com/search/zless> |
@@ -214,8 +224,8 @@ tags: Linux教程
 
 # 2 查看两个文件的差异
 ## 2.1 查看两个普通文件的差异——`diff`
-&emsp;&emsp;**命令**：diff [-bBi]  file1 file2
-&emsp;&emsp;**描述**：将file1与file2按行比较，以查看两个文件的差异。
+**命令**：diff [-bBi]  file1 file2
+**描述**：将file1与file2按行比较，以查看两个文件的差异。
 > |常用选项|作用|
 |:--|--|
 |-b|忽略空白的差异。
@@ -225,10 +235,10 @@ tags: Linux教程
 |&emsp;&emsp;&emsp;&emsp;|<http://man.linuxde.net/diff>|
 
 ## 2.2 查看两个压缩文件差异——`zdiff`、`bzdiff`、`xzdiff`
-&emsp;&emsp;**命令**：zdiff [ diff_options ] file1 [ file2 ]
-&emsp;&emsp;&emsp;&emsp;&emsp;bzdiff [ diff_options ] file1 [ file2 ]
-&emsp;&emsp;&emsp;&emsp;&emsp;xzdiff [ diff_options ] file1 [ file2 ]
-&emsp;&emsp;**描述**：*Zdiff用于在压缩文件上调用diff程序。指定的所有选项都直接传递给diff。如果只指定file1，则将其与file1.gz的未压缩内容进行比较。如果指定了两个文件，则它们的内容（如果需要则先解压）会被传送到diff。输入文件不会被修改。 diff的退出状态将被保留。
+**命令**：zdiff [ diff_options ] file1 [ file2 ]
+&emsp;&emsp;&emsp;bzdiff [ diff_options ] file1 [ file2 ]
+&emsp;&emsp;&emsp;xzdiff [ diff_options ] file1 [ file2 ]
+**描述**：*Zdiff用于在压缩文件上调用diff程序。指定的所有选项都直接传递给diff。如果只指定file1，则将其与file1.gz的未压缩内容进行比较。如果指定了两个文件，则它们的内容（如果需要则先解压）会被传送到diff。输入文件不会被修改。 diff的退出状态将被保留。
 > |常用选项|无|
 |:--|--|
 |**更多信息**|<http://linux.51yip.com/search/diff> 和 man 手册|
@@ -239,8 +249,8 @@ tags: Linux教程
 # 3 比较两个文件是否相同
 ## 3.1 比较两个普通文件是否相同——`cmp`
 
-&emsp;&emsp;**命令**：cmp [-s]  file1 file2
-&emsp;&emsp;**描述**：将file1与file2按字节比较，以查看两个文件的差异。
+**命令**：cmp [-s]  file1 file2
+**描述**：将file1与file2按字节比较，以查看两个文件的差异。
 > |常用选项|作用|
 |:--|--|
 |-s|将所有的不同的字节都列出来。因为cmp预设仅会输出第一个发现的不同点。
@@ -249,10 +259,10 @@ tags: Linux教程
 
 
 ## 3.2 比较两个压缩文件是否相同——`zcmp`、`bzcmp`、`xzcmp`
-&emsp;&emsp;**命令**：zcmp [ cmp_options ] file1 [ file2 ]
-&emsp;&emsp;&emsp;&emsp;&emsp;bzcmp [ cmp_options ] file1 [ file2 ]
-&emsp;&emsp;&emsp;&emsp;&emsp;xzcmp [ cmp_options ] file1 [ file2 ]
-&emsp;&emsp;**描述**：*cmp用于在压缩文件上调用cmp程序。指定的所有选项都直接传递给cmp。如果只指定file1，则将其与file1.gz的未压缩内容进行比较。如果指定了两个文件，则它们的内容（如果需要则先解压）会被传送到cmp。输入文件不会被修改。 cmp的退出状态将被保留。只显示第一个不同字节
+**命令**：zcmp [ cmp_options ] file1 [ file2 ]
+&emsp;&emsp;&emsp;bzcmp [ cmp_options ] file1 [ file2 ]
+&emsp;&emsp;&emsp;xzcmp [ cmp_options ] file1 [ file2 ]
+**描述**：*cmp用于在压缩文件上调用cmp程序。指定的所有选项都直接传递给cmp。如果只指定file1，则将其与file1.gz的未压缩内容进行比较。如果指定了两个文件，则它们的内容（如果需要则先解压）会被传送到cmp。输入文件不会被修改。 cmp的退出状态将被保留。只显示第一个不同字节
 > |常用选项|作用|
 |:--|--|
 |-b|显示不同的字节|
@@ -266,10 +276,10 @@ tags: Linux教程
 
 # 4 搜索文件内容
 ## 4.1 搜索普通文件内容——`grep`、`fgrep`、`egrep`
-&emsp;&emsp;**命令**：grep [-acinv] [-e] [-EF][ --color=auto] 'PATTERN' filename 
-&emsp;&emsp;&emsp;&emsp;&emsp;fgrep [-acinv] [-e] [-E][ --color=auto] 'PATTERN' filename 
-&emsp;&emsp;&emsp;&emsp;&emsp;egrep [-acinv] [-e] [-F][ --color=auto] 'PATTERN' filename 
-&emsp;&emsp;**描述**：取出含有PATTERN的行。
+**命令**：grep [-acinv] [-e] [-EF][ --color=auto] 'PATTERN' filename 
+&emsp;&emsp;&emsp;fgrep [-acinv] [-e] [-E][ --color=auto] 'PATTERN' filename 
+&emsp;&emsp;&emsp;egrep [-acinv] [-e] [-F][ --color=auto] 'PATTERN' filename 
+**描述**：取出含有PATTERN的行。
 
 >|常用选项|	作用|
 |--|--|
@@ -289,30 +299,30 @@ tags: Linux教程
 |&emsp;&emsp;&emsp;&emsp;|	<<http://man.linuxde.net/egrep>
 ## 4.2 搜索压缩文件内容
 ### 4.2.1 `zgrep`、`bzgrep`、`xzgrep`
-&emsp;&emsp;**命令**：zgrep [ grep_options ] [ -e ] pattern filename...
-&emsp;&emsp;&emsp;&emsp;&emsp;bzgrep [ grep_options ] [ -e ] pattern filename...
-&emsp;&emsp;&emsp;&emsp;&emsp;xzgrep [ grep_options ] [ -e ] pattern filename...
-&emsp;&emsp;**描述**：\*Zgrep用于在通过gzip压缩的文件上调用grep。选项 -[drRzZ] | --di\* | --exc* | --inc\* | --rec* | --nu\*导致 zgrep以错误代码终止。所有其他选项直接传递给grep。如果没有输入文件就读取标准输入。
+**命令**：zgrep [ grep_options ] [ -e ] pattern filename...
+&emsp;&emsp;&emsp;bzgrep [ grep_options ] [ -e ] pattern filename...
+&emsp;&emsp;&emsp;xzgrep [ grep_options ] [ -e ] pattern filename...
+**描述**：\*Zgrep用于在通过gzip压缩的文件上调用grep。选项 -[drRzZ] | --di\* | --exc* | --inc\* | --rec* | --nu\*导致 zgrep以错误代码终止。所有其他选项直接传递给grep。如果没有输入文件就读取标准输入。
 > |常用选项|无|
 |:--|--|
 |**更多信息**|<http://linux.51yip.com/search/grep> 和 man 手册|
 |&emsp;&emsp;&emsp;&emsp;|<http://man.linuxde.net/grep>|
 
 ### 4.2.2 `zegrep`、`bzegrep`、`xzegrep`
-&emsp;&emsp;**命令**：zegrep [ grep_options ] pattern filename...
-&emsp;&emsp;&emsp;&emsp;&emsp;bzegrep [ grep_options ] pattern filename...
-&emsp;&emsp;&emsp;&emsp;&emsp;xzegrep [ grep_options ] pattern filename...
-&emsp;&emsp;**描述**：*Zegrep等同于*zgrep -E，使用扩展的正则表达式对文本进行搜索。
+**命令**：zegrep [ grep_options ] pattern filename...
+&emsp;&emsp;&emsp;bzegrep [ grep_options ] pattern filename...
+&emsp;&emsp;&emsp;xzegrep [ grep_options ] pattern filename...
+**描述**：*Zegrep等同于*zgrep -E，使用扩展的正则表达式对文本进行搜索。
 > |常用选项|无|
 |:--|--|
 |**更多信息**|<http://linux.51yip.com/search/egrep> 和 man 手册|
 |&emsp;&emsp;&emsp;&emsp;|<http://man.linuxde.net/egrep>|
 
 ### 4.2.3 `zfgrep`、`bzfgrep`、`xzfgrep`
-&emsp;&emsp;**命令**：zfgrep [ grep_options ] pattern filename...
-&emsp;&emsp;&emsp;&emsp;&emsp;bzfgrep [ grep_options ] pattern filename...
-&emsp;&emsp;&emsp;&emsp;&emsp;xzfgrep [ grep_options ] pattern filename...
-&emsp;&emsp;**描述**：*Zfgrep等同于*zgrep -F，利用固定的字符串来对文本进行搜索，但不支持正则表达式的引用，所以此命令的执行速度也最快。
+**命令**：zfgrep [ grep_options ] pattern filename...
+&emsp;&emsp;&emsp;bzfgrep [ grep_options ] pattern filename...
+&emsp;&emsp;&emsp;xzfgrep [ grep_options ] pattern filename...
+**描述**：*Zfgrep等同于*zgrep -F，利用固定的字符串来对文本进行搜索，但不支持正则表达式的引用，所以此命令的执行速度也最快。
 > |常用选项|无|
 |:--|--|
 |**更多信息**|<http://linux.51yip.com/search/fgrep> 和 man 手册|
@@ -324,15 +334,15 @@ tags: Linux教程
 
 ---
 
-&emsp;&emsp;***<font color=blue>版权声明</font>***：*本文章参考了<font color=blue >**[《鸟哥的Linux私房菜》](http://linux.vbird.org "点击跳转")、[《Linux命令手册》](http://linux.51yip.com "点击跳转")、[《Linux命令大全》](http://man.linuxde.net "点击跳转")以及[《Linux man pages》](https://linux.die.net/man/ "点击跳转")。**</font><font color=red>未经作者允许，**<font color=blue>严禁用于商业出版</font>**，否则追究法律责任。网络转载请注明出处，这是对原创者的起码的尊重！！！*</font>
+***<font color=blue>版权声明</font>***：*本文章参考了<font color=blue >**[《鸟哥的Linux私房菜》](http://linux.vbird.org "点击跳转")、[《Linux命令手册》](http://linux.51yip.com "点击跳转")、[《Linux命令大全》](http://man.linuxde.net "点击跳转")以及[《Linux man pages》](https://linux.die.net/man/ "点击跳转")。**</font><font color=red>未经作者允许，**<font color=blue>严禁用于商业出版</font>**，否则追究法律责任。网络转载请注明出处，这是对原创者的起码的尊重！！！*</font>
 
 ---
 
 
 # 5 文本处理工具——`sed`
-&emsp;&emsp;**命令**：sed [options] ' [n1[,n2]]动作' file(s)
-&emsp;&emsp;&emsp;&emsp;&emsp;sed [options] -f scriptfile file(s)
-&emsp;&emsp;**描述**：文本处理。
+**命令**：sed [options] ' [n1[,n2]]动作' file(s)
+&emsp;&emsp;&emsp;sed [options] -f scriptfile file(s)
+**描述**：文本处理。
 > |常用选项|作用|
 |:--|--|
 |-n| 使用安静(silent)模式。在一般 sed 的用法中，所有来自 STDIN 的数据一般都会被列出到屏幕上。但如果加上 -n 参数后，则只有经过 sed 特殊处理的那一行(或者动作)才会被列出来。
@@ -355,8 +365,8 @@ tags: Linux教程
 
 # 6 文本处理工具——`awk`
 
-&emsp;&emsp;**命令**：awk '条件1{动作1 } 条件2{动作2}...' filename
-&emsp;&emsp;**描述**：文本处理。awk主要是处理每一行的字段内的数据，而默认的字段的分隔符为 "空格键" 或 "[tab]键"。若动作需要多个命令辅助时可用分号隔开。awk支持逻辑运算符<、<=、=、!=、>、>=。
+**命令**：awk '条件1{动作1 } 条件2{动作2}...' filename
+**描述**：文本处理。awk主要是处理每一行的字段内的数据，而默认的字段的分隔符为 "空格键" 或 "[tab]键"。若动作需要多个命令辅助时可用分号隔开。awk支持逻辑运算符<、<=、=、!=、>、>=。
 |变量名称|作用|
 |--|--|
 |\$0|整行数据|
@@ -368,8 +378,8 @@ tags: Linux教程
 |&emsp;&emsp;&emsp;&emsp;|<http://man.linuxde.net/awk>|
 
 # 7 文件打印准备——`pr`
-&emsp;&emsp;**命令**：pr [OPTION]... [FILE]...
-&emsp;&emsp;**描述**：pr命令用来将文本文件转换成适合打印的格式，它可以把较大的文件分割成多个页面进行打印，并为每个页面添加标题。
+**命令**：pr [OPTION]... [FILE]...
+**描述**：pr命令用来将文本文件转换成适合打印的格式，它可以把较大的文件分割成多个页面进行打印，并为每个页面添加标题。
 > |常用选项|作用|
 |:--|--|
 |-h<标题>|为页指定标题；
@@ -379,8 +389,8 @@ tags: Linux教程
 
 
 # 8 格式化打印——`printf`
-&emsp;&emsp;**命令**：printf '打印格式 '  实际内容
-&emsp;&emsp;**描述**：格式化输出。
+**命令**：printf '打印格式 '  实际内容
+**描述**：格式化输出。
 > |格式参数|作用|
 |:--|--|
 |\a| 警告声音输出
@@ -398,9 +408,9 @@ tags: Linux教程
 |&emsp;&emsp;&emsp;&emsp;|<http://man.linuxde.net/printf>|
 
 # 9 选取行中指定内容——`cut`
-&emsp;&emsp;**命令**：cut -d [-s] 'delimiter' -f 范围 
-&emsp;&emsp;&emsp;&emsp;&emsp;cut -c|b 范围 
-&emsp;&emsp;**描述**：从输入数据的每一行中取出指定的数据。
+**命令**：cut -d [-s] 'delimiter' -f 范围 
+&emsp;&emsp;&emsp;cut -c|b 范围 
+**描述**：从输入数据的每一行中取出指定的数据。
 
 >|常用选项|	作用|
 |--|
@@ -418,8 +428,8 @@ tags: Linux教程
 
 
 # 10 排序——`sort`
-&emsp;&emsp;**命令**：sort [-fbMnrtuk] [file or stdin] 
-&emsp;&emsp;**描述**：排序。
+**命令**：sort [-fbMnrtuk] [file or stdin] 
+**描述**：排序。
 
 >|常用选项|	作用|
 |--|--|
@@ -436,8 +446,8 @@ tags: Linux教程
 |&emsp;&emsp;&emsp;&emsp;|	<<http://man.linuxde.net/sort>
 
 # 11 过滤重复行——`uniq`
-&emsp;&emsp;**命令**：uniq [-cdiu] [-fsw n] input [output] 
-&emsp;&emsp;**描述**：用于报告或忽略文件中的连续的重复行。
+**命令**：uniq [-cdiu] [-fsw n] input [output] 
+**描述**：用于报告或忽略文件中的连续的重复行。
 
 >|常用选项|	作用|
 |--|--|
@@ -452,8 +462,8 @@ tags: Linux教程
 |&emsp;&emsp;&emsp;&emsp;|	<<http://man.linuxde.net/uniq>
 
 # 12 统计文件的字数——`wc`
-&emsp;&emsp;**命令**：wc [-cmlLw] file... 
-&emsp;&emsp;**描述**：计算文件行数、词数、字节数。
+**命令**：wc [-cmlLw] file... 
+**描述**：计算文件行数、词数、字节数。
 
 >|常用选项|	作用|
 |--|--|
@@ -465,9 +475,9 @@ tags: Linux教程
 |更多信息|	<<http://linux.51yip.com/search/wc> 和 man 手册
 |&emsp;&emsp;&emsp;&emsp;|	<<http://man.linuxde.net/wc>
 
-# 13 字符替换、去重、删除——`tr`
-&emsp;&emsp;**命令**：tr [-cdst] SET1 [SET2] 
-&emsp;&emsp;**描述**：对来自标准输入的字符进行替换、去重、删除。
+#13 字符替换、去重、删除——`tr`
+**命令**：tr [-cdst] SET1 [SET2] 
+**描述**：对来自标准输入的字符进行替换、去重、删除。
 
 >|常用选项|	作用|
 |--|--|
@@ -479,8 +489,8 @@ tags: Linux教程
 |&emsp;&emsp;&emsp;&emsp;|	<http://man.linuxde.net/tr>
 
 # 14 过滤控制字符——`col`
-&emsp;&emsp;**命令**：col [-bfhpx] [-l num] 
-&emsp;&emsp;**描述**：过滤控制字符。
+**命令**：col [-bfhpx] [-l num] 
+**描述**：过滤控制字符。
 
 >|常用选项|	作用|
 |--|--|
@@ -493,8 +503,8 @@ tags: Linux教程
 
 
 # 15 合并相同行——`join`
-&emsp;&emsp;**命令**：join [OPTION]... FILE1 FILE2 
-&emsp;&emsp;**描述**：将文件1和文件2中指定数据相同的行合并为一行，且将相同字段放在第一个。
+**命令**：join [OPTION]... FILE1 FILE2 
+**描述**：将文件1和文件2中指定数据相同的行合并为一行，且将相同字段放在第一个。
 
 >|常用选项|	作用|
 |--|--|
@@ -506,8 +516,8 @@ tags: Linux教程
 |&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;|	<http://man.linuxde.net/join>
 
 # 16 合并对应行——`paste`
-&emsp;&emsp;**命令**：paste [-ds ] FILE1 FILE2 
-&emsp;&emsp;**描述**：将两行贴在一起，且中间以 TAB 键隔开。
+**命令**：paste [-ds ] FILE1 FILE2 
+**描述**：将两行贴在一起，且中间以 TAB 键隔开。
 
 >|常用选项|	作用|
 |--|--|
@@ -517,8 +527,8 @@ tags: Linux教程
 |&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;|	<http://man.linuxde.net/paste>
 
 # 17 将TAB转为空格——`expand`
-&emsp;&emsp;**命令**：expand [-t n] FILE... 
-&emsp;&emsp;**描述**：将TAB转为空格。
+**命令**：expand [-t n] FILE... 
+**描述**：将TAB转为空格。
 
 >|常用选项|	作用|
 |--|--|
