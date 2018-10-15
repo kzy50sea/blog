@@ -145,16 +145,7 @@ tags: Linux教程
 |&emsp;&emsp;&emsp;&emsp;&emsp;|<http://man.linuxde.net/tail>| 
 
 
-### 1.1.8 `od`
-**命令**：od [OPTION]... [FILE]...
-&emsp;&emsp;&emsp;od [-abcdfilosx]... [FILE] [[+]OFFSET[.][b]]
-&emsp;&emsp;&emsp;od --traditional [OPTION]... [FILE] [[+]OFFSET[.][b] [+][LABEL][.][b]]
-**描述**：查看非纯文本文档。
-|常用选项&emsp;|作用|
-|:----|--|
-|-t TYPE |a 利用默认的字符来输出；c 使用 ASCII 字符来输出;d[size]利用十进制来输出数据，每个整数占用 size bytes ；f[size] 利用浮点数来输出数据，每个数占用 size bytes ；o[size] 利用八进制来输出数据，每个整数占用 size bytes ；x[size] 利用十六进制来输出数据，每个整数占用 size bytes ；
-|**更多信息**|<http://linux.51yip.com/search/od> 和 man 手册|
-|&emsp;&emsp;&emsp;&emsp;|<http://man.linuxde.net/od>|
+
 
 ## 1.2 查看压缩文件
 
