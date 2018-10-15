@@ -9,7 +9,7 @@ tags: Linux教程
 
 ------
 <style>table{word-break:initial;}</style>
-### 1.1.8 `od`
+# 1 `od`
 **命令**：od [OPTION]... [FILE]...
 &emsp;&emsp;&emsp;od [-abcdfilosx]... [FILE] [[+]OFFSET[.][b]]
 &emsp;&emsp;&emsp;od --traditional [OPTION]... [FILE] [[+]OFFSET[.][b] [+][LABEL][.][b]]
