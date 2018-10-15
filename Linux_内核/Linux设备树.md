@@ -847,84 +847,96 @@ struct boot_param_header {
 
 
 # 5 设备树编译与调试
-&emsp;&emsp;DTC为编译工具，它可以将.dts文件编译成.dtb文件。DTC的源码位于内核的`scripts/dtc`目录，内核选中CONFIG_OF，编译内核的时候，主机可执行程序DTC就会被编译出来。 即scripts/dtc/Makefile中
+&emsp;&emsp;DTC为编译工具，它可以将.dts文件编译成.dtb文件。DTC的源码位于内核的`scripts/dtc`目录，内核选中CONFIG_OF，编译内核的时候，可执行程序DTC就会被编译出来。 即scripts/dtc/Makefile中
 ```makefile
 hostprogs-y := dtc
 always := $(hostprogs-y) 
 ```
-&emsp;&emsp;在内核的arch/arm/boot/dts/Makefile中，若选中某种SOC，则与其对应相关的所有dtb文件都将编译出来。在linux下，make dtbs可单独编译dtb。以下截取了TEGRA平台的一部分。
+&emsp;&emsp;在内核的arch/arm/boot/dts/Makefile中，若选中某种SOC，则与其对应相关的所有dtb文件都将编译出来。在linux下，`make dtbs`可单独编译dtb。以下截取了TEGRA平台的一部分。
 ```makefile
 ifeq ($(CONFIG_OF),y)
 dtb-$(CONFIG_ARCH_TEGRA) += tegra20-harmony.dtb tegra30-beaver.dtb tegra114-dalmore.dtb tegra124-ardbeg.dtb 
 ```
+## 5.1 dtc 
+* **命令**：dtc [options] input_file
+* **描述**：设备树编译器dtc将给定格式的设备树作为输入，输出另一种格式设备树，用于在嵌入式系统上引导内核。
+* **示例**：
+	* 编译设备树
+		* `dtc -I dts -O dtb -o filename.dtb filename.dts `
+	* 反编译设备树
+		* `dtc -I dtb -O dts -i filename.dts filename.dtb`
 
 
+|选项|描述|
+|:--|:--|
+| -h   |  显示帮助|
+|-q  |不显示警告
+|-qq| 不显示错误
+|-qqq|不显示警告和错误|
+|-I input_format|输入格式:dts ,dtb， fs |
+|-o output_file|输出文件
+| -O output_format|输出格式：dts ,dtb，asm|
+|-V output version| 在dtb文件中保存blob版本，，默认值为17（仅与dtb和asm输出相关）。
+|-d dependency_file|输出依赖文件
+| -R num|for  num reserve map entries留出空间（仅与dtb和asm输出相关）
+|-S bytes|使blob大小至少为bytes|
+| -p bytes|填充到bytes长的blob
+|-b number|设置启动CPU的编号。
+|-F| 即使输入设备树树有错误，也尝试生成输出。
+|-s |在输出之前对节点和属性进行排序（仅对比较树有用）
+|-v|打印DTC版本并退出。|
+| -H phandle_format|legacy , epapr ,both |
 
-DTC编译.dts生成的二进制文件（.dtb），bootloader在引导内核时，会预先读取.dtb到内存，进而由内核解析。
-       
-在2.6.x版本内核中，在powerpc架构下，dtb文件可以单独进行编译，编译命令格式如下：
+## 5.2 fdtget和fdtput
+* **命令**：fdtget [options] dt_file [node  property]...
+&emsp;&emsp;&emsp;fdtget -p [options] dt file [node]...
+* **描述**：从二进制设备树中读取数据
+* **示例**：
+	* 查看根节点的属性
+		* `fdtget -p -t s filename.dtb /  `
+	* 查看根节点的子节点
+		* `fdtget -l -t -s filename.dtb / `	
+	* 查看根节点的compatible属性
+		* `fdtget -t s filename.dtb / compatible  `
 
+|选项|长选项|描述|
+|:--|:--|:--|
+| -h   |  --help|显示帮助|
+|-V|--version|显示版本号|
+|-t type|--type arg| s=string, i=int, u=unsigned, x=hex，可选前缀:hh/b=1B, h=2B, l=4B(default)
+|-p|--properties|列出每个节点的属性|
+|-l|--list|列出每个节点的子节点|
+|-d arg|--default arg|当没有指定属性时，要显示的默认值|
 
-dtc [-I input-format] [-O output-format][-o output-filename] [-V output_version] input_filename
-
-参数说明
-
-input-format：
-
-- “dtb”: “blob” format
-
-- “dts”: “source” format.
-
-- “fs” format.
-
-output-format：
-
-- “dtb”: “blob” format
-
-- “dts”: “source” format
-
-- “asm”: assembly language file
-
-output_version：
-
-定义”blob”的版本，在dtb文件的字段中有表示，支持1　2　3和16,默认是3,在16版本上有许多特性改变
-
-(1)  Dts编译生成dtb
-
-./dtc -I dts -O dtb -o B_dtb.dtb A_dts.dts
-
-把A_dts.dts编译生成B_dtb.dtb
-
-(2)  Dtb编译生成dts
-
-./dtc -I dtb -O dts -o A_dts.dts A_dtb.dtb
-
-把A_dtb.dtb反编译生成为A_dts.dts
-
-        在linux 3.x内核中，可以使用make的方式进行编译。
-
----------------------
-
-本文来自 storyteller87 的CSDN 博客 ，全文地址请点击：https://blog.csdn.net/u014650722/article/details/79076352?utm_source=copy 
-
-
+* **命令**：fdtput [options] dt_file [node property [value...]]
+&emsp;&emsp;&emsp;fdtput -c [options] dt_file [node...]
+* **描述**：写数据到二进制设备树中
+* **示例**：	
+	* 设置根节点的compatible属性为xlinx,zynq7020
+		* `fdtput -t s filename.dtb / compatible xlinx,zynq7020 `
 
 
+|短选项|长选项|描述|
+|:--|:--|:--|
+| -h   |--help|  显示帮助|
+| -c| --create |  如果节点不存在创建节点
+|-p|--auto-path|  根据需要节点的路径自动创建节点
+|-v|--verbose|显示详细过程
+|-t type|--type arg| s=string, i=int, u=unsigned, x=hex，可选前缀:hh/b=1B, h=2B, l=4B(default)
 
 
+## 5.3 fdtdump
+**命令**：fdtdump [options] DTB_file_name
 
+**描述**：输出二进制设备树的可读版本
+|短选项|长选项|描述|
+|:--|:--|:--|
+|-d| --debug |解码文件时转储调试信息|
+|-s|--scan   |浏览设备树文件|
+|-h|--help   | 显示帮助并退出|
+|-V|--version |显示版本号并退出|
 
-
-
-
-
-
-
-
-
-
-
-
+# 6 设备树工作原理
 
 
 
