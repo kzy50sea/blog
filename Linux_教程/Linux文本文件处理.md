@@ -12,6 +12,7 @@ tags: Linux教程
 
 # 1 查看文件内容
 ## 1.1 查看未压缩文件
+<style 
 ### 1.1.1 `cat`
 **命令**：cat [OPTION]... [FILE]...
 **描述**：顺序将FILE输出到标准输出。没有FILE或FILE为-则读取标准输入。
@@ -62,7 +63,7 @@ tags: Linux教程
 ### 1.1.4 `more`
 **命令**：more [options] file...
 **描述**：将FILE按页输出到标准输出。
->|常用选项|作用|
+|常用选项|作用|
 |:----|--|
 |-d |提示使用者，在画面下方显示 [Press space to continue, 'q' to quit.] ，如果使用者按错键，则会显示 [Press 'h' for instructions.] 而不是 '哔' 声
 |-s  | 当遇到有连续两行以上的空白行，就代换为一行的空白行 
@@ -72,7 +73,7 @@ tags: Linux教程
 |**更多信息**|<http://linux.51yip.com/search/more> 和 man 手册|
 |&emsp;&emsp;&emsp;&emsp;|<http://man.linuxde.net/more>|
 
->|常用交互命令|作用|
+|常用交互命令|作用|
 |:----|--|             
 |h or ? | 显示帮助
 | SPACE |显示接下来的k行，默认一屏 
