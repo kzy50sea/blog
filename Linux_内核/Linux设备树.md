@@ -863,13 +863,9 @@ ifeq ($(CONFIG_OF),y)
 dtb-$(CONFIG_ARCH_TEGRA) += tegra20-harmony.dtb tegra30-beaver.dtb tegra114-dalmore.dtb tegra124-ardbeg.dtb 
 ```
 ## 5.1 dtc 
-* **命令**：dtc [options] input_file
-* **描述**：设备树编译器dtc将给定格式的设备树作为输入，输出另一种格式设备树，用于在嵌入式系统上引导内核。
-* **示例**：
-	* 编译设备树
-		* `dtc -I dts -O dtb -o filename.dtb filename.dts `
-	* 反编译设备树
-		* `dtc -I dtb -O dts -i filename.dts filename.dtb`
+**命令**：dtc [options] input_file
+**描述**：设备树编译器dtc将给定格式的设备树作为输入，输出另一种格式设备树，用于在嵌入式系统上引导内核。
+
 
 
 |选项|描述|
@@ -893,16 +889,9 @@ dtb-$(CONFIG_ARCH_TEGRA) += tegra20-harmony.dtb tegra30-beaver.dtb tegra114-da
 | -H phandle_format|legacy , epapr ,both |
 
 ## 5.2 fdtget和fdtput
-* **命令**：fdtget [options] dt_file [node  property]...
+**命令**：fdtget [options] dt_file [node  property]...
 &emsp;&emsp;&emsp;fdtget -p [options] dt file [node]...
-* **描述**：从二进制设备树中读取数据
-* **示例**：
-	* 查看根节点的属性
-		* `fdtget -p -t s filename.dtb /  `
-	* 查看根节点的子节点
-		* `fdtget -l -t -s filename.dtb / `	
-	* 查看根节点的compatible属性
-		* `fdtget -t s filename.dtb / compatible  `
+**描述**：从二进制设备树中读取数据
 
 |选项|长选项|描述|
 |:--|:--|:--|
@@ -913,12 +902,10 @@ dtb-$(CONFIG_ARCH_TEGRA) += tegra20-harmony.dtb tegra30-beaver.dtb tegra114-da
 |-l|--list|列出每个节点的子节点|
 |-d arg|--default arg|当没有指定属性时，要显示的默认值|
 
-* **命令**：fdtput [options] dt_file [node property [value...]]
+**命令**：fdtput [options] dt_file [node property [value...]]
 &emsp;&emsp;&emsp;fdtput -c [options] dt_file [node...]
-* **描述**：写数据到二进制设备树中
-* **示例**：	
-	* 设置根节点的compatible属性为xlinx,zynq7020
-		* `fdtput -t s filename.dtb / compatible xlinx,zynq7020 `
+**描述**：写数据到二进制设备树中
+
 
 
 |短选项|长选项|描述|
@@ -933,12 +920,6 @@ dtb-$(CONFIG_ARCH_TEGRA) += tegra20-harmony.dtb tegra30-beaver.dtb tegra114-da
 ## 5.3 fdtdump
 * **命令**：fdtdump [options] DTB_file_name
 * **描述**：输出二进制设备树的可读版本
-* **示例**：
-	*  	浏览设备树文件
-		* `fdtdump filename.dtb` 	
-	*  	解码文件时转储调试信息
-		* `ftddump -d filename.dtb`  	
-
 |短选项|长选项|描述|
 |:--|:--|:--|
 |-d| --debug |解码文件时转储调试信息|
