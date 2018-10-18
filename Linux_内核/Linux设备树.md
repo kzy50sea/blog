@@ -80,9 +80,7 @@ binary
 	* 混合数据，之间用逗号隔开，如"a-mixed-property";
 * 引用节点，有两种方法
 	* 使用绝对路径full path
-	* 为节点设置一个标签label，然后用`&标签`来引用该节点
-
-
+	* 为节点设置一个标签label，然后用`&label`来引用该节点，这种引用是通过phandle（pointer handle）进行的。像是这种phandle的节点，在经过DTC工具编译之后，`&label`会变成一个特殊的整型数字n，假设n值为0x00000001，那么在node2节点下自动生成两个属性:`linux,phandle = <0x00000001>;phandle = <0x00000001>;`
 ## 3.2 dts基本语法
 &emsp;&emsp;为了帮助理解device tree的用法，我们从一个简单的计算机开始， 手把手创建一个device tree来描述它。假设有这样一台计算机（基于ARM Versatile）,由“Acme”制造并命名为"Coyote's Revenge"：
 
@@ -767,7 +765,9 @@ pci@0x10180000 {
 
 ![dtb结构图](https://www.github.com/liao20081228/blog/raw/master/图片/Linux设备树/2.gif "dtb结构")
 
+![4](https://www.github.com/liao20081228/blog/raw/master/图片/Linux设备树/4.png)
 
+&emsp;&emsp; alignment gap为填充域，使用0进行填充。
 ## 4.1 DTB header
 &emsp;&emsp;DTB header主要描述设备树的一些基本信息，例如设备树大小，结构块偏移地址，字符串块偏移地址等。偏移地址是相对于设备树头的起始地址计算的。
 ```c
@@ -807,14 +807,11 @@ struct boot_param_header {
 
 ## 4.3 DT structure block
 
-&emsp;&emsp;设备树结构块是一个线性化的结构体，是设备树的主体，以节点的形式保存了主板上的设备信息。在结构块中，以宏`OF_DT_BEGIN_NODE`标志一个节点的开始，以宏`OF_DT_END_NODE`标识一个节点的结束，整个结构块以宏`OF_DT_END` 结束。在`/kernel/include/linux/of_fdt.h`中有相关定义，我们把这些宏称之为token。共计有5种token，定义如下：
+&emsp;&emsp;设备树结构块是一个线性化的结构体，是设备树的主体，以节点的形式保存了主板上的设备信息。在结构块中，以宏`OF_DT_BEGIN_NODE`标志一个节点的开始，以宏`OF_DT_END_NODE`标识一个节点的结束，整个结构块以宏`OF_DT_END` 结束。在`/kernel/include/linux/of_fdt.h`中有相关定义，我们把这些宏称之为tag。共计有5种tag，定义如下：
 ```cpp
-#define FDT_MAGIC   0xd00dfeed 
-#define FDT_TAGSIZE sizeof(uint32_t)
-
-#define FDT_BEGIN_NODE  0x1    /*描述一个node的开始位置，紧挨着该token的就是node name（包括unit address）*/
+#define FDT_BEGIN_NODE  0x1    /*描述一个node的开始位置，紧挨着该tag的就是node name（包括unit address）*/
 #define FDT_END_NODE    0x2     /*描述了一个node的结束位置。*/
-#define FDT_PROP    0x3    /*描述了一个property的开始位置，该token之后是两个u32的数据，分别是length和name offset。length表示该property value data的size。name offset表示该属性字符串在device tree strings block的偏移值。length和name offset之后就是长度为length具体的属性值数据。*/
+#define FDT_PROP    0x3    /*描述了一个property的开始位置，该tag之后是两个u32的数据，分别是length和name offset。length表示该property value data的size。name offset表示该属性字符串在device tree strings block的偏移值。length和name offset之后就是长度为length具体的属性值数据。*/
 #define FDT_NOP     0x4     
 #define FDT_END     0x9  /*标识了一个DTB的结束位置。*/
 
@@ -824,6 +821,21 @@ struct boot_param_header {
 #define FDT_V16_SIZE FDT_V3_SIZE
 #define FDT_V17_SIZE (FDT_V16_SIZE + sizeof(uint32_t))
 
+/*节点信息使用struct fdt_node_header结构体描述。*/
+struct fdt_node_header  {
+    fdt32_t  tag;     	/*一般为
+    char  name[0];
+
+};
+
+ 
+/*属性信息使用struct fdt_property结构体描述*/
+struct  fdt_property  {
+    fdt32_t  tag;
+    fdt32_t  len;     /*len为属性值的长度（包括‘\0’，单位：字节）*/
+    fdt32_t  nameoff;   /*nameoff为属性名称存储位置相对于off_dt_strings的偏移地址*/
+    char  data[0];          
+};
 ```
 
 一个节点主要由以下几部分组成：
@@ -835,14 +847,12 @@ struct boot_param_header {
 5. 如果存在子节点，则定义子节点。
 6. 节点结束标志FDT_END_NODE。
 
-节点和属性都是按照tag，string，value来记录和组织数据，但对于节点来说没有string和value。
-* tag：五个token之一
-* string：节点名或属性名
-* value：属性值
+节点使用`struct fdt_node_header`组织数据，属性使用`struct  fdt_property `组织数据。
 
 
 ![3](https://www.github.com/liao20081228/blog/raw/master/图片/Linux设备树/3.jpg)
 
+![5](https://www.github.com/liao20081228/blog/raw/master/图片/Linux设备树/5.jpg)
 
 ## 4.4 DT strings block
 &emsp;&emsp;通过节点的定义知道节点都有若干属性，而不同的节点的属性又有大量相同的属性名称，因此将这些属性名称提取出一张表，当节点需要应用某个属性名称时直接在属性名字段保存该属性名称在字符串块中的偏移量。
