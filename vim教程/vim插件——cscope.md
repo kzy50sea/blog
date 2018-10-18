@@ -100,24 +100,23 @@ tags: vim
 
 ## 5.3  初始搜索请求
 * 交叉索引数据库准备就绪后，cscope将显示以下菜单：
-
- * Find this C symbol——找到这个C符号
- * Find this function definition——找到此函数定义：
- * Find functions called by this function——查找此函数调用的函数：
- * Find functions calling this function——查找调用此函数的函数：
- * Find this text string——找到这个文字字符串：
- * Change this text string——更改此文本字符串：
- * Find this egrep pattern——找到这个egrep pattern：
- * Find this file——找到这个文件：
- * Find files #including this file——查找文件#include文件
- * Find assignments to this symbol——查找此符号的赋值
-
-* 反复按`<up>`或`<down>`键移动到所需的输入字段，键入要搜索的文本，然后按`<return>`键搜索。如果搜索成功，则可以使用以下任何单字符命令：
+	* Find this C symbol——找到这个C符号
+	* Find this function definition——找到此函数定义：
+	* Find functions called by this function——查找此函数调用的函数：
+	* Find functions calling this function——查找调用此函数的函数：
+	* Find this text string——找到这个文字字符串： 
+	* Change this text string——更改此文本字符串：
+	* Find this egrep pattern——找到这个egrep pattern：
+	* Find this file——找到这个文件：
+	* Find files #including this file——查找文件#include文件
+	* Find assignments to this symbol——查找此符号的赋值
+* 反复按`<up>`或`<down>`键移动到所需的输入字段，键入要搜索的文本，然后按`<ENTER>`键搜索。如果搜索成功，则可以使用以下任何单字符命令：
 
 ## 5.4 发出后续请求
 * 搜索成功后可以使用下例命令
+
 |按键|描述|
-|--|--|
+|:--|:--|
 | 0-9A-ZA-Z|编辑给定行号的文件。
 |`<space>`|显示下一组匹配行。
 |`<TAB>`|在菜单和匹配行列表之间交替显示
@@ -136,7 +135,7 @@ tags: vim
 * 在任何时候，可以使用这些单字符命令：
 
 |按键|描述|
-|--|--|
+|:--|:--|
 |`<ENTER>`|移至下一个输入字段。
 |ctrl+n|移动到下一个输入字段。
 |ctrl+p|移至上一个输入字段。
@@ -154,8 +153,9 @@ tags: vim
 >注意：如果要搜索的文本的第一个字符与上述命令之一匹配，请先键入（反斜杠）以将其转义。
 
 * 用新文本替换旧文本:键入要被改变的文本后，cscope将提示输入新文本，然后显示包含旧文本的行。 使用这些单字符命令选择要更改的行
+
 |按键|描述|
-|--|--|
+|:--|:--|
 |0-9A-ZA-Z|标记或取消标记要更改的行。
 |*|标记或取消标记要更改的所有显示行。
 |`<space>`|显示下一组。
@@ -191,7 +191,7 @@ tags: vim
 |--|--|
 |CSCOPE_EDITOR|覆盖EDITOR和VIEWER变量。在cscope中使用不同于EDITOR/VIEWER变量指定的编辑器
 |CSCOPE_LINEFLAG|编辑器行号的格式。cscope默认通过`editor +N file`来调用编辑器，`N`是编辑器应跳转到的行号。emacs和vim都使用此格式。如果您的编辑器需要不同的方式，请在此变量中指定此项，并使用“％s”作为行号的占位符。例如：`editor -＃103 file`，应将此变量设置为` -＃％s`。
-|CSCOPE_LINEFLAG_AFTER_FILE|如果需要在要编辑的文件名后使用行号选项调用编辑器，请将此变量设置为“yes”。例如：`editor file +＃number`
+|CSCOPE_LINEFLAG<br />_AFTER_FILE|如果需要在要编辑的文件名后使用行号选项调用编辑器，请将此变量设置为“yes”。例如：`editor file +＃number`
 |EDITOR|首选编辑器，默认为vi。
 |HOME|主目录，自动设置为登录。
 |INCLUDEDIRS|以冒号分隔的目录列表，用于搜索#include文件。
@@ -203,13 +203,13 @@ tags: vim
 |VIEWER|首选文件显示程序（如less），它会覆盖EDITOR（见上文）。
 |VPATH|以冒号分隔的目录列表，每个目录下面都有相同的目录结构。 如果设置了VPATH，cscope将搜索指定目录中的源文件; 如果未设置，则cscope仅在当前目录中搜索。
 
-##5.7 文件
+## 5.7 相关文件
 |文件|描述|
 |--|--|
 |cscope.files|包含-I，-p，-q和-T选项的默认文件以及源文件列表（由-i选项覆盖）。
 |cscope.out|交叉索引数据库（由-f选项覆盖），如果无法在当前目录中创建，则放在主目录中。
 |cscope.in.out、cscope.po.out|默认的反向索引数据库（由-q选项建立）。如果使用-f选项重命名数据库文件（cscope.out）， 则会在加上.in和.po后缀
-|INCDIR |#include文件的标准目录（通常为/ usr / include）。
+|INCDIR |#include文件的标准目录（通常为`/usr/include`）。
 
 
 
