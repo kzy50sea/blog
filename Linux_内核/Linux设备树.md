@@ -951,6 +951,7 @@ dtb-$(CONFIG_ARCH_TEGRA) += tegra20-harmony.dtb tegra30-beaver.dtb tegra114-da
  
 <5> machine_desc结构
 内核提供了一个重要的结构体struct machine_desc ，这个结构体在内核移植中起到相当重要的作用，内核通过machine_desc结构体来控制系统体系架构相关部分的初始化。machine_desc结构体通过MACHINE_START宏来初始化，在代码中， 通过在start_kernel->setup_arch中调用setup_machine_fdt来获取。
+```cpp
 struct machine_desc {
     unsigned int nr; /* architecture number */
     const char *name; /* architecture name */
@@ -1020,6 +1021,9 @@ struct property {
     unsigned long _flags; //标志
     unsigned int unique_id;
 };
+```
+
+
 
 
 ------
