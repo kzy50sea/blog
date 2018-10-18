@@ -6,6 +6,7 @@ tags: vim
 ------
 
 &emsp;&emsp;<font color=blue>**_版权声明_**</font>：本文参考了<font color=blue>《cscope 官方文档》。</font><font color=red>未经作者允许，<font color=blue>严禁用于商业出版</font>，否则追究法律责任。网络转载请注明出处，这是对原创者的起码的尊重！！！</font>
+<style>table{word-break:initial;}</style>
 
 ------
 
@@ -29,50 +30,40 @@ tags: vim
 >**注意**：cscope即可以单独使用，也可以在作为vim的一个插件来使用，但要求vim编译时配置了`--enable-cscepe`特性。可以使用`$ vim --version |grep cscepe`来查看是否支持。
 
 
-#3 配置
+# 3 配置
 * 修改vim配置文件vimrc.你可以修改/etc/vimrc使用所有用户都使用本配置文件，当然你还可以修改~/.vimrc
 * 下载配置文件：[cscope_map.vim ](http://cscope.sourceforge.net/cscope_maps.vim) 
-* 把cscope_map.vim里从 if has("cscope")  到 endif里边的内容复制到/etc/vimrc里边去，也可以自行修改。
+* 把cscope_map.vim里从 if has("cscope")  到 endif里边的内容复制到`/etc/vimrc`里边去，也可以自行修改。
 
-#4 使用
+# 4 使用
 * 建立数据库：`cscope -Rbq`
 * 进入vim
 * 添加数据库: `:add file|dir [pre-path] [flags])`
-* 搜索: `:find  {querytype} {name}`，除了 4 和 6 之外的类型忽略 name之前的空格。4 和 6 在 querytype和name 之间只能有一个空格分隔。多余的空格是 name}的一部分。
- * 0 或 s: 查找本 C 符号
- * 1 或 g: 查找本定义
- * 2 或 d: 查找本函数调用的函数
- * 3 或 c: 查找调用本函数的函数
- * 4 或 t: 查找本字符串
- * 6 或 e: 查找本 egrep 模式
- * 7 或 f: 查找本文件
- * 8 或 i: 查找#include本文件的文件
- * 9 或 a: 查找此符号被赋值的位置
-
+* 搜索: `:find  {querytype} {name}`，除了 4 和 6 之外的类型忽略 name之前的空格。4 和 6 在 querytype和name 之间只能有一个空格分隔。多余的空格是 name的一部分。
+	* 0 或 s: 查找本 C 符号
+	* 1 或 g: 查找本定义
+	* 2 或 d: 查找本函数调用的函数
+	* 3 或 c: 查找调用本函数的函数
+	* 4 或 t: 查找本字符串
+	* 6 或 e: 查找本 egrep 模式
+	* 7 或 f: 查找本文件
+	* 8 或 i: 查找#include本文件的文件
+	* 9 或 a: 查找此符号被赋值的位置
 * 显示帮助: `:help`
 * 断开连接: `:kill #`
 * 重置连接:` :reset`
 * 显示连接:` :show`
 
-
-
-
-        除了 4 和 6 之外的类型忽略 {name} 之前的空格。4 和 6 在 {querytype} 和
-        {name} 之间只能有一个空格分隔。多余的空格是 {name} 的一部分。
-
-
-
-
-#5 命令详解
-##5.1  概要和描述
+# 5 命令详解
+## 5.1  概要和描述
 **命令** ：cscope [-bCcdehkLlqRTUuVvX] [-Fsymfile] [-freffile] [-Iincdir] [-inamefile] [-0123456789pattern] [-pn] [-sdir] [files]
 **描述**：cscope是一个交互式的，面向屏幕的工具，允许用户浏览C源文件以获取指定的代码元素。默认情况下，cscope检查当前目录中的C（.c和.h），lex（.l）和yacc（.y）源文件。可以在命令行上指明源文件。cscope会搜索头文件目录。 cscope使用交叉引用符号（默认情况下称为cscope.out）来定位文件中的函数，函数调用，宏，变量和预处理器符号。cscope将在首次浏览程序源文件时构建交叉引用符号数据库。在后续调用中，仅当源文件已更改或源文件列表不同时，cscope才会重建交叉引用。重建交叉引用时，将从旧的交叉引用复制未更改文件的数据数据库，这使得重建速度比初始构建更快。
 
-##5.2  选项
+## 5.2  选项
 * -I，-c，-k，-p，-q和-T选项也可以位于cscope.files文件中。
 
 |短选项|描述
-|--|--|--|
+|:--|:--|
 |-h|  帮助|
 |-V| 查看版本号
 |**-b**|  只创建数据库，然后退出。否则进入查找界面
@@ -80,15 +71,15 @@ tags: vim
 |-c|在数据库中只使用ASCII字符，即不压缩数据。
 |-d|不更新数据库
 |-e|禁止文件之间的<Ctrl> -e命令提示符。
-|**-k**|``Kernel Mode''，在创建数据库时禁用默认的头文件目录（/usr/ include）
+|**-k**|"Kernel Mode''，在创建数据库时禁用默认的头文件目录（/usr/ include）
 | -L|与-num pattern选项一起使用时进行单次搜索，然后使用命令行模式进行输出
 |-l|命令行模式
-|**-npattern**|进入指定的搜索模式，并搜索pattern。n为[0-9]
-|**-Ppath**|在预先建立数据库中的相对文件名前加上路径path，这样不必更改工作目录到数据库所在目录。仅与-d联用有效
-|-pn|显示最后n个文件路径而不是最后1个。0不显示文件名。
+|**-n pattern**|进入指定的搜索模式，并搜索pattern。n为[0-9]
+|**-P path**|在预先建立数据库中的相对文件名前加上路径path，这样不必更改工作目录到数据库所在目录。仅与-d联用有效
+|-p n|显示最后n个文件路径而不是最后1个。0不显示文件名。
 |**-q**|通过反向索引启用快速符号查找。除普通数据库外，cscope会创建2个文件（默认为`cscope.in.out`和`cscope.po.out`）。
 |**-R**|在搜索源文件期间递归子目录。
-|-sdir|在dir中查找其他源文件。 如果在命令行上提供源文件，则忽略此选项。
+|-s dir|在dir中查找其他源文件。 如果在命令行上提供源文件，则忽略此选项。
 |-T|仅使用前八个字符匹配C符号。除`.`之外的长度大于8的正则表达式不会匹配任何标识符
 |-U|检查文件时间戳。 即使没有更改文件，此选项也将更新数据库上的时间戳。
 |-u|无条件地构建交叉引用数据库（假设所有文件都已更改）。
@@ -98,7 +89,7 @@ tags: vim
 |-f reffile|使用reffile作为生成的数据库的文件名而不是默认的“cscope.out”。
 |-F symfile|从symfile中读取数据库。（由重定向>或>>输出，也可用<读入)
 |-I incdir|在indir中搜索#include引入的头文件（包括`#include<xx.h>`和`#include"xx.h"`），查找名称不以`/`开头并且未在命令行或-i选项中列出的文件。 如果出现多次出现-I，则按照出现的顺序搜索目录。
-|-i namefile|浏览namefile列出的源文件而不是名为cscope.files的默认文件（文件名由空格，制表符或换行符分隔）。 <br>如果指定了此选项，则cscope将忽略命令行中出现的任何文件名namefile为“ - ”表示接受标准输入。<br>文件名由空格必须用“双引号”括起来。双引号和反斜杠必须转义。
+|-i namefile|浏览namefile列出的源文件而不是名为cscope.files的默认文件（文件名由空格，制表符或换行符分隔）。 如果指定了此选项，则cscope将忽略命令行中出现的任何文件名namefile为“ - ”表示接受标准输入。文件名由空格必须用“双引号”括起来。双引号和反斜杠必须转义。
 |&emsp;&emsp;&emsp;&emsp;&emsp;&ensp;||
 |**长选项**|**描述**
 |--help|等效于-h
@@ -107,7 +98,7 @@ tags: vim
 
 
 
-##5.3  初始搜索请求
+## 5.3  初始搜索请求
 * 交叉索引数据库准备就绪后，cscope将显示以下菜单：
 
  * Find this C symbol——找到这个C符号
@@ -194,7 +185,7 @@ tags: vim
 * 您可以使用r命令重建数据库。
 * 当cscope检测到文件结束时，或者当输入行的第一个字符是“^d”或“q”时，它将退出。
 
-##5.6 环境变量
+## 5.6 环境变量
 
 |环境变量|描述|
 |--|--|
