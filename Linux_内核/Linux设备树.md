@@ -5,7 +5,7 @@ tags: Linux内核
 
 ------
 
-&emsp;&emsp;<font color=blue>**_版权声明_**</font>：本文章参考了<font color=blue >[《Device Tree Usage》](http://www.devicetree.org/Device_Tree_Usage)、[《uboot之fdt介绍》](https://www.cnblogs.com/leaven/p/6295999.html)、[《蜂窝科技的几篇文章》](http://www.wowotech.net/device_model/dt_basic_concept.html)。</font><font color=red>未经作者允许，<font color=blue>严禁用于商业出版</font>，否则追究法律责任。网络转载请注明出处，这是对原创者的起码的尊重！！！</font>
+&emsp;&emsp;<font color=blue>**_版权声明_**</font>：本文章参考了<font color=blue >[《Device Tree Usage》](http://www.devicetree.org/Device_Tree_Usage)、[《uboot之fdt介绍》](https://www.cnblogs.com/leaven/p/6295999.html)、[《蜂窝科技的几篇文章》](http://www.wowotech.net/device_model/dt_basic_concept.html)，宋牧春[《Linux设备树文件结构与解析深度分析》](https://blog.csdn.net/woyimibayi/article/details/77574736)</font><font color=red>未经作者允许，<font color=blue>严禁用于商业出版</font>，否则追究法律责任。网络转载请注明出处，这是对原创者的起码的尊重！！！</font>
 
 ------
 
@@ -1014,6 +1014,7 @@ struct property {
 
 ------
 
-&emsp;&emsp;<font color=blue>**_版权声明_**</font>：本文章参考了<font color=blue >[《Device Tree Usage》](http://www.devicetree.org/Device_Tree_Usage)、[《uboot之fdt介绍》](https://www.cnblogs.com/leaven/p/6295999.html)、[《蜂窝科技的几篇文章》](http://www.wowotech.net/device_model/dt_basic_concept.html)。</font><font color=red>未经作者允许，<font color=blue>严禁用于商业出版</font>，否则追究法律责任。网络转载请注明出处，这是对原创者的起码的尊重！！！</font>
+
+&emsp;&emsp;<font color=blue>**_版权声明_**</font>：本文章参考了<font color=blue >[《Device Tree Usage》](http://www.devicetree.org/Device_Tree_Usage)、[《uboot之fdt介绍》](https://www.cnblogs.com/leaven/p/6295999.html)、[《蜂窝科技的几篇文章》](http://www.wowotech.net/device_model/dt_basic_concept.html)，宋牧春[《Linux设备树文件结构与解析深度分析》](https://blog.csdn.net/woyimibayi/article/details/77574736)</font><font color=red>未经作者允许，<font color=blue>严禁用于商业出版</font>，否则追究法律责任。网络转载请注明出处，这是对原创者的起码的尊重！！！</font>
 
 ------
