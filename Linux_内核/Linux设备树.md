@@ -1020,6 +1020,7 @@ struct property {
     struct property *next; //指向下一个属性
     unsigned long _flags; //标志
     unsigned int unique_id;
+	struct bin_attribute attr；
 };
 ```
 
