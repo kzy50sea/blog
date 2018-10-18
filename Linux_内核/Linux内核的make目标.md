@@ -47,8 +47,8 @@ tags: Linux内核
 * `all`——编译本文中所有加粗的目标
 * **`vmlinux`**—— 构建vmlinux格式的内核
 * **`modules`**——构建所有的模块
-*  `modules_install`——安装所有的module到INSTALL_MOD_PATH (default: /)
-*  `firmware_install`——安装所有的firmware到 INSTALL_FW_PATH(default:$(INSTALL_MOD_PATH)/lib/firmware)
+*  `modules_install`——安装所有的module到`INSTALL_MOD_PATH (default: /)`
+*  `firmware_install`——安装所有的firmware到 `INSTALL_FW_PATH(default:$(INSTALL_MOD_PATH)/lib/firmware)`
 *  `dir/ —— 构建dir目录下的所有的文件
 *  `dir/file.[ois]`——编译构建指定目标
 *  `dir/file.ll`——构建LLVM程序集文件（需要编译器支持LLVM程序集生成）
