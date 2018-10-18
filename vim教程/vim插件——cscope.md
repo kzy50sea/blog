@@ -38,21 +38,21 @@ tags: vim
 # 4 使用
 * 建立数据库：`cscope -Rbq`
 * 进入vim
-* 添加数据库: `:add file|dir [pre-path] [flags])`
-* 搜索: `:find  {querytype} {name}`，除了 4 和 6 之外的类型忽略 name之前的空格。4 和 6 在 querytype和name 之间只能有一个空格分隔。多余的空格是 name的一部分。
-	* 0 或 s: 查找本 C 符号
-	* 1 或 g: 查找本定义
-	* 2 或 d: 查找本函数调用的函数
+* 添加数据库: `:cscope|cs add file|dir [pre-path] [flags])`
+* 搜索: `:cscope|cs find  {querytype} {name}`，除了 4 和 6 之外的类型忽略 name之前的空格。4 和 6 在 querytype和name 之间只能有一个空格分隔。多余的空格是 name的一部分。
+	* 0 或 s: 查找 C 符号
+	* 1 或 g: 查找定义
+	* 2 或 d: 查找函数调用的函数
 	* 3 或 c: 查找调用本函数的函数
 	* 4 或 t: 查找本字符串
 	* 6 或 e: 查找本 egrep 模式
 	* 7 或 f: 查找本文件
 	* 8 或 i: 查找#include本文件的文件
 	* 9 或 a: 查找此符号被赋值的位置
-* 显示帮助: `:help`
-* 断开连接: `:kill #`
-* 重置连接:` :reset`
-* 显示连接:` :show`
+* 显示帮助: `:cscope|cs help`
+* 断开连接: `:cscope|cs kill #`
+* 重置连接:` :cscope|cs reset`
+* 显示连接:` :cscope|cs show`
 
 # 5 命令详解
 ## 5.1  概要和描述
