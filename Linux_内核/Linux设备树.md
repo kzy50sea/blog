@@ -939,7 +939,10 @@ dtb-$(CONFIG_ARCH_TEGRA) += tegra20-harmony.dtb tegra30-beaver.dtb tegra114-da
 
 # 6 设备树工作原理
 
+```
 
+
+```
 
 
 
