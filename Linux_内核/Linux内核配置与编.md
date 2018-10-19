@@ -18,17 +18,17 @@ tags: Linux内核
 $tar -xvJf linux-x.x.x.tar.xz
 $cd linux-x.x.x.tar.xz
 ```
-##1.2 检查硬件环境
+## 1.2 检查硬件环境
 ```
 $cat /proc/cpuinfo
-$lspci
+$ls pci
 ```
-##1.3 获取干净的源码
+## 1.3 获取干净的源码
 * `$make clean`—— 删除大多数生成的文件，但保留配置和足够的构建支持以构建外部模块
 * `$make mrproper` —— 删除所有生成的文件+ config +各种备份文件
 * `$make distclean` —— `$make mrproper` +删除编辑器备份文件和补丁文件
 
-#2 配置和编译内核
+# 2 配置和编译内核
 ## 2.1 配置内核
 * `make [ARCH=xxx] xxxconfig`，配置内核，每个选项要么是二选一yes或no，要么是三选一yes、no、module。yes表示把代码编译进内核映像，module表示以模块方式编译。
 * 常见配置目标
