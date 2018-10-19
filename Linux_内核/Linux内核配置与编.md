@@ -5,25 +5,15 @@ tags: Linux内核
 
 ------
 
-&emsp;&emsp;<font color=blue>**_版权声明_**</font>：本文参考了<font color=blue>。</font><font color=red>未经作者允许，<font color=blue>严禁用于商业出版</font>，否则追究法律责任。网络转载请注明出处，这是对原创者的起码的尊重！！！</font>
+&emsp;&emsp;<font color=blue>**_版权声明_**</font>：本文参考了<font color=blue>《Linux内核官方文档》。</font><font color=red>未经作者允许，<font color=blue>严禁用于商业出版</font>，否则追究法律责任。网络转载请注明出处，这是对原创者的起码的尊重！！！</font>
 
 ------
 
-# 
-
-标签（空格分隔）： Linux内核
 
 
+# 1 准备工作
 
----
-
-&emsp;&emsp;***<font color=blue>版权声明</font>***：*本文章参考了<font color=blue >**《Linux内核官方文档》。**</font><font color=red>未经作者允许，**<font color=blue>严禁用于商业出版</font>**，否则追究法律责任。网络转载请注明出处，这是对原创者的起码的尊重！！！</font>*
-
----
-
-#1 准备工作
-
-##1.1 获取并解压内核源码
+## 1.1 获取并解压内核源码
 ```
 $tar -xvJf linux-x.x.x.tar.xz
 $cd linux-x.x.x.tar.xz
