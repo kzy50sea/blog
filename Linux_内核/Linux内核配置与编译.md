@@ -43,10 +43,10 @@ $ls pci
 		 * `$ maken[ARCH=xxx] defconfig`——使用ARCH提供的defconfig默认配置
 		 * `$ maken[ARCH=xxx] tinyconfig`——配置最小的内核
 
-* 补充
-	 * 内核配置好后，配置项存放在源代码内核源码根目录的`.config`文件中，可以直接修改该文件，修改后应该更新用`$ make oldconfig`更新配置。
-	 * 选项`CONFIG_IKCONFIG_PROC`把压缩过的内核配置文件放在`/proc/config.gz`中，如果当前内核启用了该选项，则可以直接克隆该配置。
-	 * 如果不想在命令行输入ARCH=XXX，则可以直接在顶层Makefile中进行修改。
+>补充：
+> * 内核配置好后，配置项存放在源代码内核源码根目录的`.config`文件中，可以直接修改该文件，修改后应该更新用`$ make oldconfig`更新配置。
+>* 选项`CONFIG_IKCONFIG_PROC`把压缩过的内核配置文件放在`/proc/config.gz`中，如果当前内核启用了该选项，则可以直接克隆该配置。
+>* 如果不想在命令行输入ARCH=XXX，则可以直接在顶层Makefile中进行修改。
 
 ## 2.2 编译内核与模块 
 
@@ -64,16 +64,28 @@ $ls pci
 	* modules
 
 # 3 安装内核
-* `$make modules_install`，安装模块
-* 安装内核
- * 自动安装
-     *  `$make install`
- *  手动安装
-     *  拷贝
-     *  建立
-     *  设置
+* 自动安装
+	* `$make modules_install`，安装模块
+	*  `$make install`，安装内核
+	*  `$sudo update-initramfs -c -k 4.17-rc2`,启用内核
+	*  `$sudo update-grub`,更新grub
+*  手动安装
+	*  拷贝bzImage为/boot/vmlinuz-VERSION-RELEASE
+	*  建立initramfs文件
+	*  设置grub的配置文件
 
-# 4 内核配置及编译过程详解
+
+
+# 4 卸载内核 
+1. 删除`/boot/vmlinuz-KERNEL-VERSION`
+2. 删除`/boot/initrd-KERNEL-VERSION*`
+3. 删除`/boot/System-map-KERNEL-VERSION`
+4. 删除`/boot/config-KERNEL-VERSION`
+5. 更新/boot/grub的配置文件，删除不需要的内核启动列表
+
+
+
+# 5 内核配置及编译过程详解
 ## 4.1 内核配置过程详解
 * Linux内核的配置系统由三个部分组成，分别是：
 
