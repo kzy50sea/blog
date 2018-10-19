@@ -825,7 +825,7 @@ ${function arg1,arg2...}
 
 * `$(origin <variable> )`
 	 * 名称：原始函数——origin。
-	 * 功能:获取变量的来源。
+	 * 功能：获取变量的来源。
 	 * 返回：
 		 * “undefined”：未定义变量。
 		 * “default”：预定义变量。
