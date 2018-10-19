@@ -1,5 +1,5 @@
 ---
-title: Linux内核配置与编
+title: Linux内核配置与编译
 tags: Linux内核
 ---
 
