@@ -622,12 +622,18 @@ endif
 	 * `ifdef|ifndef variable-name`
 
 # 7 函数
-## 7.1 函数调用语法
+## 7.1 函数定义与调用
 ```makefile
+#定义函数
+define fun
+... ...
+... ...
+endef
+
+#调用函数
+
 $(function arg1,arg2...)
-
 #或
-
 ${function arg1,arg2...}
 ```
 
