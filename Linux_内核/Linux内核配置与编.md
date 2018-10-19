@@ -32,38 +32,38 @@ $ls pci
 ## 2.1 配置内核
 * `make [ARCH=xxx] xxxconfig`，配置内核，每个选项要么是二选一yes或no，要么是三选一yes、no、module。yes表示把代码编译进内核映像，module表示以模块方式编译。
 * 常见配置目标
- * 手动配置 
-     * `$ make [ARCH=xxx] config`——基于文本的配置界面
-     * `$ maken[ARCH=xxx] nconfig`——基于ncurses的配置界面
-     * `$ maken[ARCH=xxx] menuconfig`——基于菜单程序的配置界面
-     * `$ maken[ARCH=xxx] xconfig`——使用基于Qt的配置界面
-     * `$ maken[ARCH=xxx] gconfig`——使用基于GTK+的配置界面
- * 快速配置
-     * `$ maken[ARCH=xxx] oldconfig`——使用之前配置好的.config作为基础更新当前配置
-     * `$ maken[ARCH=xxx] defconfig`——使用ARCH提供的defconfig默认配置
-     * `$ maken[ARCH=xxx] tinyconfig`——配置最小的内核
+	* 手动配置 
+		 * `$ make [ARCH=xxx] config`——基于文本的配置界面
+		 * `$ maken[ARCH=xxx] nconfig`——基于ncurses的配置界面
+		 * `$ maken[ARCH=xxx] menuconfig`——基于菜单程序的配置界面
+		 * `$ maken[ARCH=xxx] xconfig`——使用基于Qt的配置界面
+		 * `$ maken[ARCH=xxx] gconfig`——使用基于GTK+的配置界面
+	* 快速配置
+		 * `$ maken[ARCH=xxx] oldconfig`——使用之前配置好的.config作为基础更新当前配置
+		 * `$ maken[ARCH=xxx] defconfig`——使用ARCH提供的defconfig默认配置
+		 * `$ maken[ARCH=xxx] tinyconfig`——配置最小的内核
 
 * 补充
- * 内核配置好后，配置项存放在源代码内核源码根目录的`.config`文件中，可以直接修改该文件，修改后应该更新用`$ make oldconfig`更新配置。
- * 选项`CONFIG_IKCONFIG_PROC`把压缩过的内核配置文件放在`/proc/config.gz`中，如果当前内核启用了该选项，则可以直接克隆该配置。
- * 如果不想在命令行输入ARCH=XXX，则可以直接在顶层Makefile中进行修改。
+	 * 内核配置好后，配置项存放在源代码内核源码根目录的`.config`文件中，可以直接修改该文件，修改后应该更新用`$ make oldconfig`更新配置。
+	 * 选项`CONFIG_IKCONFIG_PROC`把压缩过的内核配置文件放在`/proc/config.gz`中，如果当前内核启用了该选项，则可以直接克隆该配置。
+	 * 如果不想在命令行输入ARCH=XXX，则可以直接在顶层Makefile中进行修改。
 
-##2.2 编译内核与模块 
+## 2.2 编译内核与模块 
 
 * `$make [ARCH=xxx] [编译目标][编译选项与参数]`，编译内核，2.6版本之前每次编译需要运行`$make dep`。 
- * 如果想减少编译时的垃圾信息可以使用
-     * `$make XXXX > 文件名` ： 把编译细节、警告、错误输出到指定文件。
-     *  `$make XXXX > /dev/null`：不记录任何编译信息
- *  如果不想在命令行输入ARCH=XXX和CROSS_COMPILE=XXX，则可以直接在顶层Makefile中进行修改。
- *  如果想编译快一些，可以使用-jn选项，n为cpu个数
+	* 如果想减少编译时的垃圾信息可以使用
+		* `$make XXXX > 文件名` ： 把编译细节、警告、错误输出到指定文件。
+		*  `$make XXXX > /dev/null`：不记录任何编译信息
+	*  如果不想在命令行输入ARCH=XXX和CROSS_COMPILE=XXX，则可以直接在顶层Makefile中进行修改。
+	*  如果想编译快一些，可以使用-jn选项，n为cpu个数
 * 常见编译目标
- * all
- * vmlinux 
- * Image
- * zImage/bzImage
- * modules
+	* all
+	* vmlinux 
+	* Image
+	* zImage/bzImage
+	* modules
 
-#3 安装内核
+# 3 安装内核
 * `$make modules_install`，安装模块
 * 安装内核
  * 自动安装
@@ -73,9 +73,7 @@ $ls pci
      *  建立
      *  设置
 
-
-
-#4 内核配置及编译过程详解
+# 4 内核配置及编译过程详解
 ## 4.1 内核配置过程详解
 * Linux内核的配置系统由三个部分组成，分别是：
 
