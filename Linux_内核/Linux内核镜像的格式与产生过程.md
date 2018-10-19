@@ -52,21 +52,21 @@ tags: Linux内核
 ### 1.5.1 uImage简介
 &emsp;&emsp;uImage是uboot专用的镜像文件，它是在zImage之前加上一个长度为64B的头信息(tag)，在头信息内说明了该镜像文件的类型、加载 位置、生成时间、大小等信息。换句话说，若直接从uImage的0x40位置开始执行，则zImage和uImage没有任何区别。命令格式是`make uImage`，这种格式的Linux镜像文件多存放在NAND 上。64字节的头结构如下：
 ```cpp
-typedef struct image_header 
-{
-    uint32_t ih_magic;
-    uint32_t ih_hcrc;
-    uint32_t ih_time;
-    uint32_t ih_size;
-    uint32_t ih_load;
-    uint32_t ih_ep;
-    uint32_t ih_dcrc;
-    uint8_t ih_os;
-    uint8_t ih_arch;
-    uint8_t ih_type;
-    uint8_t ih_comp;
-    uint8_t ih_name[IH_NMLEN];
+typedef struct image_header {
+	__be32		ih_magic;	/* 魔数	*/
+	__be32		ih_hcrc;	/* 整个64字节头的crc校验码 */
+	__be32		ih_time;	/* uImage的建立时间	*/
+	__be32		ih_size;	/* zImage的字节数 */
+	__be32		ih_load;	/* uImage要加载的地址	*/
+	__be32		ih_ep;		/* zImage的入口位置 = load + 64	*/
+	__be32		ih_dcrc;	/* 整个zImage的crc校验码	*/
+	uint8_t		ih_os;		/* 操作系统代码	*/
+	uint8_t		ih_arch;	/* 芯片类型 */
+	uint8_t		ih_type;	/*  镜像类型 */
+	uint8_t		ih_comp;	/* 压缩类型 */
+	uint8_t		ih_name[IH_NMLEN];	/* 32字节的名字 */
 } image_header_t;
+
 ```
 所以，uImage和zImage都是压缩后的内核映像。而uImage是用mkimage工具根据zImage制作而来的。mkimage工具介绍如下：u-boot里面的mkimage工具来生成uImage（u-boot源码包/tools/mkimage.c )
 
