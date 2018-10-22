@@ -1,6 +1,5 @@
 ---
-title: Linux内核构建系统详解
-tags: Linux内核
+title: Linux内核构建系统
 ---
 
 ------
@@ -9,7 +8,44 @@ tags: Linux内核
 
 ------
 
-# Linux内核Kconfig语法
+# 1 简介
+Linux的内核构建系统主要由几个组成：
+* Kbuild
+* Kconfig
+* Makefile
+* scripts/
+
+
+# 2 内核配置详解
+## 2.1 内核配置过程详解
+* Linux内核的**配置系统**由三个部分组成，分别是：
+	* `Makefile`——分布在 Linux 内核源代码根目录及各层目录中，定义 Linux 内核的编译规则；
+	* `Kconfig`——分布在 Linux 内核源代码根目录及各层目录中，给用户提供配置选择的功能；
+	* `scripts`——分布在 Linux内核源代码根目录下，包括配置命令解释器（对配置脚本中使用的配置命令进行解释）和配置用户界面（提供基于字符界面、基于 Ncurses 图形界面以及基于 Xwindows 图形界面的用户配置界面，各自对应于 Make config、Make menuconfig 和 make xconfig）。
+* 当我们使用`make menuconfig`这个命令时（其它配置命令类似）：
+	* 首先由make编译生成`scripts/kconfig/mconf.c`生成`scripts/kconfig/mconf`。（xconfig对应qconf，gconfig对应gconf，config对应conf）
+	* 然后执行`scripts/kconfig/mconf Kconfig`
+	* mconf程序读取内核根目录下的Kconfig文件，Kconfig载入了`arch/$(SRCARCH)/Kconfig`，`arch/$(SRCARCH)/Kconfig`又分别载入各目录下的Kconfig文件，以此递归下去，最后生成主配置界面以及各级配置菜单。`SRCARCH`是由顶层Makefile中定义的，它等于`$(ARCH)`，而`$ARCH`由Makefile或make的命令行参数指定。
+	* 在完成配置后，mconf会将配置保存在Linux内核源代码根目录下的`.config`文件中。
+
+* 当我们使用`make defconfig`这个命令时：系统直接将`arch/$SRCARCH/configs`（**该目录存放内核的默认配置文件**）下的对应的默认配置文件拷贝到Linux内核源代码根目录下的`.config`文件。
+
+
+## 5.2 内核编译过程详解
+* 在输入编译命令后，make首先调用脚本来读取`.config`文件，并根据内容载入对应文件到`include/config/`，并将一些配置项写入`include/config/auto.conf`。
+* 脚本程序将`include/config/auto.conf`中的配置项`CONFIG_XXXX=y|m|xxx`翻译为宏定义`#define CONFIG_XXXX[_MODULE] 1|xxx`，并写入`include/generate/autoconf.h`中。
+* autoconf.h就是`include/config/auto.conf`中的配置项的内容的C语言写法，以便在以后使用的时候作为宏定义出现，以实现条件编译。
+* make根据Makefile执行编译。
+
+# 6 在内核中添加程序
+* 将源代码拷贝到内核源码的相应目录
+* 修改对应目录下的Kconfig文件，按照Kconfig语法增加对应的选项；
+* 修改对应目录下的Makefile文件完成编译选项的添加`obj-$(CONFIG_symbol)+= filename.o`；
+
+
+
+
+# 2 Linux内核Kconfig语法
 
 标签（空格分隔）： Linux内核
 
@@ -17,7 +53,7 @@ tags: Linux内核
 
 ---
 
-#1 Kconfig格式
+# 1 Kconfig格式
 ```
 菜单入口 "菜单入口名"
    [依赖]
