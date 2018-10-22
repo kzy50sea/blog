@@ -1,5 +1,5 @@
 ---
-title: Linux内核的构建过程
+title: Linux内核的构建
 tags: Linux内核
 ---
 
