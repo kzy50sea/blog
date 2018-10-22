@@ -49,15 +49,15 @@ tags: Linux内核
 * **`modules`**——构建所有的模块
 *  `modules_install`——安装所有的module到`INSTALL_MOD_PATH (default: /)`
 *  `firmware_install`——安装所有的firmware到 `INSTALL_FW_PATH(default:$(INSTALL_MOD_PATH)/lib/firmware)`
-*  `dir/ —— 构建dir目录下的所有的文件
-*  `dir/file.[ois]`——编译构建指定目标
-*  `dir/file.ll`——构建LLVM程序集文件（需要编译器支持LLVM程序集生成）
-*  `dir/file.lst `—— 仅构建指定的混合源/程序集目标（需要最近的binutils和最近的构建（System.map））
-*   `dir/file.ko`—— 构建包括最终链接的模块
-*   ` modules_prepare` —— 设置用于构建外部模块
-*   `tags/TAGS` ——为编辑器生成tags文件
+*  `dir/` —— 构建dir目录下的所有的文件
+* `dir/file.[ois]`——编译构建指定目标
+* `dir/file.ll`——构建LLVM程序集文件（需要编译器支持LLVM程序集生成）
+* `dir/file.lst `—— 仅构建指定的混合源/程序集目标（需要最近的binutils和最近的构建（System.map））
+* `dir/file.ko`—— 构建包括最终链接的模块
+* ` modules_prepare` —— 设置用于构建外部模块
+*  `tags/TAGS` ——为编辑器生成tags文件
 *  ` cscope`—— 生成cscope 索引
-*  ` gtags`——生成 GNU GLOBAL 索引
+*  ` gtags`——生成 GNU GLOBAL索引
 *  ` kernelrelease`—— 显示发行版本 (与 make——s 一起使用)
 *  ` kernelversion`—— 输出存放在makefile中的版本号 ((与 make -s 一起使用))
 *  ` image_name`——输出镜像名称(与 make -s 一起使用))
