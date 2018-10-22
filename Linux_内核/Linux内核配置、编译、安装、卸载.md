@@ -1,5 +1,5 @@
 ---
-title: Linux内核的构建
+title: Linux内核配置、编译、安装、卸载
 tags: Linux内核
 ---
 
