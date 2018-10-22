@@ -62,6 +62,8 @@ $ls pci
 	* Image
 	* zImage/bzImage
 	* modules
+	
+>更多目标请参考《Linux内核的make目标》
 
 # 3 安装内核
 * 自动安装
