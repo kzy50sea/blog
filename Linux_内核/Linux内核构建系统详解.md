@@ -4,7 +4,7 @@ title: Linux内核的构建系统
 
 ------
 
-&emsp;&emsp;<font color=blue>**_版权声明_**</font>：本文参考了<font color=blue>。</font><font color=red>未经作者允许，<font color=blue>严禁用于商业出版</font>，否则追究法律责任。网络转载请注明出处，这是对原创者的起码的尊重！！！</font>
+&emsp;&emsp;<font color=blue>**_版权声明_**</font>：本文参考了<font color=blue>《Linux内核文档》。</font><font color=red>未经作者允许，<font color=blue>严禁用于商业出版</font>，否则追究法律责任。网络转载请注明出处，这是对原创者的起码的尊重！！！</font>
 
 ------
 
@@ -45,14 +45,9 @@ Linux的内核构建系统主要由几个组成：
 
 
 
-# 2 Linux内核Kconfig语法
+# 2 Kconfig语法
 
-标签（空格分隔）： Linux内核
-
-&emsp;&emsp;***<font color=blue>版权声明</font>***：*本文章参考了<font color=blue >**《Linux内核官方文档》。**</font><font color=red>未经作者允许，**<font color=blue>严禁用于商业出版</font>**，否则追究法律责任。网络转载请注明出处，这是对原创者的起码的尊重！！！</font>*
-
----
-
+&emsp;&emsp;linux在2.6版本以后将配置文件由原来的config.in改为Kconfig，对于Kconfig的语法在内核源代码/Documentation/kbuild/kconfig-language.txt中做了详细的说明。
 # 1 Kconfig格式
 ```
 菜单入口 "菜单入口名"
@@ -73,7 +68,7 @@ Linux的内核构建系统主要由几个组成：
    [帮助]
 ```
 
-#2 属性
+# 2 属性
 * `bool/tristate/int/hex/string`
 值类型，只有配置选项有值类型。包括： bool——值为y或n、 tristate——值为y或m或n、string——值为字符串、int——值为十进制整数、 hex——值为十六进制整数
 
@@ -189,7 +184,7 @@ Linux的内核构建系统主要由几个组成：
 
 
 
-#4 菜单入口
+# 4 菜单入口
 
 * 主菜单——最顶层的菜单
 ```
@@ -237,7 +232,7 @@ source "...dir/Kconfig"
 ```
 
 
-#5 菜单结构
+# 5 菜单结构
 * 一种是使用了菜单入口明确指定，如下中所有位于“menu”…和“endmenu”之间的入口都是"Network device support"的一个子菜单入口。所有的子入口都继承了菜单入口的依赖项，例如，依赖项”NET”就会被加入到子菜单”NETDEVICESx”的依赖项列表中。
 ```
 menu "Network device support"
@@ -267,7 +262,7 @@ config MODVERSIONS
 comment "module support disabled"
     dependson !MODULES
 ```
-&emsp;&emsp;***<font color=blue>版权声明</font>***：*本文章参考了<font color=blue >**《Linux内核官方文档》。**</font><font color=red>未经作者允许，**<font color=blue>严禁用于商业出版</font>**，否则追究法律责任。网络转载请注明出处，这是对原创者的起码的尊重！！！</font>*
+
 
 
 
@@ -276,6 +271,6 @@ comment "module support disabled"
 
 ------
 
-&emsp;&emsp;<font color=blue>**_版权声明_**</font>：本文参考了<font color=blue>。</font><font color=red>未经作者允许，<font color=blue>严禁用于商业出版</font>，否则追究法律责任。网络转载请注明出处，这是对原创者的起码的尊重！！！</font>
+&emsp;&emsp;<font color=blue>**_版权声明_**</font>：本文参考了<font color=blue>《Linux内核文档》。</font><font color=red>未经作者允许，<font color=blue>严禁用于商业出版</font>，否则追究法律责任。网络转载请注明出处，这是对原创者的起码的尊重！！！</font>
 
 ------
