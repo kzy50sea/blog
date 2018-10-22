@@ -1,5 +1,5 @@
 ---
-title: Linux内核构建系统
+title: Linux内核的构建系统
 ---
 
 ------
