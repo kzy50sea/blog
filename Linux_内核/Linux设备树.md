@@ -5,40 +5,39 @@ tags: Linux内核
 
 ------
 
-&emsp;&emsp;<font color=blue>**_版权声明_**</font>：本文章参考了<font color=blue >[《Device Tree Usage》](http://www.devicetree.org/Device_Tree_Usage)、[《uboot之fdt介绍》](https://www.cnblogs.com/leaven/p/6295999.html)、[《蜂窝科技的几篇文章》](http://www.wowotech.net/device_model/dt_basic_concept.html)，宋牧春[《Linux设备树文件结构与解析深度分析》](https://blog.csdn.net/woyimibayi/article/details/77574736)</font><font color=red>未经作者允许，<font color=blue>严禁用于商业出版</font>，否则追究法律责任。网络转载请注明出处，这是对原创者的起码的尊重！！！</font>
+&emsp;&emsp;<font color=blue>**_版权声明_**</font>：本文章参考了<font color=blue >[《Device Tree Usage》](http://www.devicetree.org/Device_Tree_Usage)、[《uboot之fdt介绍》](https://www.cnblogs.com/leaven/p/6295999.html)、[《蜂窝科技的几篇文章》](http://www.wowotech.net/device_model/dt_basic_concept.html)，[《Linux设备树文件结构与解析深度分析》](https://blog.csdn.net/woyimibayi/article/details/77574736)、[《我眼中的Linux设备树》](https://www.cnblogs.com/targethero/p/5053591.html)。</font><font color=red>未经作者允许，<font color=blue>严禁用于商业出版</font>，否则追究法律责任。网络转载请注明出处，这是对原创者的起码的尊重！！！</font>
 
 ------
 
-# 1 设备树起源
-&emsp;&emsp;Linus Torvalds在2011年3月17日的ARM Linux邮件列表宣称“this whole ARM thing is a fucking pain in the ass”，引发ARM Linux社区的地震，随后ARM社区进行了一系列的重大修正。在过去的ARM Linux中，arch/arm/plat-xxx和arch/arm/mach-xxx中充斥着大量的垃圾代码，相当多数的代码只是在描述板级细节，而这些板级细节对于内核来讲，不过是垃圾，如板上的platform设备、resource、i2c_board_info、spi_board_info以及各种硬件的platform_data。社区必须改变这种局面，于是PowerPC等其他体系架构下已经使用的Flattened Device Tree（FDT）进入ARM社区的视野。Device Tree是一种描述硬件的数据结构，它起源于 OpenFirmware (OF)。在Linux 2.6中，ARM架构的板极硬件细节过多地被硬编码在arch/arm/plat-xxx和arch/arm/mach-xxx，采用Device Tree后，许多硬件的细节可以直接透过它传递给Linux，而不再需要在kernel中进行大量的冗余编码。
-&emsp;&emsp;Device Tree由一系列被命名的结点（node）和属性（property）组成，而结点本身可包含子结点。所谓属性，其实就是成对出现的键值对（name和value）。在设备树中，可描述的信息包括（原先这些信息大多被hard  code到kernel中）：
+# 1 设备树简介
+&emsp;&emsp;Linus Torvalds在2011年3月17日的ARM Linux邮件列表宣称“this whole ARM thing is a fucking pain in the ass”，引发ARM Linux社区的地震，随后ARM社区进行了一系列的重大修正。在过去的ARM Linux中，`arch/arm/plat-xxx和arch/arm/mach-xxx`中充斥着大量的垃圾代码，相当多数的代码只是在描述板级细节，而这些板级细节对于内核来讲，不过是垃圾，如板上的platform设备、resource、i2c_board_info、spi_board_info以及各种硬件的platform_data。社区必须改变这种局面，于是PowerPC等其他体系架构下已经使用的Flattened Device Tree（FDT）进入ARM社区的视野。
 
-* CPU的数量和类别
-* 内存基地址和大小
-* 总线和桥
-* 外设连接
-* 中断控制器和中断使用情况
-* GPIO控制器和GPIO使用情况
-* Clock控制器和Clock使用情况
+&emsp;&emsp;Device Tree是一种描述硬件的数据结构，它起源于 OpenFirmware (OF)。采用Device Tree后，许多硬件的细节可以直接透过它传递给Linux 内核，而不再需要在kernel中进行大量的冗余编码。设备树是从软件使用的角度描述硬件的，不是从硬件设计的角度描述的。我们在写设备树时没有必要按照硬件逻辑生搬硬套，也不要指望通过阅读设备树弄清楚硬件是如何设计的。对于软件可以自动识别的硬件，如USB设备，PCI设备，也是没有必要通过设备树描述的。
 
-&emsp;&emsp;基本上设备树就是画一棵电路板上CPU、总线、设备组成的树，Bootloader会将这棵树传递给内核，然后内核可以识别这棵树，并根据它展开出Linux内核中的platform_device、i2c_client、spi_device等设备，而这些设备用到的内存、IRQ等资源，也被传递给了内核，内核会将这些资源绑定给展开的相应的设备。
+&emsp;&emsp;内核中关于设备树的文档位于`Documentation/devicetree/`目录。设备树是Power.org组织定义的一套名为[EPAPR](https://www.power.org/documentation/epapr-version-1-1/)的规范。如果想快速了解下设备树怎么用，可以参考[《Device Tree Usage》](http://www.devicetree.org/Device_Tree_Usage)
 
-# 2 设备树组成
+
+
+
+&emsp;&emsp;设备树包括三个部分DTS，DTC和DTB。我们首先根据硬件编写DTS文件，然后在通过DTC工具将DTS文件转换成 DTB文件，然后将DTB文件烧写到机器上(如emmc，磁盘等存储介质)。系统启动时，Bootloader（如u-boot）在启动内核前将DTB文件读到内存中，跳转到内核执行的同时将DTB起始地址传给内核。之后内核会解析Device Tree并创建和注册相关的设备。
+
+
 
 ![设备树](https://www.github.com/liao20081228/blog/raw/master/图片/Linux设备树/1.jpg "devicetree")
 
 * DTS(Device tree source)是设备树源文件，为了方便阅读及修改，采用文本格式。DTSI类似于C语言的头文件
-* DTC(Device tree compiler)是一个小工具，负责将DTS转换成DTB。
+* DTC(Device tree compiler)是一个小工具，负责将DTS编译成DTB。
 * DTB(Device tree blob)是DTS的二进制形式，供内核使用。
 
-&emsp;&emsp;我们首先根据硬件修改DTS文件，然后在编译的时候通过DTC工具将DTS文件转换成 DTB文件，然后将DTB文件烧写到机器上(如emmc，磁盘等存储介质)。系统启动时，Bootloader在启动内核前将DTB文件读到内存中，跳转到内核执行的同时将DTB起始地址传给内核。之后内核会展开Device Tree并创建和注册相关的设备，因此arch/arm/mach-xxx和arch/arm/plat-xxx中大量的用于注册platform、I2C、SPI板级信息的代码被删除，而驱动也以新的方式和.dts中定义的设备结点进行匹配。
-binary
 
-# 3  设备树源文件
-&emsp;&emsp;.dts文件是一种ASCII文本格式的Device Tree描述，此文本格式非常人性化，适合人类的阅读习惯。基本上，在ARM Linux在，一个.dts文件对应一个ARM的machine，一般放置在内核的arch/arm/boot/dts/目录。
-&emsp;&emsp;由于一个SoC可能对应多个machine（一个SoC可以对应多个产品和电路板），势必这些.dts文件需包含许多共同的部分，Linux内核为了简化，把SoC公用的部分或者多个machine共同的部分一般提炼为.dtsi，类似于C语言的头文件。其他的machine对应的.dts就include这个.dtsi。
+# 2 设备树源文件
 
-## 3.1 dts基本结构
+&emsp;&emsp;**EPAPR**中规定了设备树源文件的语法，可以分为两个层次的。第一层是关于设备树组织形式的，如设备树结构，节点名字的构成等，第一个层次是基础，是理解第二个层次的前提。第二层是关于设备树内容的，如多核CPU怎样描述，一个具体的设备如何描述。第二层可以看成是第一层的具体应用。相对来说第二层内容更多，更具体，根据描述的内容不同，定义规范的方式也有差别，比如关于CPU，内存，中断这些基础的内容，是在epapr中说明的，而关于外设的规范是在专门的地方说明的。说设备树的规范可以分成两个层次，是针对DTS的，关于DTB的结构不在此范围内。
+
+&emsp;&emsp;**dts**文件是一种ASCII文本格式的Device Tree描述，此文本格式非常人性化，适合人类的阅读习惯。基本上，在ARM Linux在，一个.dts文件对应一个ARM的machine，一般放置在内核的`arch/arm/boot/dts/`目录。由于一个SoC可能对应多个machine（一个SoC可以对应多个产品和电路板），势必这些.dts文件需包含许多共同的部分，Linux内核为了简化，把SoC公用的部分或者多个machine共同的部分一般提炼为**dtsi**，类似于C语言的头文件。其他的machine对应的.dts就include这个.dtsi。
+
+## 2.1 dts基本结构
+
 ```dts
 /{
 	node1 {
@@ -64,8 +63,7 @@ binary
 ```
 .dts（或者其include的.dtsi）由结点和属性组成，上述.dts文件并没有什么真实的用途，但它基本表征了一个Device Tree源文件的结构：
 * 每个设备树都由一个根结点"/"开始，根节点只有一个；
-* 每个结点下面含一系列子结点，子节点下又含有一系列子结点；
-* 一个节点可以有多个子节点，但只有一个父节点；
+* 每个结点下面可以有一系列子结点，子节点下又可含有一系列子结点；
 * 每个node用节点名字（node name）标识，节点名字的格式是node-name@unit-address，不超过31字符。
 	* 如果该node没有reg属性，那么该节点名字中不能包括@和unit-address。
 	* 根节点的node name是确定的，必须是“/”。
@@ -1035,6 +1033,6 @@ struct property {
 ------
 
 
-&emsp;&emsp;<font color=blue>**_版权声明_**</font>：本文章参考了<font color=blue >[《Device Tree Usage》](http://www.devicetree.org/Device_Tree_Usage)、[《uboot之fdt介绍》](https://www.cnblogs.com/leaven/p/6295999.html)、[《蜂窝科技的几篇文章》](http://www.wowotech.net/device_model/dt_basic_concept.html)，宋牧春[《Linux设备树文件结构与解析深度分析》](https://blog.csdn.net/woyimibayi/article/details/77574736)</font><font color=red>未经作者允许，<font color=blue>严禁用于商业出版</font>，否则追究法律责任。网络转载请注明出处，这是对原创者的起码的尊重！！！</font>
+&emsp;&emsp;<font color=blue>**_版权声明_**</font>：本文章参考了<font color=blue >[《Device Tree Usage》](http://www.devicetree.org/Device_Tree_Usage)、[《uboot之fdt介绍》](https://www.cnblogs.com/leaven/p/6295999.html)、[《蜂窝科技的几篇文章》](http://www.wowotech.net/device_model/dt_basic_concept.html)，[《Linux设备树文件结构与解析深度分析》](https://blog.csdn.net/woyimibayi/article/details/77574736)、[《我眼中的Linux设备树》](https://www.cnblogs.com/targethero/p/5053591.html)。</font><font color=red>未经作者允许，<font color=blue>严禁用于商业出版</font>，否则追究法律责任。网络转载请注明出处，这是对原创者的起码的尊重！！！</font>
 
 ------
