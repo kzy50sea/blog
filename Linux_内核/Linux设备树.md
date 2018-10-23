@@ -64,9 +64,11 @@ tags: Linux内核
 ```
 上面的dts文件并没有实际意义，但它表示了一个设备树源文件的基本结构：
 
-* dts/dtsi文件由结点和属性组成；
+* dts/dtsi文件由结点组成；
 * 每个设备树都由一个根结点"/"开始，根节点只有一个；
 * 每个结点下面可以有一系列子结点，子节点下又可含有一系列子结点；
+* 节点包含若干属性。
+# 2.2 节点
 * 节点用节点名标识，节点名的格式是：**node-name@unit-address**
 	* 根节点必须是“/”。
 	* node-name为节点名，不超过31字符，包括`“0-9 a-z A-Z , . _ + -”`。规范定义了通用的节点名：`atm、cache-controller、compact-flash、can、cpu、crypto、disk、display、dma-controller、ethernet、ethernet-phy、fdc、flash、gpio、i2c、ide、interrupt-controller、isa、keyboard、mdio、memory、memory-controller、mouse、nvram、parallel、pc-card、pci、pcie、rtc、sata、scsi、serial、sound、spi、timer、usb、vme、watchdog`
@@ -74,10 +76,12 @@ tags: Linux内核
 		* 对于cpu，其unit-address就是从0开始编址，以此加一。
 		* 以太网控制器，其unit-address就是寄存器地址。
 	* 如果节点有unit-address，那么节点下边必须有一个叫reg的属性，并且该地址必须和reg的属性的第一个地址相同。如果节点没有reg属性，那么unit-address及前边的@都不能有。
-	* **引用节点**，有两种方法
-		* 使用全路径full path。全路径就是由根节点开始，各级节点用“/”隔开，如`/cpus/cpu@0`
-		* 为节点设置一个标签label，然后用`&label`来引用该节点，这种引用是通过phandle（pointer handle）进行的。这种phandle节点，在经过DTC工具编译之后，`&label`会变成一个特殊的整型数字n，假设n值为0x00000001，那么在node2节点下自动生成两个属性:`linux,phandle = <0x00000001>;phandle = <0x00000001>;`
-* 节点含有若干属性，属性由`属性名=值`定义，
+* **引用节点**，有两种方法
+	* 使用全路径full path。全路径就是由根节点开始，各级节点用“/”隔开，如`/cpus/cpu@0`
+	* 为节点设置一个标签label，然后用`&label`来引用该节点，这种引用是通过phandle（pointer handle）进行的。这种phandle节点，在经过DTC工具编译之后，`&label`会变成一个特殊的整型数字n，假设n值为0x00000001，那么在node2节点下自动生成两个属性:`linux,phandle = <0x00000001>;phandle = <0x00000001>;`
+
+# 2.3 属性
+* 属性由`属性名=值`定义
 	* 属性名由1到31个字符组成。和节点名有些区别，不允许有大写字母，增加了`？`和`#`两个字符。为了容易区分以及避免重复，标准未定义的属性名字应该用公司或组织名称开头，比如：`ibm,ppc-interrupt-server#s`
 	* 属性值有5种：
 		* 空，如"an-empty-property"；
