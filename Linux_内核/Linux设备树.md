@@ -1027,6 +1027,8 @@ struct property {
 };
 ```
 
+![3](https://www.github.com/liao20081228/blog/raw/master/图片/Linux设备树/30145634_1428507890cwwV.png)
+![1](https://www.github.com/liao20081228/blog/raw/master/图片/Linux设备树/20170829102235526.jpg)
 
 
 
