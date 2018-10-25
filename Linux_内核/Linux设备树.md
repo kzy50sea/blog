@@ -36,7 +36,7 @@ tags: Linux内核
 
 &emsp;&emsp;**dts**文件是一种ASCII文本格式的Device Tree描述，此文本格式非常人性化，适合人类的阅读习惯。基本上，在ARM Linux在，一个.dts文件对应一个ARM的machine，一般放置在内核的`arch/arm/boot/dts/`目录。由于一个SoC可能对应多个machine（一个SoC可以对应多个产品和电路板），势必这些.dts文件需包含许多共同的部分，Linux内核为了简化，把SoC公用的部分或者多个machine共同的部分一般提炼为**dtsi**，类似于C语言的头文件。其他的machine对应的.dts就include这个.dtsi。
 
-## 2.1 dts基本结构
+## 2.1 基本结构
 ```dts
 /{
 	node1 {
@@ -82,15 +82,27 @@ tags: Linux内核
 
 # 2.3 属性
 * 属性由`属性名=值`定义
-	* 属性名由1到31个字符组成。和节点名有些区别，不允许有大写字母，增加了`？`和`#`两个字符。为了容易区分以及避免重复，标准未定义的属性名字应该用公司或组织名称开头，比如：`ibm,ppc-interrupt-server#s`
+	* 属性名由1到31个字符组成。和节点名有些区别，不允许有大写字母，增加了`？`和`#`两个字符。为了容易区分以及避免重复，标准未定义的属性名字应该用公司或组织名称开头，比如：`ibm,ppc-interrupt-server#s`。
 	* 属性值有5种：
 		* 空，如"an-empty-property"；
 		* 字符串，如 "a-string-property"；
 		* 字符串数组 ，用双引号表示，如"a-string-property-list"；
 		* Cells（单位为u32bit），用尖括号表示，如"second-child-property"，
 		* 无符号整数（u32，u64），用方括号表示，如“a-binary-data-property"。
+* EPAPR规范预定义了一些标准的属性:
+* 
+	* compatible`——用来匹配驱动的，类型是字符串数组，每个字符串表示一种设备的类型，从具体到一般。列表中的第一个字符串指定了"`<manufacturer>,<model>`"格式的节点代表的确切设备，第二个字符串代表了与该设备兼容的其他设备。
+	* `model`——用来表示设备的型号，用字符串表示，不像"compatible"用多个字符串，只需一个就够了。
+	* `device_type`——用来表示设备类型，用字符串表示。
+	* `#address-cells`、`#size-cells`、`reg`、`ranges`、`dma-ranges`属性都是和地址有关的。
+		* 不同的平台，不同的总线，地址位长度可能不同，有32位地址，有64位地址，为了适应这个，规范规定一个32位的长度为一个cell。"#address-cells"属性用来表示总线地址需要几个cell表示，该属性本身是u32类型的。"#size-cells"属性用来表示子总线地址空间的长度需要几个cell表示，属性本身的类型也是u32。这两个属性不可以继承，就是说在未定义这两个属性的时候，不会继承更高一级父节点的设置，如果没有设置的话，内核默认认为"#address-cells"为2，"#size-cells"为1。
+		* `reg`属性用来表示节点地址资源的，比如常见的就是寄存器的起始地址及大小。要想表示一块连续地址，必须包含起始地址和空间大小两个参数，如果有多块地址，那么就需要多组这样的值表示。还记得前边说过的cell类型的属性吧，就是用来干这个的，他表示一个数组，每个元素的具体格式根据属性而定，对于'reg'属性，每个元素是一个二元组，包含起始地址和大小。还有另外一个问题，地址和大小用几个u32表示呢？这个就由父节点的"#address-cells","#size-cells"属性确定。
+		* 总线上设备在总线地址和总线本身的地址可能不同，"ranges"属性用来表示如何转换。和'reg'属性类似，'ranges'属性也是Cell类型的属性，不同的是'ranges'属性的每个元素是三元组，按照前后顺序分别是`(子总线地址，父总线地址，大小)`。子总线地址需要几个u32表示由'ranges'属性所在节点的`#address-cells`属性决定，父总线地址需要几个u32表示由上一级节点的`#address-cells`属性决定，大小需要几个u32表示由当前节点的`#size-cells`属性确定。
+		*`dma-ranges`属性的结构和定义与'ranges'属性完全相同，唯一不同的是地址是dma使用的地址，'ranges'中的地址是cpu使用的地址。
+		* `phandle`属性是专门为方便引用节点设计的，想要引用哪个节点就在该节点下边增加一个'phandle'属性，设定值为一个u32，如`phandle = <1>`，引用的地方直接使用数字1就可以引用该节点，如`interrupt-parent = <1>`。以上是规范中描述的方法，实际上这样也不方便，我在实际的代码中没有看到这么用的。还记得节点那节说过节点名字前边可以定义一个标签吧，实际情况是都用标签引用，比如节点标签为intc1，那么用`interrupt-parent = <&intc1>`就可以引用了。
+		* `status`属性用来表示节点的状态的，其实就是硬件的状态，用字符串表示。'okay'表示硬件正常工作，“disabled”表示硬件当前不可用，“fail”表示因为出错不可用，“fail-sss”表示因为某种原因出错不可用，sss表示具体的出错原因。实际中，基本只用'okay'和'disabled'。
 	
-## 3.2 dts基本语法
+## 2.5 示例
 &emsp;&emsp;为了帮助理解device tree的用法，我们从一个简单的计算机开始， 手把手创建一个device tree来描述它。假设有这样一台计算机（基于ARM Versatile）,由“Acme”制造并命名为"Coyote's Revenge"：
 
 * 1个双核ARM Cortex-A9 32位处理器；
@@ -204,18 +216,15 @@ tags: Linux内核
 &emsp;&emsp;在上面的设备树中，系统中的设备节点已经添加进来，树的层次结构反映了设备如何连到系统中。外部总线上的设备就是外部总线节点的子节点，i2c设备是i2c总线控制节点的子节点。总的来说，**层次结构表现的是从CPU视角来看的系统视图**。在这里这棵树是依然是无效的。它缺少关于设备之间的连接信息。稍后将添加这些数据。在这个设备树中应当注意：
 * 每个设备节点有一个compatible属性。
 * flash节点的compatible属性有两个字符串。请阅读下一节以了解更多内容。 
-* 之前提到的，节点命名应当反映设备的类型，而不是特定型号。请参考ePAPR规范2.2.2节的通用节点命名，应优先使用这些命名。
+* 之前提到的，节点命名应当反映设备的类型，而不是特定型号。请参考EPAPR规范2.2.2节的通用节点命名，应优先使用这些命名。
 
-
-### 3.2.4  compatible 属性
-&emsp;&emsp;树中的每一个代表了一个设备的节点都要有一个compatible属性。compatible是OS用来匹配设备驱动的关键。
-&emsp;&emsp;compatible是字符串的列表。列表中的第一个字符串指定了"`<manufacturer>,<model>`"格式的节点代表的确切设备，第二个字符串代表了与该设备兼容的其他设备。例如，Freescale MPC8349 SoC有一个串口设备实现了National Semiconductor ns16550寄存器接口。因此MPC8349串口设备的compatible属性为：`compatible = "fsl,mpc8349-uart", "ns16550"`。在这里，fsl,mpc8349-uart指定了确切的设备，ns16550表明它与National Semiconductor 16550 UART是寄存器级兼容的。
+&emsp;&emsp;树中的每一个代表了一个设备的节点都要有一个compatible属性。compatible是OS用来匹配设备驱动的关键。compatible是字符串的列表。列表中的第一个字符串指定了"`<manufacturer>,<model>`"格式的节点代表的确切设备，第二个字符串代表了与该设备兼容的其他设备。例如，Freescale MPC8349 SoC有一个串口设备实现了National Semiconductor ns16550寄存器接口。因此MPC8349串口设备的compatible属性为：`compatible = "fsl,mpc8349-uart", "ns16550"`。在这里，fsl,mpc8349-uart指定了确切的设备，ns16550表明它与National Semiconductor 16550 UART是寄存器级兼容的。
 >&emsp;&emsp;注：由于历史原因，ns16550没有制造商前缀，但所有新的compatible值都应使用制造商的前缀。这种做法使得现有的设备驱动程序可以绑定到一个新设备上，同时仍能唯一准确的识别硬件。
 >&emsp;&emsp;警告：不要使用带通配符的compatible值，如"fsl,mpc83xx-uart"等类似表达，芯片厂商总会改变并打破你的通配符假设，到时候再想修改就为时已晚了。相反，你应当选择一个特定的芯片实现，并与所有后续芯片保持兼容。
 
  
 
-## 3.3 编址
+### 3.3 编址
 * 可编址的设备使用下列属性来将地址信息编码进设备树：
 	* reg
 	* #address-cells
