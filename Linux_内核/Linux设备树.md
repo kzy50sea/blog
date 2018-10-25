@@ -34,7 +34,7 @@ tags: Linux内核
 
 &emsp;&emsp;**EPAPR**中规定了设备树源文件的语法，可以分为两个层次的。第一层是关于设备树组织形式的，如设备树结构，节点名字的构成等，第一个层次是基础，是理解第二个层次的前提。第二层是关于设备树内容的，如多核CPU怎样描述，一个具体的设备如何描述。第二层可以看成是第一层的具体应用。相对来说第二层内容更多，更具体，根据描述的内容不同，定义规范的方式也有差别，比如关于CPU，内存，中断这些基础的内容，是在epapr中说明的，而关于外设的规范是在专门的地方说明的。说设备树的规范可以分成两个层次，是针对DTS的，关于DTB的结构不在此范围内。
 
-&emsp;&emsp;**dts**文件是一种ASCII文本格式的Device Tree描述，此文本格式非常人性化，适合人类的阅读习惯。基本上，在ARM Linux在，一个.dts文件对应一个ARM的machine，一般放置在内核的`arch/arm/boot/dts/`目录。由于一个SoC可能对应多个machine（一个SoC可以对应多个产品和电路板），势必这些.dts文件需包含许多共同的部分，Linux内核为了简化，把SoC公用的部分或者多个machine共同的部分一般提炼为**dtsi**，类似于C语言的头文件。其他的machine对应的.dts就include这个.dtsi。
+&emsp;&emsp;**dts**文件是一种ASCII文本格式的Device Tree描述，此文本格式非常人性化，适合人类的阅读习惯。基本上，在ARM Linux在，一个.dts文件对应一个ARM的machine，一般放置在内核的`arch/arm/boot/dts/`目录。由于一个SoC可能对应多个machine（一个SoC可以对应多个产品和电路板），势必这些dts文件需包含许多共同的部分，Linux内核为了简化，把SoC公用的部分或者多个machine共同的部分一般提炼为**dtsi**，类似于C语言的头文件。其他的machine对应的dts就include这个dtsi。
 
 ## 2.1 基本结构
 ```dts
@@ -65,10 +65,9 @@ tags: Linux内核
 上面的dts文件并没有实际意义，但它表示了一个设备树源文件的基本结构：
 
 * dts/dtsi文件由结点组成；
-* 每个设备树都由一个根结点"/"开始，根节点只有一个；
+* 每个设备树都有一个根结点"/"开始，根节点只有一个；
 * 每个结点下面可以有一系列子结点，子节点下又可含有一系列子结点；
 * 节点包含若干属性。
-# 2.2 节点
 * 节点用节点名标识，节点名的格式是：**node-name@unit-address**
 	* 根节点必须是“/”。
 	* node-name为节点名，不超过31字符，包括`“0-9 a-z A-Z , . _ + -”`。规范定义了通用的节点名：`atm、cache-controller、compact-flash、can、cpu、crypto、disk、display、dma-controller、ethernet、ethernet-phy、fdc、flash、gpio、i2c、ide、interrupt-controller、isa、keyboard、mdio、memory、memory-controller、mouse、nvram、parallel、pc-card、pci、pcie、rtc、sata、scsi、serial、sound、spi、timer、usb、vme、watchdog`
@@ -76,11 +75,9 @@ tags: Linux内核
 		* 对于cpu，其unit-address就是从0开始编址，以此加一。
 		* 以太网控制器，其unit-address就是寄存器地址。
 	* 如果节点有unit-address，那么节点下边必须有一个叫reg的属性，并且该地址必须和reg的属性的第一个地址相同。如果节点没有reg属性，那么unit-address及前边的@都不能有。
-* **引用节点**，有两种方法
-	* 使用全路径full path。全路径就是由根节点开始，各级节点用“/”隔开，如`/cpus/cpu@0`
-	* 为节点设置一个标签label，然后用`&label`来引用该节点，这种引用是通过phandle（pointer handle）进行的。这种phandle节点，在经过DTC工具编译之后，`&label`会变成一个特殊的整型数字n，假设n值为0x00000001，那么在node2节点下自动生成两个属性:`linux,phandle = <0x00000001>;phandle = <0x00000001>;`
-
-# 2.3 属性
+	* **引用节点**，有两种方法
+		* 使用全路径full path。全路径就是由根节点开始，各级节点用“/”隔开，如`/cpus/cpu@0`
+		* 为节点设置一个标签label，然后用`&label`来引用该节点，这种引用是通过phandle属性进行的。这种phandle节点，在经过DTC工具编译之后，`&label`会变成一个特殊的整型数字n，假设n值为0x00000001，那么在被引用的节点下自动生成两个属性:`linux,phandle = <0x00000001>;phandle = <0x00000001>;`
 * 属性由`属性名=值`定义
 	* 属性名由1到31个字符组成。和节点名有些区别，不允许有大写字母，增加了`？`和`#`两个字符。为了容易区分以及避免重复，标准未定义的属性名字应该用公司或组织名称开头，比如：`ibm,ppc-interrupt-server#s`。
 	* 属性值有5种：
