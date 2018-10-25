@@ -40,15 +40,15 @@ tags: vim
 * 进入vim
 * 添加数据库: `:cscope|cs add file|dir [pre-path] [flags])`
 * 搜索: `:cscope|cs find  {querytype} {name}`，除了 4 和 6 之外的类型忽略 name之前的空格。4 和 6 在 querytype和name 之间只能有一个空格分隔。多余的空格是 name的一部分。
-	* 0 或 s: 查找 C 符号
-	* 1 或 g: 查找该全局定义
+	* 0 或 s: 查找 C 语言标识符
+	* 1 或 g: 查找函数、宏、枚举等定义的位置，
 	* 2 或 d: 查找函数调用的函数
 	* 3 或 c: 查找调用本函数的函数
-	* 4 或 t: 查找本字符串
-	* 6 或 e: 查找本 egrep 模式
-	* 7 或 f: 查找本文件
+	* 4 或 t: 查找字符串
+	* 6 或 e: 查找符合egrep 模式的字符串
+	* 7 或 f: 查找文件
 	* 8 或 i: 查找#include本文件的文件
-	* 9 或 a: 查找此符号被赋值的位置
+	* 9 或 a: 查找变量被赋值的位置
 * 显示帮助: `:cscope|cs help`
 * 断开连接: `:cscope|cs kill #`
 * 重置连接:` :cscope|cs reset`
