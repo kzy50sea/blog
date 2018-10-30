@@ -321,7 +321,8 @@ tags: windows教程
 	* PARTITION——将焦点移动到分区。例如，`SELECT PARTITION`。
 	* VOLUME——将焦点移动到卷。例如，`SELECT VOLUME`。
 	* VDISK——将焦点转移到虚拟磁盘。例如，`SELECT VDISK`。
-	*  partition与volume区别：一个volume可以有多个partition。partition是物理的概念，偏向设备；volume是逻辑的概念，偏向文件系统。
+
+>partition与volume区别：分区是基本磁盘上的概念，也叫基本卷；卷是动态磁盘的概念，也叫动态卷。
 
 -----
 * SET ID={BYTE | GUID} [OVERRIDE] [NOERR]——为带焦点的分区更改分区类型字段。
