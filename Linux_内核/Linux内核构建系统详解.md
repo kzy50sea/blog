@@ -8,17 +8,31 @@ title: Linux内核的构建系统
 
 ------
 
-# 1 配置内核
-## 1.1 配置方式
-&emsp;&emsp;Linux内核源代码组织了一个配置系统，该配置系统可以生成内核配置菜单，方便内核配置。配置系统主要包含Makefile、Kconfig、Kbuild和scripts。其中，scripts/kconfig中存放了各种配置工具，配置界面是通过配置工具来生成的，配置工具通过Makefile编译执行，配置界面中的选项则是通过各级的Kconfig(老版本也称Config.in)和Makefile(老版本也称Kbuild)文件定义。
+
+# 1 准备知识
+## 1.1 程序构建过程
+&emsp;&emsp;**编译**：把高级语言书写的代码转换为机器可识别的机器指令。编译高级语言后生成的指令虽然可被机器识别，但是还不能被执行。编译时，编译器检查高级语言的语法、函数与变量的声明是否正确。只有所有的语法正确、相关变量定义正确编译器就可以编译出中间目标文件。通常，一个高级语言的源文件都可对应一个目标文件。目标文件在Linux中默认后缀为“.o”（如“hello.c”的目标文件为“hello.o”）。
+&emsp;&emsp;**链接**：将多个.o文件，或者.o文件和库文件链接成为可被操作系统执行的可执行程序。链接器不检查函数所在的源文件，只检查所有.o文件中的定义的符号。将.o文件中使用的函数和其它.o或者库文件中的相关符号进行合并，最后生成一个可执行的程序。“ld”是GNU的链接器。
+&emsp;&emsp;**静态库**：又称为文档文件（Archive File）。它是多个.o文件的集合。Linux中静态库文件的后缀为“.a”。静态库中的各个成员（.o文件）没有特殊的存在格式，仅仅是一个.o文件的集合。使用“ar”工具维护和管理静态库。
+&emsp;&emsp;**共享库**：也是多个.o文件的集合，但是这些.o文件时有编译器按照一种特殊的方式生成。对象模块的各个成员的地址（变量引用和函数调用）都是相对地址。因此在程序运行时，可动态加载库文件和执行共享的模块（多个程序可以共享使用库中的某一个模块）。
+&emsp;&emsp;一般来说，无论是C、C++、还是pas，首先要把源文件编译成中间代码文件，在Windows下也就是 .obj 文件，UNIX下是 .o 文件，即 Object File，这个动作叫做编译（compile）。然后再把大量的Object File合成执行文件，这个动作叫作链接（link）。
+
+## 1.2 make简介
+&emsp;&emsp;Make是GCC提供的一种半自动化的工程管理器，可以根据预定规则自动构建目标程序。所谓的**半自动化是指在使用工程管理器之前需要人工编写程序的编译规则**，所有的编译规则都保存在Makefile文件中，全自动化工程管理器会在编译程序前自动生成Makefile文件。
+&emsp;&emsp;make通过比较对应文件（规则的目标和依赖）的最后修改时间，来决定哪些文件需要更新。对需要更新的文件make就执行数据库中所记录的相应命令（在make读取Makefile以后会建立一个编译过程的描述数据库。此数据库中记录了所有各个文件之间的相互关系，以及它们的关系描述）来重建它，对于不需要重建的文件make什么也不做。而且可以通过make的命令行选项来指定需要重新编译的文件。
+&emsp;&emsp;执行make时，需要一个命名为Makefile的特殊文件来告诉make需要做什么（完成什么任务），该怎么做。当使用make工具进行编译时，工程中以下几种文件在执行make时将会被编译（重新编译）：
+* 所有的源文件没有被编译过，则对各个C源文件进行编译并进行链接，生成最后的可执行程序；
+* 每一个在上次执行make之后修改过的C源代码文件在本次执行make时将会被重新编译；
+* 头文件在上一次执行make之后被修改。则所有包含此头文件的C源文件在本次执行make时将会被重新编译。
+
+后两种情况make只将修改过的C源文件重新编译生成.o文件，对于没有修改的文件不进行任何工作。重新编译过程中，任何一个源文件的修改将产生新的对应的.o文件，新的.o文件将和以前的已经存在、此次没有重新编译的.o文件重新连接生成最后的可执行程序。
+# 2 配置内核
+## 2.1 配置方式
+&emsp;&emsp;Linux内核源代码组织了一个配置系统，该配置系统可以生成内核配置菜单，方便内核配置。配置系统主要包含Makefile、Kconfig 和 scripts。其中，scripts/kconfig中存放了各种配置工具，配置界面是通过配置工具来生成的，配置工具是通过指定make目标，然后由make构建并执行，配置界面中的选项则是通过各级的Kconfig文件定义。
 &emsp;&emsp;Linux内核配置系统也被移植到其它软件(如Busybox、glibc、uclibc等)中，来提供同样的配置界面以方便有选择性的配置。
 &emsp;&emsp;Linux内核配置命令主要有：make config、make menuconfig、make xconfig和make gconfig，分别是字符界面、ncurses光标菜单、QT图形窗口和GTK图形窗口的配置界面。
 
 
-* Linux内核的**配置系统**由三个部分组成，分别是：
-	* `Makefile`——分布在 Linux 内核源代码根目录及各层目录中，定义 Linux 内核的编译规则；
-	* `Kconfig`——分布在 Linux 内核源代码根目录及各层目录中，给用户提供配置选择的功能；
-	* `scripts`——分布在 Linux内核源代码根目录下，包括配置命令解释器（对配置脚本中使用的配置命令进行解释）和配置用户界面（提供基于字符界面、基于 Ncurses 图形界面以及基于 Xwindows 图形界面的用户配置界面，各自对应于 Make config、Make menuconfig 和 make xconfig）。
 
 
 |工具 |Makefile目标 |源程序|依赖库|
@@ -29,7 +43,7 @@ title: Linux内核的构建系统
 |qconf|xconfig|qconf.c、kconfig_load.c、zconf.tab.c|QT图形库|
 |gconf|gconfig|gconf.c、kconfig_load.c、zconf.tab.c|GTK图形库|
 
-其中zconf.tab.c程序实现了解析Kconfig文件和内核配置主要函数。Zconf.tab.c程序还直接包括了下列一些C程序，这样各种配置功能都包含在zconf.tab.o目标文件中了。
+其中zconf.tab.c程序实现了解析Kconfig文件和内核配置主要函数。zconf.tab.c程序还直接包括了下列一些C程序，这样各种配置功能都包含在zconf.tab.o目标文件中了。
 * lex.zconf.c实现lex语法解析器，
 * util.c实现配置工具，
 * confdata.c实现.config等相关数据文件保存，
@@ -37,71 +51,49 @@ title: Linux内核的构建系统
 * symbol.c实现变量处理函数，
 * menu.c实现菜单控制函数。
 
-## 1.2 配置过程详解
-
-* 当我们使用`make menuconfig`这个命令时（其它配置命令类似）：
-	* 首先由make编译生成`scripts/kconfig/mconf.c`生成`scripts/kconfig/mconf`。（xconfig对应qconf，gconfig对应gconf，config对应conf）
-	* 然后执行`scripts/kconfig/mconf Kconfig`
-	* mconf程序读取内核根目录下的Kconfig文件，Kconfig载入了`arch/$(SRCARCH)/Kconfig`，`arch/$(SRCARCH)/Kconfig`又分别载入各目录下的Kconfig文件，以此递归下去，最后生成主配置界面以及各级配置菜单。`SRCARCH`是由顶层Makefile中定义的，它等于`$(ARCH)`，而`$ARCH`由Makefile或make的命令行参数指定。
-	* 在完成配置后，mconf会将配置保存在Linux内核源代码根目录下的`.config`文件中。
+## 1.2 配置过程
+当我们使用`make menuconfig`这个命令时（其它配置命令类似）：
+	
+* 首先由make编译生成`scripts/kconfig/mconf.c`生成`scripts/kconfig/mconf`。（xconfig对应qconf，gconfig对应gconf，config对应conf）
+* 然后执行`scripts/kconfig/mconf Kconfig`
+* mconf程序读取内核根目录下的Kconfig文件，Kconfig载入了`arch/$(SRCARCH)/Kconfig`，`arch/$(SRCARCH)/Kconfig`又分别载入各目录下的Kconfig文件，以此递归下去，最后生成主配置界面以及各级配置菜单。`SRCARCH`是由顶层Makefile中定义的，它等于`$(ARCH)`，而`$ARCH`由Makefile或make的命令行参数指定。
+* 在完成配置后，mconf会将配置保存在Linux内核源代码根目录下的`.config`文件中。
 
 * 当我们使用`make defconfig`这个命令时：系统直接将`arch/$SRCARCH/configs`（**该目录存放内核的默认配置文件**）下的对应的默认配置文件拷贝到Linux内核源代码根目录下的`.config`文件。
 
 
-
-
-
-
-
-# 2 make
-MAKE概述 1.1准备知识
-一般来说，无论是C、C++、还是pas，首先要把源文件编译成中间代码文件，在Windows下也就是 .obj 文件，UNIX下是 .o 文件，即 Object File，这个动作叫做编译（compile）。然后再把大量的Object File合成执行文件，这个动作叫作链接（link）。
-
-编译：把高级语言书写的代码转换为机器可识别的机器指令。编译高级语言后生成的指令虽然可被机器识别，但是还不能被执行。编译时，编译器检查高级语言的语法、函数与变量的声明是否正确。只有所有的语法正确、相关变量定义正确编译器就可以编译出中间目标文件。通常，一个高级语言的源文件都可对应一个目标文件。目标文件在Linux中默认后缀为“.o”（如“hello.c”的目标文件为“hello.o”）。
-
-链接：将多个.o文件，或者.o文件和库文件链接成为可被操作系统执行的可执行程序。链接器不检查函数所在的源文件，只检查所有.o文件中的定义的符号。将.o文件中使用的函数和其它.o或者库文件中的相关符号进行合并，最后生成一个可执行的程序。“ld”是GNU的链接器。
-
-静态库：又称为文档文件（Archive File）。它是多个.o文件的集合。Linux中静态库文件的后缀为“.a”。静态库中的各个成员（.o文件）没有特殊的存在格式，仅仅是一个.o文件的集合。使用“ar”工具维护和管理静态库。
-
-共享库：也是多个.o文件的集合，但是这些.o文件时有编译器按照一种特殊的方式生成。对象模块的各个成员的地址（变量引用和函数调用）都是相对地址。因此在程序运行时，可动态加载库文件和执行共享的模块（多个程序可以共享使用库中的某一个模块）。
-
-1.2 makefile简介
-make在执行时，需要一个命名为Makefile的文件。这个文件告诉make以何种方式编译源代码和链接程序，即告诉make需要做什么（完成什么任务），该怎么做。典型地，可执行文件可由一些.o文件按照一定的顺序生成或者更新。如果在你的工程中已经存在一个或者多个正确的Makefile。当对工程中的若干源文件修改以后，需要根据修改来更新可执行文件或者库文件，正如前面提到的你只需要在shell下执行“make”。make会自动根据修改情况完成源文件的对应.o文件的更新、库文件的更新、最终的可执行程序的更新。
-
-make通过比较对应文件（规则的目标和依赖，）的最后修改时间，来决定哪些文件需要更新、那些文件不需要更新。对需要更新的文件make就执行数据库中所记录的相应命令（在make读取Makefile以后会建立一个编译过程的描述数据库。此数据库中记录了所有各个文件之间的相互关系，以及它们的关系描述）来重建它，对于不需要重建的文件make什么也不做。
-
-而且可以通过make的命令行选项来指定需要重新编译的文件。
-
-在执行make之前，需要一个命名为Makefile的特殊文件（本文的后续将使用Makefile作为这个特殊文件的文件名）来告诉make需要做什么（完成什么任务），该怎么做。通常，make工具主要被用来进行工程编译和程序链接。
-
+在顶层的Makefile中，可以查找到如下几行定义的规则：
+```makefile
+config: scripts_basic outputmakefile FORCE
+	$(Q)$(MAKE) $(build)=scripts/kconfig $@
  
+%config: scripts_basic outputmakefile FORCE
+	$(Q)$(MAKE) $(build)=scripts/kconfig $@
+```
+这就是生成内核配置界面的命令规则，它也定义了执行的目标和依赖的前提条件，还有要执行的命令。这条规则定义的目标为config %config，通配符%意味着可以包括config、menuconfig、xconfig、gconfig等。依赖的前提条件是scripts_basic outputmakefile，这些在Makefile中也是规则定义，主要用来编译生成配置工具。这条规则执行的命令就是执行scripts/kconfig/Makefile制定的规则。
 
-当使用make工具进行编译时，工程中以下几种文件在执行make时将会被编译（重新编译）：
-
-1.所有的源文件没有被编译过，则对各个C源文件进行编译并进行链接，生成最后的可执行程序；
-
-2.每一个在上次执行make之后修改过的C源代码文件在本次执行make时将会被重新编译；
-
-3.头文件在上一次执行make之后被修改。则所有包含此头文件的C源文件在本次执行make时将会被重新编译。
-
- 
-
-后两种情况是make只将修改过的C源文件重新编译生成.o文件，对于没有修改的文件不进行任何工作。重新编译过程中，任何一个源文件的修改将产生新的对应的.o文件，新的.o文件将和以前的已经存在、此次没有重新编译的.o文件重新连接生成最后的可执行程序。
+根据配置工具的不同，内核有不同的配置方式。有命令行方式，还有图形界面方式。表2是各种内核配置方法的说明。
 
 
 
 
+这些内核配置方式是在scripts/kconfig/Makefile中通过规则定义的。从这个Makefile中，可以找到下面一些规则定义。如果把变量或者通配符带进去，就可以明白要执行的操作。
+
+这里的ARCH以arm为例来说明。
+
+执行命令：scripts/kconfig/qconf arch/arm/Kconfig，使用QT图形库生成配置界面，arch/arm/Kconfig是菜单的主配置文件，每种配置方式都需要。
+
+执行命令：scripts/kconfig/qconf arch/arm/Kconfig，使用GTK图形库生成配置界面。
+
+执行命令：scripts/kconfig/mconf arch/arm/Kconfig，使用lxdialog工具，生成光标配置菜单。
+
+执行命令：scripts/kconfig/conf (-o/s) arch/arm/Kconfig，完全命令行的内核配置方式。使用“-o”选项，直接读取已经存在的.config文件，要求确定内核新的配置项。使用“-s”选项，直接读取已经存在的.config文件，提示但不要求确认内核新的配置项。
+
+通过上述各种方式都可以完成配置内核的工作，在顶层目录下生成.config文件。这个.config文件保存大量的内核配置项，.config会自动转换成include/linux/autoconf.h头文件。在include/linux/config.h文件中，将包含使用include/linux/autoconf.h头文件。
 
 
 
-
-
-
-
-
-
-
-## 5.2 内核编译过程详解
+# 5.2 内核编译过程
 * 在输入编译命令后，make首先调用脚本来读取`.config`文件，并根据内容载入对应文件到`include/config/`，并将一些配置项写入`include/config/auto.conf`。
 * 脚本程序将`include/config/auto.conf`中的配置项`CONFIG_XXXX=y|m|xxx`翻译为宏定义`#define CONFIG_XXXX[_MODULE] 1|xxx`，并写入`include/generate/autoconf.h`中。
 * autoconf.h就是`include/config/auto.conf`中的配置项的内容的C语言写法，以便在以后使用的时候作为宏定义出现，以实现条件编译。
