@@ -28,9 +28,8 @@ title: Linux内核的构建系统
 后两种情况make只将修改过的C源文件重新编译生成.o文件，对于没有修改的文件不进行任何工作。重新编译过程中，任何一个源文件的修改将产生新的对应的.o文件，新的.o文件将和以前的已经存在、此次没有重新编译的.o文件重新连接生成最后的可执行程序。
 # 2 配置内核
 ## 2.1 配置方式
-&emsp;&emsp;Linux内核源代码组织了一个配置系统，该配置系统可以生成内核配置菜单，方便内核配置。配置系统主要包含Makefile、Kconfig 和 scripts。其中，scripts/kconfig中存放了各种配置工具，配置界面是通过配置工具来生成的，配置工具是通过指定make目标，然后由make构建并执行，配置界面中的选项则是通过各级的Kconfig文件定义。
-&emsp;&emsp;Linux内核配置系统也被移植到其它软件(如Busybox、glibc、uclibc等)中，来提供同样的配置界面以方便有选择性的配置。
-&emsp;&emsp;Linux内核配置命令主要有：make config、make menuconfig、make xconfig和make gconfig，分别是字符界面、ncurses光标菜单、QT图形窗口和GTK图形窗口的配置界面。
+&emsp;&emsp;Linux内核源代码组织了一个配置系统，该配置系统可以生成内核配置菜单，方便内核配置。**配置系统主要包含Makefile、Kconfig 和 scripts**。其中，scripts/kconfig中存放了各种配置工具，配置界面是通过配置工具来生成的，配置工具是通过指定make目标，然后由make构建并执行，配置界面中的选项则是通过各级的Kconfig文件定义。
+&emsp;&emsp;Linux内核配置系统也被移植到其它软件(如Busybox、glibc、uclibc等)中，来提供同样的配置界面以方便有选择性的配置。Linux内核配置命令主要有：make config、make menuconfig、make xconfig和make gconfig，分别是字符界面、ncurses光标菜单、QT图形窗口和GTK图形窗口的配置界面。
 
 
 
@@ -51,7 +50,8 @@ title: Linux内核的构建系统
 * symbol.c实现变量处理函数，
 * menu.c实现菜单控制函数。
 
-## 1.2 配置过程
+## 2.2 配置过程
+
 当我们使用`make menuconfig`这个命令时（其它配置命令类似）：
 	
 * 首先由make编译生成`scripts/kconfig/mconf.c`生成`scripts/kconfig/mconf`。（xconfig对应qconf，gconfig对应gconf，config对应conf）
@@ -61,56 +61,10 @@ title: Linux内核的构建系统
 
 * 当我们使用`make defconfig`这个命令时：系统直接将`arch/$SRCARCH/configs`（**该目录存放内核的默认配置文件**）下的对应的默认配置文件拷贝到Linux内核源代码根目录下的`.config`文件。
 
-
-在顶层的Makefile中，可以查找到如下几行定义的规则：
-```makefile
-config: scripts_basic outputmakefile FORCE
-	$(Q)$(MAKE) $(build)=scripts/kconfig $@
- 
-%config: scripts_basic outputmakefile FORCE
-	$(Q)$(MAKE) $(build)=scripts/kconfig $@
-```
-这就是生成内核配置界面的命令规则，它也定义了执行的目标和依赖的前提条件，还有要执行的命令。这条规则定义的目标为config %config，通配符%意味着可以包括config、menuconfig、xconfig、gconfig等。依赖的前提条件是scripts_basic outputmakefile，这些在Makefile中也是规则定义，主要用来编译生成配置工具。这条规则执行的命令就是执行scripts/kconfig/Makefile制定的规则。
-
-根据配置工具的不同，内核有不同的配置方式。有命令行方式，还有图形界面方式。表2是各种内核配置方法的说明。
-
-
-
-
-这些内核配置方式是在scripts/kconfig/Makefile中通过规则定义的。从这个Makefile中，可以找到下面一些规则定义。如果把变量或者通配符带进去，就可以明白要执行的操作。
-
-这里的ARCH以arm为例来说明。
-
-执行命令：scripts/kconfig/qconf arch/arm/Kconfig，使用QT图形库生成配置界面，arch/arm/Kconfig是菜单的主配置文件，每种配置方式都需要。
-
-执行命令：scripts/kconfig/qconf arch/arm/Kconfig，使用GTK图形库生成配置界面。
-
-执行命令：scripts/kconfig/mconf arch/arm/Kconfig，使用lxdialog工具，生成光标配置菜单。
-
-执行命令：scripts/kconfig/conf (-o/s) arch/arm/Kconfig，完全命令行的内核配置方式。使用“-o”选项，直接读取已经存在的.config文件，要求确定内核新的配置项。使用“-s”选项，直接读取已经存在的.config文件，提示但不要求确认内核新的配置项。
-
-通过上述各种方式都可以完成配置内核的工作，在顶层目录下生成.config文件。这个.config文件保存大量的内核配置项，.config会自动转换成include/linux/autoconf.h头文件。在include/linux/config.h文件中，将包含使用include/linux/autoconf.h头文件。
-
-
-
-# 5.2 内核编译过程
-* 在输入编译命令后，make首先调用脚本来读取`.config`文件，并根据内容载入对应文件到`include/config/`，并将一些配置项写入`include/config/auto.conf`。
-* 脚本程序将`include/config/auto.conf`中的配置项`CONFIG_XXXX=y|m|xxx`翻译为宏定义`#define CONFIG_XXXX[_MODULE] 1|xxx`，并写入`include/generate/autoconf.h`中。
-* autoconf.h就是`include/config/auto.conf`中的配置项的内容的C语言写法，以便在以后使用的时候作为宏定义出现，以实现条件编译。
-* make根据Makefile执行编译。
-
-# 6 在内核中添加程序
-* 将源代码拷贝到内核源码的相应目录
-* 修改对应目录下的Kconfig文件，按照Kconfig语法增加对应的选项；
-* 修改对应目录下的Makefile文件完成编译选项的添加`obj-$(CONFIG_symbol)+= filename.o`；
-
-
-
-
-# 2 Kconfig语法
+## 2.3 Kconfig语法
 
 &emsp;&emsp;linux在2.6版本以后将配置文件由原来的config.in改为Kconfig，对于Kconfig的语法在内核源代码/Documentation/kbuild/kconfig-language.txt中做了详细的说明。
-# 1 Kconfig格式
+### 2.3.1 Kconfig格式
 ```
 菜单入口 "菜单入口名"
    [依赖]
@@ -130,7 +84,7 @@ config: scripts_basic outputmakefile FORCE
    [帮助]
 ```
 
-# 2 属性
+### 2.3.2 属性
 * `bool/tristate/int/hex/string`
 值类型，只有配置选项有值类型。包括： bool——值为y或n、 tristate——值为y或m或n、string——值为字符串、int——值为十进制整数、 hex——值为十六进制整数
 
@@ -207,7 +161,7 @@ config: scripts_basic outputmakefile FORCE
 > * 如果一个配置项只有值类型属性，则它的选中只能通过其他配置项的select属性
 
 
-# 3 表达式expr
+### 2.3.3 表达式expr
 ```
 <expr> ::= <symbol>                             (1)
            <symbol> '=' <symbol>                (2)
@@ -241,12 +195,7 @@ config: scripts_basic outputmakefile FORCE
 * 常数symbol只是表达式的一部分。常数symbol通常被单引号或者双引号包围着。在引号中，任何字母都是允许的，并且可以使用‘\’进行转义。
 
  
-
-
-
-
-
-# 4 菜单入口
+### 2.3.4 菜单入口
 
 * 主菜单——最顶层的菜单
 ```
@@ -294,7 +243,7 @@ source "...dir/Kconfig"
 ```
 
 
-# 5 菜单结构
+### 2.3.5 菜单结构
 * 一种是使用了菜单入口明确指定，如下中所有位于“menu”…和“endmenu”之间的入口都是"Network device support"的一个子菜单入口。所有的子入口都继承了菜单入口的依赖项，例如，依赖项”NET”就会被加入到子菜单”NETDEVICESx”的依赖项列表中。
 ```
 menu "Network device support"
@@ -327,8 +276,16 @@ comment "module support disabled"
 
 
 
+# 3  内核编译过程
+* 在输入编译命令后，make首先调用脚本来读取`.config`文件，并根据内容载入对应文件到`include/config/`，并将一些配置项写入`include/config/auto.conf`。
+* 脚本程序将`include/config/auto.conf`中的配置项`CONFIG_XXXX=y|m|xxx`翻译为宏定义`#define CONFIG_XXXX[_MODULE] 1|xxx`，并写入`include/generate/autoconf.h`中。
+* autoconf.h就是`include/config/auto.conf`中的配置项的内容的C语言写法，以便在以后使用的时候作为宏定义出现，以实现条件编译。
+* make根据Makefile执行编译。
 
-
+# 4 在内核中添加程序
+* 将源代码拷贝到内核源码的相应目录
+* 修改对应目录下的Kconfig文件，按照Kconfig语法增加对应的选项；
+* 修改对应目录下的Makefile文件完成编译选项的添加`obj-$(CONFIG_symbol)+= filename.o`；
 
 
 ------
