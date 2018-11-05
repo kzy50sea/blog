@@ -116,14 +116,14 @@ tags: Linux内核
  “status”属性用来表示节点的状态的，其实就是硬件的状态，用字符串表示。'okay'表示硬件正常工作，“disabled”表示硬件当前不可用，“fail”表示因为出错不可用，“fail-sss”表示因为某种原因出错不可用，sss表示具体的出错原因。实际中，基本只用'okay'和'disabled'。
 
 ----
-
-"interrupts"、"interrupt-controller"、"#interrupt-cells"、"interrupt-map"、"interrupt-map-mask"、"interrupt-parrent"是与中断有关的属性。
-
-* "interrupt-controller "： 一个空的属性表示该节点为中断控制器。
-* "#interrupt-cells "： 中断控制器节点或者interrupt nexus节点的属性。它声明了中断产生设备的中断说明符需要多少个cell。假如需要2个cell表示，`<中断类型，中断号>`，那么#interrupt-cells就设置成2。需要3个cell表示，`<中断类型，中断号，中断触发方式>`，那么#interrupt-cells就设置成3。
-* "interrupt-parent"：中断产生设备的属性，包含一个指向该设备所连接中断控制器的pHandle。那些没有interrupt-parent属性的节点则从它们的父节点继承该属性，也就是说如果设备树的父节点就是中断父节点，那么可以不用设置interrupt-parent属性.
-	* "interrupts "：中断源的属性，中断说明符列表，对应于该设备上的每个中断输出信号。
-	* "interrupt-map"：interrupt nexus(用于说明中断控制器中的一个中断与中断产生设备中的多个中断源之间的对应关系)节点的属性，是cell类型的，每个元素表示一个中断映射关系，`<中断子设备地址，中断子设备中断源，中断父设备，中断父设备地址，中断父设备中断源>`。中断子设备地址由中断子设备所在总线的#address-cells属性决定，中断子设备中断源由该interrupt nexus节点下的#interrupt-cell决定的。中断父设备是一个指向中断父设备的`<phandle>`属性，一般情况下是中断控制器，但是按照中断树的逻辑，也可能是更高一级的interrupt nexus节点。中断父设备地址是由中断父设备节点下的#address-cells属性决定的(注意，不是中断父设备所在总线的#address-cells属性)。中断父设备中断源由中断父设备的#interrupt-cells属性决定的。
+* 中断产生设备节点的属性
+	* "interrupt-parent"：实质是一个指向该设备所连接的中断控制器的pHandle，但一般使用标签来进行引用，如`interrupt-parent=<&intc>`。那些没有interrupt-parent属性的节点则从它们的父节点继承该属性，也就是说如果设备树的父节点就是中断父节点，那么可以不用设置interrupt-parent属性。
+	* "interrupts "：中断源的属性，中断说明符列表，对应于该设备上的每个中断输出信号。每个元素由几个Cell表示由中断父节点的 "#interrupt-cells "属性说明。
+* 中断控制器节点的属性
+	* "interrupt-controller "： 一个空的属性表示该节点为中断控制器。
+	* "#interrupt-cells "： 中断控制器节点或者interrupt nexus节点的属性。它声明了中断产生设备的中断说明符需要多少个cell。假如需要2个cell表示，`<中断类型，中断号>`，那么#interrupt-cells就设置成2。需要3个cell表示，`<中断类型，中断号，中断触发方式>`，那么#interrupt-cells就设置成3。
+* 中断关系节点(用于说明中断控制器中的一个中断与中断产生设备中的多个中断源之间的对应关系)的属性
+	* "interrupt-map"：interrupt nexus节点的属性，是cell类型的，每个元素表示一个中断映射关系，`<中断子设备地址，中断子设备中断源，中断父设备，中断父设备地址，中断父设备中断源>`。中断子设备地址由中断子设备所在总线的#address-cells属性决定，中断子设备中断源由该interrupt nexus节点下的#interrupt-cell决定的。中断父设备是一个指向中断父设备的`<phandle>`属性，一般情况下是中断控制器，但是按照中断树的逻辑，也可能是更高一级的interrupt nexus节点。中断父设备地址是由中断父设备节点下的#address-cells属性决定的(注意，不是中断父设备所在总线的#address-cells属性)。中断父设备中断源由中断父设备的#interrupt-cells属性决定的。
 	* 还记得前边说过中断设备的中断源和中断控制器的中断源可能是多对一的关系，如果每个子中断都用interrupt-map中的一行表示，那么interrupt-map属性将非常大。为了让多个子中断共享映射关系，引入了interrupt-map-mask属性，该属性的类型也是<prop-enacoded-array>，包含中断子设备地址和中断子设备中断源的bit mask，给定一个子中断源，那么首先和interrupt-map-mask做与运算，运算结果再通过interrupt-map属性查找对应的中断父设备中断源。这就是我们前边为什么说interrupt-map属性的一行是一个“中断映射关系”，而不是“一个中断”映射关系的原因。
 	* 我们再来复习一下，整个中断树的最底层是中断产生设备(也可能是从interrupt nexus节点)，中断产生设备用interrupts属性描述他能产生的中断。因为他的中断父设备可能和设备树的父设备不同，那么用interrupt-parent属性指向他的中断父设备。他的中断父设备可能是中断控制器(如果中断产生设备的中断和中断控制器的中断是一一对应的，或者最底层是interrupt nexus节点)，也可能是interrupt nexus节点(如果最底层是中断产生设备，且需要映射)。interrupt nexus节点及他的所有直接子节点构成了一个interrupt domain，在该interrupt domain下中断源怎样表示由#interrupt-cells属性决定，如何由中断子设备中断源找到中断父设备中断源由interrupt-map和interrupt-map-mask属性决定。interrupt nexus的父节点可能还是一个interrupt nexus父节点，也可能是一个中断控制器，当向上找到最后一个中断控制器，并且该中断控制器再也没有中断父设备时，整个中断树就遍历完成了。中断控制器用interrupt-controller属性表示自己是中断控制器，并且用#interrupt-cells属性表示他所直接管理的interrupt domain用几个u32表示一个中断源。根据中断树的特性，一个设备树中是有可能有多个中断树的。
 
