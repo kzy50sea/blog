@@ -91,6 +91,44 @@ tags: Linux内核
 		* 地址相关：`#address-cells、#size-cells、reg、range、dma-range`……
 		* 中断相关：`interrupts、interrupt-controller、#interrupt-cells、interrupt-map、interrupt-map-mask、interrupt-parrent`……
 		* 设备状态相关：`status`……
+## 2.2 常见属性
+“compatible”，“model”,"device_type"都是用来表示节点基本信息的。
+
+* “compatible”属性是用来匹配驱动的，他的类型是字符串数组，每个字符串表示一种设备的类型，从具体到一般。列表中的第一个字符串指定了`<manufacturer>,<model>`格式的节点代表的确切设备，第二个字符串代表了与该设备兼容的其他设备。如：`compatible = "fsl,mpc8349-uart", "ns16550"`。
+* "model"属性用来表示设备的型号，用字符串表示，不像"compatible"用多个字符串，只需一个就够了。
+* "device_type"属性用来表示设备类型，用字符串表示。
+----
+
+"#address-cells","#size-cells","reg","ranges","dma-ranges"属性都是和地址有关的。
+
+* 不同的平台，不同的总线，地址长度可能不同，有32位地址，有64位地址，为了适应这个，规范规定一个32位的长度为一个cell。
+	* "#address-cells"属性用来表示地址需要几个cell表示，该属性本身是u32类型的。 
+	* "#size-cells"属性用来表示地址空间的长度需要几个cell表示，属性本身的类型也是u32。
+* "reg"属性用来表示节点地址资源的，比如常见的就是寄存器的起始地址及大小。要想表示一块连续地址，必须包含起始地址和空间大小两个参数，如果有多块地址，那么就需要多组这样的值表示，如`reg = <address1 length1 [address2 length2] ... >`。每个元素是一个二元组，包含起始地址和大小。地址和大小用几个cell表示由父节点的"#address-cells","#size-cells"属性确定。
+* "ranges"属性用来表示如何转换设备在总线上的地址和总线本身的地址。'ranges'属性的每个元素是三元组，按照前后顺序分别是`<子总线地址，父总线地址，大小>`。子总线地址需要几个u32表示由'ranges'属性所在节点的'#address-cells'属性决定，父总线地址需要几个u32表示由上一级节点的'#address-cells'属性决定，大小需要几个u32表示由当前节点的'#size-cells'属性确定。
+* 'dma-ranges'属性的结构和定义与'ranges'属性完全相同，唯一不同的是地址是dma使用的地址，'ranges'中的地址是cpu使用的地址。
+
+----
+
+  "`phandle`"属性是专门为方便引用节点设计的，想要引用哪个节点就在该节点下边增加一个'phandle'属性，设定值为一个u32，如`phandle = <1>`，引用的地方直接使用数字1就可以引用该节点，如`interrupt-parent = <1>`。以上是规范中描述的方法，实际上这样也不方便，我在实际的代码中没有看到这么用的。还记得节点那节说过节点名字前边可以定义一个标签吧，实际情况是都用标签引用，比如节点标签为intc1，那么用`interrupt-parent = <&intc1>`就可以引用了。
+
+---
+ “status”属性用来表示节点的状态的，其实就是硬件的状态，用字符串表示。'okay'表示硬件正常工作，“disabled”表示硬件当前不可用，“fail”表示因为出错不可用，“fail-sss”表示因为某种原因出错不可用，sss表示具体的出错原因。实际中，基本只用'okay'和'disabled'。
+
+----
+
+"interrupts"、"interrupt-controller"、"#interrupt-cells"、"interrupt-map"、"interrupt-map-mask"、"interrupt-parrent"是与中断有关的属性。
+
+* "interrupt-controller "： 一个空的属性表示该节点为中断控制器。
+* "#interrupt-cells "： 中断控制器节点或者interrupt nexus节点的属性。它声明了中断产生设备的中断说明符需要多少个cell。假如需要2个cell表示，`<中断类型，中断号>`，那么#interrupt-cells就设置成2。需要3个cell表示，`<中断类型，中断号，中断触发方式>`，那么#interrupt-cells就设置成3。
+* "interrupt-parent"：中断产生设备的属性，包含一个指向该设备所连接中断控制器的pHandle。那些没有interrupt-parent属性的节点则从它们的父节点继承该属性，也就是说如果设备树的父节点就是中断父节点，那么可以不用设置interrupt-parent属性.
+	* "interrupts "：中断源的属性，中断说明符列表，对应于该设备上的每个中断输出信号。
+	* "interrupt-map"：interrupt nexus(用于说明中断控制器中的一个中断与中断产生设备中的多个中断源之间的对应关系)节点的属性，是cell类型的，每个元素表示一个中断映射关系，`<中断子设备地址，中断子设备中断源，中断父设备，中断父设备地址，中断父设备中断源>`。中断子设备地址由中断子设备所在总线的#address-cells属性决定，中断子设备中断源由该interrupt nexus节点下的#interrupt-cell决定的。中断父设备是一个指向中断父设备的`<phandle>`属性，一般情况下是中断控制器，但是按照中断树的逻辑，也可能是更高一级的interrupt nexus节点。中断父设备地址是由中断父设备节点下的#address-cells属性决定的(注意，不是中断父设备所在总线的#address-cells属性)。中断父设备中断源由中断父设备的#interrupt-cells属性决定的。
+	* 还记得前边说过中断设备的中断源和中断控制器的中断源可能是多对一的关系，如果每个子中断都用interrupt-map中的一行表示，那么interrupt-map属性将非常大。为了让多个子中断共享映射关系，引入了interrupt-map-mask属性，该属性的类型也是<prop-enacoded-array>，包含中断子设备地址和中断子设备中断源的bit mask，给定一个子中断源，那么首先和interrupt-map-mask做与运算，运算结果再通过interrupt-map属性查找对应的中断父设备中断源。这就是我们前边为什么说interrupt-map属性的一行是一个“中断映射关系”，而不是“一个中断”映射关系的原因。
+	* 我们再来复习一下，整个中断树的最底层是中断产生设备(也可能是从interrupt nexus节点)，中断产生设备用interrupts属性描述他能产生的中断。因为他的中断父设备可能和设备树的父设备不同，那么用interrupt-parent属性指向他的中断父设备。他的中断父设备可能是中断控制器(如果中断产生设备的中断和中断控制器的中断是一一对应的，或者最底层是interrupt nexus节点)，也可能是interrupt nexus节点(如果最底层是中断产生设备，且需要映射)。interrupt nexus节点及他的所有直接子节点构成了一个interrupt domain，在该interrupt domain下中断源怎样表示由#interrupt-cells属性决定，如何由中断子设备中断源找到中断父设备中断源由interrupt-map和interrupt-map-mask属性决定。interrupt nexus的父节点可能还是一个interrupt nexus父节点，也可能是一个中断控制器，当向上找到最后一个中断控制器，并且该中断控制器再也没有中断父设备时，整个中断树就遍历完成了。中断控制器用interrupt-controller属性表示自己是中断控制器，并且用#interrupt-cells属性表示他所直接管理的interrupt domain用几个u32表示一个中断源。根据中断树的特性，一个设备树中是有可能有多个中断树的。
+
+
+
 
 ## 2.2 示例
 &emsp;&emsp;为了帮助理解device tree的用法，我们从一个简单的计算机开始， 手把手创建一个device tree来描述它。假设有这样一台计算机（基于ARM Versatile）,由“Acme”制造并命名为"Coyote's Revenge"：
@@ -109,17 +147,6 @@ tags: Linux内核
 			* Maxim DS1338实时钟，I2C地址为1101000 （0x58）
 		* 64MB NOR Flash，位于0x30000000
 
-
-* `phandle`属性是专门为方便引用节点设计的，想要引用哪个节点就在该节点下边增加一个'phandle'属性，设定值为一个u32，如`phandle = <1>`，引用的地方直接使用数字1就可以引用该节点，如`interrupt-parent = <1>`。以上是规范中描述的方法，实际上这样也不方便，我在实际的代码中没有看到这么用的。还记得节点那节说过节点名字前边可以定义一个标签吧，实际情况是都用标签引用，比如节点标签为intc1，那么用`interrupt-parent = <&intc1>`就可以引用了。
-		* `status`属性用来表示节点的状态的，其实就是硬件的状态，用字符串表示。'okay'表示硬件正常工作，“disabled”表示硬件当前不可用，“fail”表示因为出错不可用，“fail-sss”表示因为某种原因出错不可用，sss表示具体的出错原因。实际中，基本只用'okay'和'disabled'。
-		* * `compatible`属性用来匹配驱动的，类型是字符串数组，每个字符串表示一种设备的类型，从具体到一般。列表中的第一个字符串指定了`<manufacturer>,<model>`格式的节点代表的确切设备，第二个字符串代表了与该设备兼容的其他设备。如：`compatible = "fsl,mpc8349-uart", "ns16550"`。
-		* `model`属性用来表示设备的型号，用字符串表示，不像`compatible`用多个字符串，只需一个就够了。
-		* `device_type`属性用来表示设备类型，用字符串表示。
-		* 不同的平台，不同的总线，地址位长度可能不同，有32位地址，有64位地址，为了适应这个，规范规定一个32位的长度为一个cell。`#address-cells`属性用来表示总线地址需要几个cell表示，该属性本身是u32类型的。`#size-cells`属性用来表示子总线地址空间的长度需要几个cell表示，属性本身的类型也是u32。这两个属性不可以继承，就是说在未定义这两个属性的时候，不会继承更高一级父节点的设置，如果没有设置的话，内核默认认为`#address-cells`为2，`#size-cells`为1。
-		* `reg`属性用来表示节点地址资源的，比如常见的就是寄存器的起始地址及大小。要想表示一块连续地址，必须包含起始地址和空间大小两个参数，如果有多块地址，那么就需要多组这样的值表示。还记得前边说过的cell类型的属性吧，就是用来干这个的，他表示一个数组，每个元素的具体格式根据属性而定，对于'reg'属性，每个元素是一个二元组，包含起始地址和大小。还有另外一个问题，地址和大小用几个u32表示呢？这个就由父节点的"#address-cells","#size-cells"属性确定。
-		* 总线上设备在总线地址和总线本身的地址可能不同，"ranges"属性用来表示如何转换。和'reg'属性类似，'ranges'属性也是Cell类型的属性，不同的是'ranges'属性的每个元素是三元组，按照前后顺序分别是`(子总线地址，父总线地址，大小)`。子总线地址需要几个u32表示由'ranges'属性所在节点的`#address-cells`属性决定，父总线地址需要几个u32表示由上一级节点的`#address-cells`属性决定，大小需要几个u32表示由当前节点的`#size-cells`属性确定。
-		* `dma-ranges`属性的结构和定义与'ranges'属性完全相同，唯一不同的是地址是dma使用的地址，'ranges'中的地址是cpu使用的地址。
-	
 
 ### 3.2.1 初始结构
 &emsp;&emsp;第一步，先构建一个计算机的基本架构，即一个有效设备树的最小架构。在这一步，要唯一地标志这台计算机。
@@ -215,7 +242,7 @@ tags: Linux内核
 ```
 &emsp;&emsp;在上面的设备树中，系统中的设备节点已经添加进来，树的层次结构反映了设备如何连到系统中。外部总线上的设备就是外部总线节点的子节点，i2c设备是i2c总线控制节点的子节点。总的来说，**层次结构表现的是从CPU视角来看的系统视图**。在这里这棵树是依然是无效的。它缺少关于设备之间的连接信息。稍后将添加这些数据。在这个设备树中应当注意：
 * 每个设备节点有一个compatible属性。
-* flash节点的compatible属性有两个字符串。请阅读下一节以了解更多内容。 
+* flash节点的compatible属性有两个字符串。 
 * 之前提到的，节点命名应当反映设备的类型，而不是特定型号。请参考EPAPR规范2.2.2节的通用节点命名，应优先使用这些命名。
 
 &emsp;&emsp;树中的每一个代表了一个设备的节点都要有一个compatible属性。compatible是OS用来匹配设备驱动的关键。compatible是字符串的列表。列表中的第一个字符串指定了"`<manufacturer>,<model>`"格式的节点代表的确切设备，第二个字符串代表了与该设备兼容的其他设备。例如，Freescale MPC8349 SoC有一个串口设备实现了National Semiconductor ns16550寄存器接口。因此MPC8349串口设备的compatible属性为：`compatible = "fsl,mpc8349-uart", "ns16550"`。在这里，fsl,mpc8349-uart指定了确切的设备，ns16550表明它与National Semiconductor 16550 UART是寄存器级兼容的。
@@ -853,6 +880,7 @@ struct property {
 	struct bin_attribute attr；
 };
 ```
+
 
 ![3](https://www.github.com/liao20081228/blog/raw/master/图片/Linux设备树/30145634_1428507890cwwV.png)
 ![1](https://www.github.com/liao20081228/blog/raw/master/图片/Linux设备树/20170829102235526.jpg)
