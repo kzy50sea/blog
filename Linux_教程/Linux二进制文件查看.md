@@ -13,12 +13,17 @@ tags: Linux教程
 **命令**：od [OPTION]... [FILE]...
 &emsp;&emsp;&emsp;od [-abcdfilosx]... [FILE] [[+]OFFSET[.][b]]
 &emsp;&emsp;&emsp;od --traditional [OPTION]... [FILE] [[+]OFFSET[.][b] [+][LABEL][.][b]]
-**描述**：查看非纯文本文档。
-|常用选项&emsp;|作用|
-|:----|--|
+**描述**：读取FILE并以指定格式输出到标准输出，默认为每两个字节用六个八进制数表示。 如果有多个FILE参数，以列出的顺序连接它们以形成输入。如果没有FILE，或者FILE是 - ，则读取标准输入。如果第一和第二调用格式都适用，则假设最后一个操作数以+或（如果有2个操作数）以数字开头，则假定第二种格式。 OFFSET操作数表示-j OFFSET。 LABEL是打印的第一个字节的伪地址，在转储进行时递增。 对于OFFSET和LABEL，0x或0X前缀表示十六进制; 后缀可以是八进制，b是乘以512。长选项的参数也适用于短选项。
+
+       
+|短选项|长选项|秒速|
+|:--|:--|:--|
+|-A| ---address-radix=RADIX| 文件偏移量的输出格式; RADIX是[doxn]之一，用于十进制，八进制，十六进制或不出出偏移量
+
+
+
 |-t TYPE |a 利用默认的字符来输出；c 使用 ASCII 字符来输出;d[size]利用十进制来输出数据，每个整数占用 size bytes ；f[size] 利用浮点数来输出数据，每个数占用 size bytes ；o[size] 利用八进制来输出数据，每个整数占用 size bytes ；x[size] 利用十六进制来输出数据，每个整数占用 size bytes ；
-|**更多信息**|<http://linux.51yip.com/search/od> 和 man 手册|
-|&emsp;&emsp;&emsp;&emsp;|<http://man.linuxde.net/od>|
+
 
 
 
