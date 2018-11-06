@@ -92,45 +92,44 @@ tags: Linux内核
 		* 中断相关：`interrupts、interrupt-controller、#interrupt-cells、interrupt-map、interrupt-map-mask、interrupt-parrent`……
 		* 设备状态相关：`status`……
 ## 2.2 常见属性
-“compatible”，“model”,"device_type"都是用来表示节点基本信息的。
+### 2.2.1 基本信息
+* “compatible”，“model”,"device_type"都是用来表示节点基本信息的。
+	* “compatible”属性是用来匹配驱动的，他的类型是字符串数组，每个字符串表示一种设备的类型，从具体到一般。列表中的第一个字符串指定了`<manufacturer>,<model>`格式的节点代表的确切设备，第二个字符串代表了与该设备兼容的其他设备。如：`compatible = "fsl,mpc8349-uart", "ns16550"`。
+	* "model"属性用来表示设备的型号，用字符串表示，不像"compatible"用多个字符串，只需一个就够了。
+	* "device_type"属性用来表示设备类型，用字符串表示。
+ 
+ * "`phandle`"属性是专门为方便引用节点设计的，想要引用哪个节点就在该节点下边增加一个'phandle'属性，设定值为一个u32，如`phandle = <1>`，引用的地方直接使用数字1就可以引用该节点，如`interrupt-parent = <1>`。以上是规范中描述的方法，实际上这样也不方便，我在实际的代码中没有看到这么用的。还记得节点那节说过节点名字前边可以定义一个标签吧，实际情况是都用标签引用，比如节点标签为intc1，那么用`interrupt-parent = <&intc1>`就可以引用了。
 
-* “compatible”属性是用来匹配驱动的，他的类型是字符串数组，每个字符串表示一种设备的类型，从具体到一般。列表中的第一个字符串指定了`<manufacturer>,<model>`格式的节点代表的确切设备，第二个字符串代表了与该设备兼容的其他设备。如：`compatible = "fsl,mpc8349-uart", "ns16550"`。
-* "model"属性用来表示设备的型号，用字符串表示，不像"compatible"用多个字符串，只需一个就够了。
-* "device_type"属性用来表示设备类型，用字符串表示。
-----
+*  “status”属性用来表示节点的状态的，其实就是硬件的状态，用字符串表示。'okay'表示硬件正常工作，“disabled”表示硬件当前不可用，“fail”表示因为出错不可用，“fail-sss”表示因为某种原因出错不可用，sss表示具体的出错原因。实际中，基本只用'okay'和'disabled'。
+### 2.2.2 编址
 
-"#address-cells","#size-cells","reg","ranges","dma-ranges"属性都是和地址有关的。
-
-* 不同的平台，不同的总线，地址长度可能不同，有32位地址，有64位地址，为了适应这个，规范规定一个32位的长度为一个cell。
-	* "#address-cells"属性用来表示地址需要几个cell表示，该属性本身是u32类型的。 
-	* "#size-cells"属性用来表示地址空间的长度需要几个cell表示，属性本身的类型也是u32。
+"#address-cells","#size-cells","reg","ranges","dma-ranges"属性都是和地址有关的。不同的平台，不同的总线，地址长度可能不同，有32位地址，有64位地址，为了适应这个，规范规定一个32位的长度为一个cell。
+* "#address-cells"属性用来表示地址需要几个cell表示，该属性本身是u32类型的。 
+* "#size-cells"属性用来表示地址空间的长度需要几个cell表示，属性本身的类型也是u32。
 * "reg"属性用来表示节点地址资源的，比如常见的就是寄存器的起始地址及大小。要想表示一块连续地址，必须包含起始地址和空间大小两个参数，如果有多块地址，那么就需要多组这样的值表示，如`reg = <address1 length1 [address2 length2] ... >`。每个元素是一个二元组，包含起始地址和大小。地址和大小用几个cell表示由父节点的"#address-cells","#size-cells"属性确定。
 * "ranges"属性用来表示如何转换设备在总线上的地址和总线本身的地址。'ranges'属性的每个元素是三元组，按照前后顺序分别是`<子总线地址，父总线地址，大小>`。子总线地址需要几个u32表示由'ranges'属性所在节点的'#address-cells'属性决定，父总线地址需要几个u32表示由上一级节点的'#address-cells'属性决定，大小需要几个u32表示由当前节点的'#size-cells'属性确定。
 * 'dma-ranges'属性的结构和定义与'ranges'属性完全相同，唯一不同的是地址是dma使用的地址，'ranges'中的地址是cpu使用的地址。
 
-----
+### 2.2.3 中断
 
-  "`phandle`"属性是专门为方便引用节点设计的，想要引用哪个节点就在该节点下边增加一个'phandle'属性，设定值为一个u32，如`phandle = <1>`，引用的地方直接使用数字1就可以引用该节点，如`interrupt-parent = <1>`。以上是规范中描述的方法，实际上这样也不方便，我在实际的代码中没有看到这么用的。还记得节点那节说过节点名字前边可以定义一个标签吧，实际情况是都用标签引用，比如节点标签为intc1，那么用`interrupt-parent = <&intc1>`就可以引用了。
-
----
- “status”属性用来表示节点的状态的，其实就是硬件的状态，用字符串表示。'okay'表示硬件正常工作，“disabled”表示硬件当前不可用，“fail”表示因为出错不可用，“fail-sss”表示因为某种原因出错不可用，sss表示具体的出错原因。实际中，基本只用'okay'和'disabled'。
-
-----
 * 中断产生设备节点的属性
 	* "interrupt-parent"：实质是一个指向该设备所连接的中断控制器的pHandle，但一般使用标签来进行引用，如`interrupt-parent=<&intc>`。那些没有interrupt-parent属性的节点则从它们的父节点继承该属性，也就是说如果设备树的父节点就是中断父节点，那么可以不用设置interrupt-parent属性。
 	* "interrupts "：中断源的属性，中断说明符列表，对应于该设备上的每个中断输出信号。每个元素由几个Cell表示由中断父节点的 "#interrupt-cells "属性说明。
 * 中断控制器节点的属性
 	* "interrupt-controller "： 一个空的属性表示该节点为中断控制器。
-	* "#interrupt-cells "： 中断控制器节点或者interrupt nexus节点的属性。它声明了中断产生设备的中断说明符需要多少个cell。假如需要2个cell表示，`<中断类型，中断号>`，那么#interrupt-cells就设置成2。需要3个cell表示，`<中断类型，中断号，中断触发方式>`，那么#interrupt-cells就设置成3。
+	* "#interrupt-cells "： 中断控制器节点或者interrupt nexus节点的属性。它声明了中断产生设备的一个中断说明符需要多少个cell。假如需要2个cell表示，`<中断号，中断触发方式>`，那么#interrupt-cells就设置成2。需要3个cell表示，`<中断类型，中断号，中断触发方式>`，那么#interrupt-cells就设置成3。
 * 中断关系节点(用于说明中断控制器中的一个中断与中断产生设备中的多个中断源之间的对应关系)的属性
-	* "interrupt-map"：interrupt nexus节点的属性，是cell类型的，每个元素表示一个中断映射关系，`<中断子设备地址，中断子设备中断源，中断父设备，中断父设备地址，中断父设备中断源>`。中断子设备地址由中断子设备所在总线的#address-cells属性决定，中断子设备中断源由该interrupt nexus节点下的#interrupt-cell决定的。中断父设备是一个指向中断父设备的`<phandle>`属性，一般情况下是中断控制器，但是按照中断树的逻辑，也可能是更高一级的interrupt nexus节点。中断父设备地址是由中断父设备节点下的#address-cells属性决定的(注意，不是中断父设备所在总线的#address-cells属性)。中断父设备中断源由中断父设备的#interrupt-cells属性决定的。
-	* 还记得前边说过中断设备的中断源和中断控制器的中断源可能是多对一的关系，如果每个子中断都用interrupt-map中的一行表示，那么interrupt-map属性将非常大。为了让多个子中断共享映射关系，引入了interrupt-map-mask属性，该属性的类型也是<prop-enacoded-array>，包含中断子设备地址和中断子设备中断源的bit mask，给定一个子中断源，那么首先和interrupt-map-mask做与运算，运算结果再通过interrupt-map属性查找对应的中断父设备中断源。这就是我们前边为什么说interrupt-map属性的一行是一个“中断映射关系”，而不是“一个中断”映射关系的原因。
-	* 我们再来复习一下，整个中断树的最底层是中断产生设备(也可能是从interrupt nexus节点)，中断产生设备用interrupts属性描述他能产生的中断。因为他的中断父设备可能和设备树的父设备不同，那么用interrupt-parent属性指向他的中断父设备。他的中断父设备可能是中断控制器(如果中断产生设备的中断和中断控制器的中断是一一对应的，或者最底层是interrupt nexus节点)，也可能是interrupt nexus节点(如果最底层是中断产生设备，且需要映射)。interrupt nexus节点及他的所有直接子节点构成了一个interrupt domain，在该interrupt domain下中断源怎样表示由#interrupt-cells属性决定，如何由中断子设备中断源找到中断父设备中断源由interrupt-map和interrupt-map-mask属性决定。interrupt nexus的父节点可能还是一个interrupt nexus父节点，也可能是一个中断控制器，当向上找到最后一个中断控制器，并且该中断控制器再也没有中断父设备时，整个中断树就遍历完成了。中断控制器用interrupt-controller属性表示自己是中断控制器，并且用#interrupt-cells属性表示他所直接管理的interrupt domain用几个u32表示一个中断源。根据中断树的特性，一个设备树中是有可能有多个中断树的。
+	* "interrupt-map"：interrupt nexus节点的属性，是cell类型的，每个元素表示一个中断映射关系，`<中断子设备地址，中断子设备中断说明符，中断父设备，中断父设备地址，中断父设备中断说明符>`。中断子设备地址由中断子设备所在总线的#address-cells属性决定，中断子设备中断说明符由该interrupt nexus节点下的#interrupt-cell决定的。中断父设备是一个指向中断父设备的`<phandle>`属性，一般情况下是中断控制器，但是按照中断树的逻辑，也可能是更高一级的interrupt nexus节点。中断父设备地址是由中断父设备节点下的#address-cells属性决定的(注意，不是中断父设备所在总线的#address-cells属性)。中断父设备中断源说明符由几个Cell表示是由中断父设备的#interrupt-cells属性决定的。
+	* 中断设备的中断源和中断控制器的中断可能是多对一的关系，如果每个子中断都用interrupt-map中的一行表示，那么interrupt-map属性将非常大。为了让多个子中断共享映射关系，引入了“interrupt-map-mask”属性，该属性的类型也是cell类型，包含中断子设备地址和中断子设备中断源的bit mask，给定一个子中断源，那么首先和interrupt-map-mask做与运算，运算结果再通过interrupt-map属性查找对应的中断父设备中断源。这就是我们前边为什么说interrupt-map属性的一行是一个“中断映射关系”，而不是“一个中断”映射关系的原因。
+	
+	
+&emsp;&emsp;整个中断树的最底层是中断产生设备(也可能是从interrupt nexus节点)，中断产生设备用interrupts属性描述他能产生的中断。因为他的中断父设备可能和设备树的父设备不同，那么用interrupt-parent属性指向他的中断父设备。他的中断父设备可能是中断控制器(如果中断产生设备的中断和中断控制器的中断是一一对应的，或者最底层是interrupt nexus节点)，也可能是interrupt nexus节点(如果最底层是中断产生设备，且需要映射)。interrupt nexus节点及他的所有直接子节点构成了一个interrupt domain，在该interrupt domain下中断源怎样表示由#interrupt-cells属性决定，如何由中断子设备中断源找到中断父设备中断源由interrupt-map和interrupt-map-mask属性决定。interrupt nexus的父节点可能还是一个interrupt nexus父节点，也可能是一个中断控制器，当向上找到最后一个中断控制器，并且该中断控制器再也没有中断父设备时，整个中断树就遍历完成了。中断控制器用interrupt-controller属性表示自己是中断控制器，并且用#interrupt-cells属性表示他所直接管理的interrupt domain用几个u32表示一个中断源。根据中断树的特性，一个设备树中是有可能有多个中断树的。
 
 
+### 2.2.4 启动
 
-
-## 2.2 示例
+&emsp;&emsp;“bootargs”，该属性是chosen节点的属性，类型是字符串，用来向Linux内核传递cmdline。规范中还定义了stdout-path和stdin-path两个可选的、字符串类型的属性，这两个属性的目的是用来指定标准输入输出设备的，在linux中，这两个属性基本不用。
+## 3.2 示例
 &emsp;&emsp;为了帮助理解device tree的用法，我们从一个简单的计算机开始， 手把手创建一个device tree来描述它。假设有这样一台计算机（基于ARM Versatile）,由“Acme”制造并命名为"Coyote's Revenge"：
 
 * 1个双核ARM Cortex-A9 32位处理器；
@@ -146,7 +145,6 @@ tags: Linux内核
 		* I2C控制器，位于0x10160000，I2C总线上又连接了
 			* Maxim DS1338实时钟，I2C地址为1101000 （0x58）
 		* 64MB NOR Flash，位于0x30000000
-
 
 ### 3.2.1 初始结构
 &emsp;&emsp;第一步，先构建一个计算机的基本架构，即一个有效设备树的最小架构。在这一步，要唯一地标志这台计算机。
@@ -251,7 +249,7 @@ tags: Linux内核
 
  
 
-### 3.3 编址
+### 3.2.4  编址
 * 可编址的设备使用下列属性来将地址信息编码进设备树：
 	* reg
 	* #address-cells
@@ -261,7 +259,7 @@ tags: Linux内核
 * 每个元组表示该设备的地址范围。每个地址值由一个或多个32位整数列表组成，被称做cells。同样地，长度值也可以是cells列表或为空。
 * 由于address和length字段是大小可变的变量，**父节点的`#address-cells`和`#size-cells`属性用来说明子节点的各个字段有多少个cells**。换句话说，正确解释一个子节点的reg属性需要父节点的#address-cells和#size-cells值。
 
-### 3.3.1 CPU编址
+#### 3.2.4.1 CPU编址
 
 &emsp;&emsp;谈到编址，最简单的例子就是CPU节点。每个CPU被分配了一个唯一的ID，并且不存在与CPU ids的相关大小信息。
 ```dts
@@ -282,7 +280,7 @@ cpus {
 
 >注：ePAPR中对cell的定义是”一个包含32bit信息的单元“。
 
-### 3.3.2 内存映射设备
+#### 3.2.4.2 内存映射设备
 &emsp;&emsp;与CPU节点中的单一地址值不同，内存映射设备会被分配一个它能响应的地址范围。`#size-cells`用来说明每个子节点中reg元组的大小的长度。在下面的示例中，每个地址值是1 cell (32位) ，并且每个的长度值也为1 cell，这在32位系统中是非常典型的。64位计算机可以在设备树中使用2作为`#address-cells`和`#size-cells`的值来实现64位寻址。
 ```dts
 / {  
@@ -360,7 +358,7 @@ external-bus {
 ```	
 &emsp;&emsp;在上例中，外部总线用了2个cells来表示地址值;一个是片选号，一个是基于片选的偏移量。长度字段还是一个cell，这是因为只有地址的偏移部分需要一个范围。所以，在本例中，每个reg条目包含3个cell；片选号码，偏移，长度。由于地址范围包含节点及其子节点，父节点可以自由定义任何对该总线而言有意义的编址方案。直接父节点和子节点之外的其他节点，通常不关心本地节点地址域，因而地址不得不从一个域映射到另一个域。
 
-### 3.3.3 非内存映射设备
+#### 3.2.4.3 非内存映射设备
 
 &emsp;&emsp;其他设备没有映射到处理器本地总线上。虽然这些设备可以有地址范围，但是不能直接被CPU访问，而是由父设备的驱动代表CPU来执行间接访问。
 
@@ -380,7 +378,7 @@ i2c@1,0 {
 
 
 
-### 3.3.4 地址转换
+#### 3.2.4.4 地址转换
 
 &emsp;&emsp;我们已经讨论过如何分配地址给设备，但在这些地址只是设备节点的本地地址，还没有描述如何将这些地址映射成CPU可使用的地址。
 &emsp;&emsp;根节点总是从CPU的角度描述地址空间。如果根节点的子节点已经使用了CPU地址域，就不需要任何显式映射了，例如，串口serial@101f0000被直接分配到地址0x101f0000。
@@ -471,7 +469,7 @@ dcsr: dcsr@f00000000 {
  };
 ```
 
-## 3.4 中断如何工作
+### 3.2.5 中断如何工作
 
 &emsp;&emsp;与地址范围转换遵循树的天然结构不同，一台计算机的任何设备都可以发起和终止中断信号。不像设备编址，中断信号表现为独立于树的节点之间的链接。描述中断连接有4个属性：
 
@@ -547,9 +545,9 @@ dcsr: dcsr@f00000000 {
     external-bus {  
         #address-cells = <2>  
         #size-cells = <1>;  
-        ranges = <0 0  0x10100000   0x10000     // Chipselect 1, Ethernet  
-                  1 0  0x10160000   0x10000     // Chipselect 2, i2c controller  
-                  2 0  0x30000000   0x1000000>; // Chipselect 3, NOR Flash  
+        ranges = <0 0  0x10100000   0x1000     // Chipselect 1, Ethernet  
+                  1 0  0x10160000   0x1000     // Chipselect 2, i2c controller  
+                  2 0  0x30000000   0x4000000>; // Chipselect 3, NOR Flash  
   
   
         ethernet@0,0 {  
@@ -584,7 +582,7 @@ dcsr: dcsr@f00000000 {
 
  
 
-## 3.5 设备特有的数据
+### 3.2.6 设备特有的数据
 
 &emsp;&emsp;除了公共属性，一个节点可以添加任意属性和子节点，只要遵循一些规则，操作系统所需要的任何数据可以被添加。
 * 首先，设备新的特有属性名应当使用制造商前缀，这样它们不会与现有的标准属性名称冲突。
@@ -593,9 +591,9 @@ dcsr: dcsr@f00000000 {
 
  
 
-## 3.6 特殊节点
+### 3.2.7 特殊节点
 
-### 3.6.1 别名节点
+#### 3.2.7.1 别名节点
 &emsp;&emsp;引用一个特定的节点通常通过完整路径，如`/external-bus/ethernet@0,0`，但当用户真正想要知道的是哪个设备是eth0时，这很不具有易读性，别名节点可分配一个短的alias给一个完整的设备路径。例如：
 ```dts
 aliases {  
@@ -605,7 +603,7 @@ aliases {
 ```
 &emsp;&emsp;分配标识符给设备时，使用别名是受操作系统欢迎的。这里使用了一个新的语法`property = &label`;该语法指定通过标签引用的完整节点路径为一个字符串属性。这与phandle = <&label>;不同，它是把一个pHandle值插入到一个cell。
 
-### 3.6.2 可选节点
+#### 3.2.7.2 可选节点
 &emsp;&emsp;可选节点并不代表真正的设备，而是作为固件和操作系统之间传递数据的地方，如启动参数。选择节点中的数据并不代表硬件。通常情况下，选择节点在DTS源文件中为空，并在开机时填充。在我们的示例系统中，固件可以添加以下选择节点：
 ```dts
 chosen {  
@@ -624,19 +622,37 @@ chosen {
 &emsp;&emsp; alignment gap为填充域，使用0进行填充。
 ## 4.1 DTB header
 &emsp;&emsp;DTB header主要描述设备树的一些基本信息，例如设备树大小，结构块偏移地址，字符串块偏移地址等。偏移地址是相对于设备树头的起始地址计算的。
-```c
-struct boot_param_header {
-    __be32 magic;          //设备树魔数，固定为OF_DT_HEADER=0xd00dfeed（大端）或者0xedfe0dd0（小端）。
-    __be32 totalsize;            //整个设备树的大小
-    __be32 off_dt_struct;         //DT structure block在整个设备树中的偏移
-    __be32 off_dt_strings;          //DT string block在设备树中的偏移
-    __be32 off_mem_rsvmap;        //保留内存区，该区保留了不能被内核动态分配的内存空间
-    __be32 version;            //设备树版本
-    __be32 last_comp_version;    //向下兼容版本号
-    __be32 boot_cpuid_phys;    //在多核处理器中用于启动的主cpu的物理id
-    __be32 dt_strings_size;    //DT string block大小
-    __be32 dt_struct_size;     //DT structure block大小
+```cpp
+/* ./scripts/dtc/libfdt/libfdt_env.h */
+typedef uint16_t FDT_BITWISE fdt16_t;
+typedef uint32_t FDT_BITWISE fdt32_t;
+typedef uint64_t FDT_BITWISE fdt64_t;
+
+/* ./include/linux/libfdt_env.h */
+typedef __be16 fdt16_t;   
+typedef __be32 fdt32_t;
+typedef __be64 fdt64_t;
+
+
+
+/* ./scripts/dtc/libfdt/fdt.h */
+struct fdt_header {
+   fdt32_t magic;           //设备树魔数，固定为FDT_MAGIC=0xd00dfeed(大端)
+   fdt32_t totalsize;        //整个设备树的大小
+   fdt32_t off_dt_struct;      //DT structure block在整个设备树中的偏移
+   fdt32_t off_dt_strings;     //DT string block在设备树中的偏移
+   fdt32_t off_mem_rsvmap;     //保留内存区，该区保留了不能被内核动态分配的内存空间
+   fdt32_t version;          //设备树版本
+   fdt32_t last_comp_version;   //向下兼容版本号
+   fdt32_t boot_cpuid_phys;    //在多核处理器中用于启动的主cpu的物理id
+   fdt32_t size_dt_strings;    //DT string block大小
+   fdt32_t size_dt_struct;     //DT structure block大小
 };
+
+
+
+#define FDT_MAGIC   0xd00dfeed
+#define FDT_TAGSIZE  sizeof(fdt32_t)
 ```
 
 
@@ -644,40 +660,51 @@ struct boot_param_header {
 |--|--|
 |magic	|用来识别DTB的。通过这个magic，kernel可以确定bootloader传递的参数block是一个DTB还是tag list。|
 |totalsize|DTB的total size|
-|off_dt_struct|	device tree structure block的offset
-|off_dt_strings|device tree strings block的offset
+|off_dt_struct|	structure block的offset
+|off_dt_strings| strings block的offset
 |off_mem_rsvmap| memory reserve map的offset。有些系统，我们也许会保留一些memory有特殊用途（例如DTB或者initrd image），或者在有些DSP+ARM的SOC platform上，有写memory被保留用于ARM和DSP进行信息交互。这些保留内存不会进入内存管理系统。
 |version|	该DTB的版本。
 |last_comp_version|兼容版本信息
 |boot_cpuid_phys|	我们在哪一个CPU（用ID标识）上booting
-|dt_strings_size|	DT string block的size。它和off_dt_strings一起确定了strings block在内存中的位置
-|dt_struct_size|DT structure block的size。它和和off_dt_struct一起确定了device tree structure block在内存中的位置
-|&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;|&emsp;|
+|size_dt_strings|strings block的size。它和off_dt_strings一起确定了strings block在内存中的位置
+|size_dt_struct_size|structure block的size。它和off_dt_struct一起确定了 structure block在内存中的位置
+|&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;||
 
 ## 4.2 memory reserve map
-
+ ```c
+ /* ./scripts/dtc/libfdt/fdt.h */:
+ struct fdt_reserve_entry {
+	fdt64_t address;
+	fdt64_t size;
+};
+```
 &emsp;&emsp;这个区域包括了若干的reserve memory描述符。每个reserve memory描述符是由address和size组成。其中address和size都是用U64来描述。
 
 
 ## 4.3 DT structure block
 
-&emsp;&emsp;设备树结构块是一个线性化的结构体，是设备树的主体，以节点的形式保存了主板上的设备信息。在结构块中，以宏`OF_DT_BEGIN_NODE`标志一个节点的开始，以宏`OF_DT_END_NODE`标识一个节点的结束，整个结构块以宏`OF_DT_END` 结束。在`/kernel/include/linux/of_fdt.h`中有相关定义，我们把这些宏称之为tag。共计有5种tag，定义如下：
-```cpp
+&emsp;&emsp;设备树结构块是一个线性化的结构体，是设备树的主体，以节点的形式保存了主板上的设备信息。在结构块中，以宏`FDT_BEGIN_NODE`标志一个节点的开始，以宏`FDT_END_NODE`标识一个节点的结束，整个结构块以宏`FDT_END` 结束。在`scripts/dtc/libfdt/fdt.h`中有相关定义，我们把这些宏称之为tag。共计有5种tag，定义如下：
+```c
 #define FDT_BEGIN_NODE  0x1    /*描述一个node的开始位置，紧挨着该tag的就是node name（包括unit address）*/
 #define FDT_END_NODE    0x2     /*描述了一个node的结束位置。*/
-#define FDT_PROP    0x3    /*描述了一个property的开始位置，该tag之后是两个u32的数据，分别是length和name offset。length表示该property value data的size。name offset表示该属性字符串在device tree strings block的偏移值。length和name offset之后就是长度为length具体的属性值数据。*/
-#define FDT_NOP     0x4     
+#define FDT_PROP    0x3  /*描述了一个property的开始位置，该tag之后是两个u32的数据，
+                   分别是length和name offset。length表示该property 
+				   value data的size。name offset表示该属性字符串在device tree 
+				   strings block的偏移值。length和name offset之后就是长度为length
+				   具体的属性值数据。*/
+#define FDT_NOP     0x4  /*NOP*/
 #define FDT_END     0x9  /*标识了一个DTB的结束位置。*/
 
-#define FDT_V1_SIZE (7*sizeof(uint32_t))
-#define FDT_V2_SIZE (FDT_V1_SIZE + sizeof(uint32_t))
-#define FDT_V3_SIZE (FDT_V2_SIZE + sizeof(uint32_t))
+#define FDT_V1_SIZE (7*sizeof(fdt32_t))
+#define FDT_V2_SIZE (FDT_V1_SIZE + sizeof(fdt32_t))
+#define FDT_V3_SIZE (FDT_V2_SIZE + sizeof(fdt32_t))
 #define FDT_V16_SIZE FDT_V3_SIZE
-#define FDT_V17_SIZE (FDT_V16_SIZE + sizeof(uint32_t))
-
+#define FDT_V17_SIZE (FDT_V16_SIZE + sizeof(fdt32_t))
+```
+```csharp?linenums
 /*节点信息使用struct fdt_node_header结构体描述。*/
 struct fdt_node_header  {
-    fdt32_t  tag;     	/*一般为
+    fdt32_t  tag;     	/*一般为FDT_BEGIN_NODE或FDT_END_NODE*/
     char  name[0];
 
 };
@@ -685,8 +712,8 @@ struct fdt_node_header  {
  
 /*属性信息使用struct fdt_property结构体描述*/
 struct  fdt_property  {
-    fdt32_t  tag;
-    fdt32_t  len;     /*len为属性值的长度（包括‘\0’，单位：字节）*/
+    fdt32_t  tag;     /*一般为FDT_PROP*/
+    fdt32_t  len;     /*len为属性的值的长度（包括‘\0’，单位：字节）*/
     fdt32_t  nameoff;   /*nameoff为属性名称存储位置相对于off_dt_strings的偏移地址*/
     char  data[0];          
 };
