@@ -13,16 +13,74 @@ tags: Linux教程
 **命令**：od [OPTION]... [FILE]...
 &emsp;&emsp;&emsp;od [-abcdfilosx]... [FILE] [[+]OFFSET[.][b]]
 &emsp;&emsp;&emsp;od --traditional [OPTION]... [FILE] [[+]OFFSET[.][b] [+][LABEL][.][b]]
-**描述**：读取FILE并以指定格式输出到标准输出，默认为每两个字节用六个八进制数表示。 如果有多个FILE参数，以列出的顺序连接它们以形成输入。如果没有FILE，或者FILE是 - ，则读取标准输入。如果第一和第二调用格式都适用，则假设最后一个操作数以+或（如果有2个操作数）以数字开头，则假定第二种格式。 OFFSET操作数表示-j OFFSET。 LABEL是打印的第一个字节的伪地址，在转储进行时递增。 对于OFFSET和LABEL，0x或0X前缀表示十六进制; 后缀可以是八进制，b是乘以512。长选项的参数也适用于短选项。
-
-       
+**描述**：读取FILE并以指定格式输出到标准输出，默认为每两个字节用六个八进制数表示。 如果有多个FILE参数，以列出的顺序连接它们以形成输入。如果没有FILE，或者FILE是 - ，则读取标准输入。如果第一和第二调用格式都适用时，第二种形式假定最后一个操作数以+或（如果有2个操作数）以数字开头。 OFFSET操作数表示-j OFFSET。 LABEL是打印的第一个字节的伪地址，在转储进行时递增。 对于OFFSET和LABEL，前缀为0x或0X的十六进制; 后缀可以是b（表示512）。长选项的参数也适用于短选项。
+   
 |短选项|长选项|秒速|
 |:--|:--|:--|
-|-A| ---address-radix=RADIX| 文件偏移量的输出格式; RADIX是[doxn]之一，用于十进制，八进制，十六进制或不出出偏移量
+|-A | ---address-radix=RADIX| 文件偏移量的输出格式; RADIX是[doxn]之一，对应十进制，八进制，十六进制或不出出偏移量
+||--endian={big\|little}| 根据指定的顺序交换输入字节,big为大端，little为小端
+|-j |--skip-bytes=BYTES|从开始跳过BYTES个输入字节|
+|-N |--read-bytes=BYTES|只读取BYTES个输入字节|
+| -S| --strings=BYTES|输出至少BYTES图形字符; 未指定BYTES时默认为3
+|-t  |--format=TYPE|选择输出格式
+| -v| --output-duplicatelicates|不要使用星号来标记行抑制
+|-w|--width[=BYTES]|每行输出BYTES个字节，默认为32
+|| --traditional|接受上面第三种调用形式的参数
+||--help| 显示帮助信息并退出
+||--version|显示版本信息并退出|
+|&emsp;&emsp;&emsp;|&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;|
+
+ * TYPE由以下一个或多个规范组成：
+  
+|新格式|描述|
+|:--|:--|
+|a | 每个字节用 一个ASCII字符显示，但使用小写的控制字符名来显示控制字符。|
+|c | 每个字节用 一个ASCII字符显示。除了可通过标准转义符表示的那些非打印字符外，其余非打印字符显示为三个八进制字符，用零填充。
+|d[SIZE] |每SIZE个字节用一个带符号的十进制整数表示|
+|f[SIZE] | 每SIZE个字节用一个浮点数表示|
+|o[SIZE] |每SIZE个字节用一个八进制数表示|
+|u[SIZE] |每SIZE个字节用一个无符号的十进制整数表示
+|x[SIZE] | 每SIZE个字节用一个十六进制整数表示|
+       
+* SIZE是一个数字 
+	* TYPE为 [doux]之一时， SIZE还可以为 ：
+		* C ，其值等于 sizeof(char), 
+		* S  ，其值等于 sizeof(short),
+		* I ，其值等于sizeof(int) 
+		* L ，其值等于 for sizeof(long).
+	* TYPE为f时， SIZE还可以为 ：
+		*  F ，其值等于 sizeof(float), 
+		*  D ，其值等于 sizeof(double) or 
+		*  L ，其值等于sizeof(long double)
+
+* 将z添加到任何TYPE之后，则会在每个输出行的末尾显示可打印字符。
+* 传统格式规范可以混合使用：
+
+|**传统格式**|**新格式**|描述|
+|:--|:--|:--|
+|-a |-t a|选择命名字符，忽略高位
+|-b|-t o1|选择八进制字节
+|-c|-t c|选择可打印字符或反斜杠转义符
+|-d|-t u2|选择无符号十进制2字节单位
+|-f|-t fF|选择浮点数
+|-i|-t dI|选择十进制整数
+|-l|-t dL|选择十进制长度
+|-o|-t o2|选择八进制2字节单位
+|-s|-t d2|选择十进制2字节单位
+|-x|-t x2|选择十六进制2字节单位
+
+
+ 
+	 
+	 
+	 
+	 
 
 
 
-|-t TYPE |a 利用默认的字符来输出；c 使用 ASCII 字符来输出;d[size]利用十进制来输出数据，每个整数占用 size bytes ；f[size] 利用浮点数来输出数据，每个数占用 size bytes ；o[size] 利用八进制来输出数据，每个整数占用 size bytes ；x[size] 利用十六进制来输出数据，每个整数占用 size bytes ；
+
+
+
 
 
 
