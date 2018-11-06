@@ -1,5 +1,5 @@
 ---
-title: Linux二进制文件查看
+title: Linux二进制文件查看与编辑
 tags: Linux教程
 ---
 
@@ -9,12 +9,21 @@ tags: Linux教程
 
 ------
 <style>table{word-break:initial;}</style>
-# 1 `od`
+# 1 二进制文件查看
+## 1.1 `od`
 **命令**：od [OPTION]... [FILE]...
 &emsp;&emsp;&emsp;od [-abcdfilosx]... [FILE] [[+]OFFSET[.][b]]
 &emsp;&emsp;&emsp;od --traditional [OPTION]... [FILE] [[+]OFFSET[.][b] [+][LABEL][.][b]]
-**描述**：读取FILE并以指定格式输出到标准输出，默认为每两个字节用六个八进制数表示。 如果有多个FILE参数，以列出的顺序连接它们以形成输入。如果没有FILE，或者FILE是 - ，则读取标准输入。如果第一和第二调用格式都适用时，第二种形式假定最后一个操作数以+或（如果有2个操作数）以数字开头。 OFFSET操作数表示-j OFFSET。 LABEL是打印的第一个字节的伪地址，在转储进行时递增。 对于OFFSET和LABEL，前缀为0x或0X的十六进制; 后缀可以是b（表示512）。长选项的参数也适用于短选项。
-   
+**描述**：
+* 读取FILE并以指定格式输出到标准输出，默认为每两个字节用六个八进制数表示。
+*  如果有多个FILE参数，以列出的顺序连接它们以形成输入。如果没有FILE，或者FILE是 - ，则读取标准输入。
+*  如果第一和第二调用格式都适用时，第二种形式假定最后一个操作数以+或（如果有2个操作数）以数字开头。 
+*  OFFSET操作数表示-j OFFSET。 
+*  LABEL是打印的第一个字节的伪地址，在转储进行时递增。 
+*  对于OFFSET和LABEL，前缀为0x或0X的十六进制; 后缀可以是b（表示512）。
+*  长选项的参数也适用于短选项。
+ 
+ 
 |短选项|长选项|秒速|
 |:--|:--|:--|
 |-A | ---address-radix=RADIX| 文件偏移量的输出格式; RADIX是[doxn]之一，对应十进制，八进制，十六进制或不出出偏移量
@@ -23,7 +32,7 @@ tags: Linux教程
 |-N |--read-bytes=BYTES|只读取BYTES个输入字节|
 | -S| --strings=BYTES|输出至少BYTES图形字符; 未指定BYTES时默认为3
 |-t  |--format=TYPE|选择输出格式
-| -v| --output-duplicatelicates|不要使用星号来标记行抑制
+| -v| --output-duplicatelicates|显示所有数据，如果不用-v则对于连续重复的输出行会使用星号表示
 |-w|--width[=BYTES]|每行输出BYTES个字节，默认为32
 || --traditional|接受上面第三种调用形式的参数
 ||--help| 显示帮助信息并退出
@@ -70,26 +79,10 @@ tags: Linux教程
 |-x|-t x2|选择十六进制2字节单位
 
 
- 
-	 
-	 
-	 
-	 
-
-
-
-
-
-
-
-
-
-
-
-#  2 `hexdump`
+## 1.2 `hexdump`
 **命令**：hexdump [-bcCdovx] [-e format_string] [-f format_file] [-n length] [-s skip] file ...
 &emsp;&emsp;&emsp;hd [-bcdovx] [-e format_string] [-f format_file] [-n length] [-s skip] file ...
-**描述**：hexdump实用程序是一个过滤器，它以用户指定的格式显示指定的文件或标准输入（如果未指定文件）。
+**描述**：hexdump实用程序以用户指定的格式显示指定的文件或标准输入（如果未指定文件）。
 
 |选项|描述|
 |:--|:--|
@@ -102,7 +95,7 @@ tags: Linux教程
 |-n length| 只显示length个字节|
 |-o|每两字节用六个八进制数表示，每行16个字节，用空格分开，第一列为十六进制的偏移量|
 |-s offset|从第offset个字节开始显示，可以带有单位b表示512，k表示1024,m表示1024^2^。offset带有前导0但不是十六进制数时被视为8进制数。
-|-v|显示所有数据，对于连续重复的16字节数据，如果不加-v则其余的所有重复行用一个`*`表示。
+|-v|显示所有数据，对于重复的输出行，如果不加-v则其余的所有重复行用一个`*`表示。
 |-x|每两字节用四个十六进制数表示，每行16个字节，用空格分开，第一列为十六进制的偏移量
 
 
@@ -134,6 +127,23 @@ tags: Linux教程
         * ` _p`输出默认字符集中的字符。非打印字符显示为单个“.”。
         * `_u`  输出US ASCII字符，但使用小写的控制字符名来显示控制字符。大于0xff的十六进制的字符显示为十六进制字符串。
 	* 如果未指定格式字符串，则默认显示等效于指定-x选项。
+
+## 1.3 `xxd`
+
+**命令**：xxd -h[elp]
+&emsp;&emsp;&emsp;xxd [options] [infile [outfile]]
+ &emsp;&emsp;&emsp;xxd -r[evert] [options] [infile [outfile]]
+**描述**：
+* xxd创建给定文件或标准输入的十六进制转储。
+*  它还可以将十六进制转储转换回其原始二进制形式。 
+*  与uuencode和uudecode一样，它允许以“邮件安全”的ASCII字符表示方式来传输二进制数据，且具有解码到标准输出的优点。 
+*  而且它可以用于执行二进制文件补丁。
+*  如果没有给出infile，或将infile指定为“ - ”字符，则从标准输入中获取输入。 如果没有给出outfile，或将outfile指定为“ - ”字符，结果将被发送到标准输出。
+*  请注意，xxd使用的是“lazy”解析器，它不会检查超过选项字母的其它字母，除非该选项后跟参数。 
+*  单个选项字母与其参数之间的空格是可选的。 可以使用十进制，十六进制或八进制表示法指定选项的参数。 因此-c8，-c 8，-c 010和-cols 8都是等价的。
+
+
+
 ------
 
 &emsp;&emsp;<font color=blue>**_版权声明_**</font>：本文参考了<font color=blue>[《鸟哥的Linux私房菜》](http://linux.vbird.org "点击跳转")、[《Linux命令手册》](http://linux.51yip.com "点击跳转")、[《Linux命令大全》](http://man.linuxde.net "点击跳转")以及[《Linux man pages》](https://linux.die.net/man/ "点击跳转")。</font><font color=red>未经作者允许，<font color=blue>严禁用于商业出版</font>，否则追究法律责任。网络转载请注明出处，这是对原创者的起码的尊重！！！</font>
