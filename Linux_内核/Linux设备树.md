@@ -137,7 +137,7 @@ tags: Linux内核
 * ARM的processor local bus上的内存映射区域分布了：
 	* 2个串口，起始地址0x101F1000 和 0x101F2000
 	* GPIO控制器，位于0x101F3000
-	* SPI控制器，位于0x10170000，并挂载以下设备：
+	* SPI控制器，位于0x10150000，并挂载以下设备：
 		* MMC插槽，SS管脚连接到GPIO #1
 	* 中断控制器，位于0x10140000
 	* External bus桥，External bus桥上又连接了：
@@ -394,7 +394,7 @@ i2c@1,0 {
         #size-cells = <1>;  
         ranges = <0 0  0x10100000   0x10000     // Chipselect 1, Ethernet  
                1 0  0x10160000   0x10000     // Chipselect 2, i2c controller  
-               2 0  0x30000000   0x1000000>;  // Chipselect 3, NOR Flash  
+               2 0  0x30000000   0x4000000>;  // Chipselect 3, NOR Flash  
   
   
         ethernet@0,0 {  
@@ -820,19 +820,14 @@ dtb-$(CONFIG_ARCH_TEGRA) += tegra20-harmony.dtb tegra30-beaver.dtb tegra114-da
 
 # 6 设备树工作原理
 
+
+
+
 ```
 
 
 ```
 
-
-
-
-
-
-
-
- 
 <5> machine_desc结构
 内核提供了一个重要的结构体struct machine_desc ，这个结构体在内核移植中起到相当重要的作用，内核通过machine_desc结构体来控制系统体系架构相关部分的初始化。machine_desc结构体通过MACHINE_START宏来初始化，在代码中， 通过在start_kernel->setup_arch中调用setup_machine_fdt来获取。
 ```cpp
