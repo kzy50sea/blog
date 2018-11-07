@@ -38,6 +38,7 @@ tags: Linux内核
 
 ## 2.1 基本结构
 ```dts
+/dts-v1/; #指定设备树版本，缺少会报错
 /{
 	node1 {
 		a-string-property = "A string";
@@ -159,6 +160,7 @@ tags: Linux内核
 ### 2.3.2 添加CPU
 &emsp;&emsp;接下来就要描述各个CPU了。先添加一个“cpus”容器节点，再将每个CPU作为子节点添加。在本例中，系统是基于ARM的双核Cortex A9系统。
 ```dts
+/dts-v1/;
 / {  
     compatible = "acme,coyotes-revenge";  
   
@@ -179,6 +181,7 @@ tags: Linux内核
 ### 2.3.3 添加其他设备
 &emsp;&emsp;系统中的每个设备由device tree的一个节点来表示，接下来将为设备树添加设备节点。在我们讲到如何寻址和如何处理中断之前，暂时将新节点置空。
 ```dts
+/dts-v1/;
 / {  
     compatible = "acme,coyotes-revenge";  
   
