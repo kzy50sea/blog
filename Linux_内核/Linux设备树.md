@@ -129,7 +129,7 @@ tags: Linux内核
 ### 2.2.4 启动
 
 &emsp;&emsp;“bootargs”，该属性是chosen节点的属性，类型是字符串，用来向Linux内核传递cmdline。规范中还定义了stdout-path和stdin-path两个可选的、字符串类型的属性，这两个属性的目的是用来指定标准输入输出设备的，在linux中，这两个属性基本不用。
-## 3.2 示例
+## 2.3 示例
 &emsp;&emsp;为了帮助理解device tree的用法，我们从一个简单的计算机开始， 手把手创建一个device tree来描述它。假设有这样一台计算机（基于ARM Versatile）,由“Acme”制造并命名为"Coyote's Revenge"：
 
 * 1个双核ARM Cortex-A9 32位处理器；
@@ -146,7 +146,7 @@ tags: Linux内核
 			* Maxim DS1338实时钟，I2C地址为1101000 （0x58）
 		* 64MB NOR Flash，位于0x30000000
 
-### 3.2.1 初始结构
+### 2.3.1 初始结构
 &emsp;&emsp;第一步，先构建一个计算机的基本架构，即一个有效设备树的最小架构。在这一步，要唯一地标志这台计算机。
 ```dts
 /{  
@@ -156,7 +156,7 @@ tags: Linux内核
 &emsp;&emsp;compatible属性以"`<manufacturer>,<model>`"的格式指定了系统名称。指定具体设备和制造商名称来避免命名空间的冲突，一个操作系统可以使用compatible值来决定如何运行这台计算机，在该属性中填入正确的数据很重要。
 
 
-### 3.2.2 添加CPU
+### 2.3.2 添加CPU
 &emsp;&emsp;接下来就要描述各个CPU了。先添加一个“cpus”容器节点，再将每个CPU作为子节点添加。在本例中，系统是基于ARM的双核Cortex A9系统。
 ```dts
 / {  
@@ -176,7 +176,7 @@ tags: Linux内核
 &emsp;&emsp;各个CPU节点的compatible属性是一个字符串，与顶层compatible属性类似，该字符串以“`<manufacturer>,<model>`”的格式指定了CPU的确切型号。
 
 
-### 3.2.3 添加其他设备
+### 2.3.3 添加其他设备
 &emsp;&emsp;系统中的每个设备由device tree的一个节点来表示，接下来将为设备树添加设备节点。在我们讲到如何寻址和如何处理中断之前，暂时将新节点置空。
 ```dts
 / {  
@@ -249,7 +249,7 @@ tags: Linux内核
 
  
 
-### 3.2.4  编址
+### 2.3.4  编址
 * 可编址的设备使用下列属性来将地址信息编码进设备树：
 	* reg
 	* #address-cells
@@ -259,7 +259,7 @@ tags: Linux内核
 * 每个元组表示该设备的地址范围。每个地址值由一个或多个32位整数列表组成，被称做cells。同样地，长度值也可以是cells列表或为空。
 * 由于address和length字段是大小可变的变量，**父节点的`#address-cells`和`#size-cells`属性用来说明子节点的各个字段有多少个cells**。换句话说，正确解释一个子节点的reg属性需要父节点的#address-cells和#size-cells值。
 
-#### 3.2.4.1 CPU编址
+#### 2.3.4.1 CPU编址
 
 &emsp;&emsp;谈到编址，最简单的例子就是CPU节点。每个CPU被分配了一个唯一的ID，并且不存在与CPU ids的相关大小信息。
 ```dts
@@ -280,7 +280,7 @@ cpus {
 
 >注：ePAPR中对cell的定义是”一个包含32bit信息的单元“。
 
-#### 3.2.4.2 内存映射设备
+#### 2.3.4.2 内存映射设备
 &emsp;&emsp;与CPU节点中的单一地址值不同，内存映射设备会被分配一个它能响应的地址范围。`#size-cells`用来说明每个子节点中reg元组的大小的长度。在下面的示例中，每个地址值是1 cell (32位) ，并且每个的长度值也为1 cell，这在32位系统中是非常典型的。64位计算机可以在设备树中使用2作为`#address-cells`和`#size-cells`的值来实现64位寻址。
 ```dts
 / {  
@@ -358,7 +358,8 @@ external-bus {
 ```	
 &emsp;&emsp;在上例中，外部总线用了2个cells来表示地址值;一个是片选号，一个是基于片选的偏移量。长度字段还是一个cell，这是因为只有地址的偏移部分需要一个范围。所以，在本例中，每个reg条目包含3个cell；片选号码，偏移，长度。由于地址范围包含节点及其子节点，父节点可以自由定义任何对该总线而言有意义的编址方案。直接父节点和子节点之外的其他节点，通常不关心本地节点地址域，因而地址不得不从一个域映射到另一个域。
 
-#### 3.2.4.3 非内存映射设备
+
+#### 2.3.4.3 非内存映射设备
 
 &emsp;&emsp;其他设备没有映射到处理器本地总线上。虽然这些设备可以有地址范围，但是不能直接被CPU访问，而是由父设备的驱动代表CPU来执行间接访问。
 
@@ -378,7 +379,7 @@ i2c@1,0 {
 
 
 
-#### 3.2.4.4 地址转换
+#### 2.3.4.4 地址转换
 
 &emsp;&emsp;我们已经讨论过如何分配地址给设备，但在这些地址只是设备节点的本地地址，还没有描述如何将这些地址映射成CPU可使用的地址。
 &emsp;&emsp;根节点总是从CPU的角度描述地址空间。如果根节点的子节点已经使用了CPU地址域，就不需要任何显式映射了，例如，串口serial@101f0000被直接分配到地址0x101f0000。
@@ -469,7 +470,7 @@ dcsr: dcsr@f00000000 {
  };
 ```
 
-### 3.2.5 中断如何工作
+### 2.3.5 中断如何工作
 
 &emsp;&emsp;与地址范围转换遵循树的天然结构不同，一台计算机的任何设备都可以发起和终止中断信号。不像设备编址，中断信号表现为独立于树的节点之间的链接。描述中断连接有4个属性：
 
@@ -582,7 +583,7 @@ dcsr: dcsr@f00000000 {
 
  
 
-### 3.2.6 设备特有的数据
+### 2.3.6 设备特有的数据
 
 &emsp;&emsp;除了公共属性，一个节点可以添加任意属性和子节点，只要遵循一些规则，操作系统所需要的任何数据可以被添加。
 * 首先，设备新的特有属性名应当使用制造商前缀，这样它们不会与现有的标准属性名称冲突。
@@ -591,9 +592,9 @@ dcsr: dcsr@f00000000 {
 
  
 
-### 3.2.7 特殊节点
+### 2.3.7 特殊节点
 
-#### 3.2.7.1 别名节点
+#### 2.3.7.1 别名节点
 &emsp;&emsp;引用一个特定的节点通常通过完整路径，如`/external-bus/ethernet@0,0`，但当用户真正想要知道的是哪个设备是eth0时，这很不具有易读性，别名节点可分配一个短的alias给一个完整的设备路径。例如：
 ```dts
 aliases {  
@@ -610,7 +611,7 @@ aliases {
 ```
 &emsp;&emsp;分配标识符给设备时，使用别名是受操作系统欢迎的。这里使用了一个新的语法`property = &label`;该语法指定通过标签引用的完整节点路径为一个字符串属性。这与phandle = <&label>;不同，它是把一个pHandle值插入到一个cell。
 
-#### 3.2.7.2 可选节点
+#### 2.3.7.2 可选节点
 &emsp;&emsp;可选节点并不代表真正的设备，而是作为固件和操作系统之间传递数据的地方，如启动参数。选择节点中的数据并不代表硬件。通常情况下，选择节点在DTS源文件中为空，并在开机时填充。在我们的示例系统中，固件可以添加以下选择节点：
 ```dts
 chosen {  
@@ -619,7 +620,7 @@ chosen {
 ```
 
 
-# 4 设备树二进制文件
+# 3 设备树二进制文件
 &emsp;&emsp;经过Device Tree Compiler编译，Device Tree source file变成了Device Tree Blob（又称作flattened device tree）的格式。Device Tree Blob的数据组织如下图所示：
 
 ![dtb结构图](https://www.github.com/liao20081228/blog/raw/master/图片/Linux设备树/2.gif "dtb结构")
@@ -627,7 +628,7 @@ chosen {
 ![4](https://www.github.com/liao20081228/blog/raw/master/图片/Linux设备树/4.png)
 
 &emsp;&emsp; alignment gap为填充域，使用0进行填充。
-## 4.1 DTB header
+## 3.1 DTB header
 &emsp;&emsp;DTB header主要描述设备树的一些基本信息，例如设备树大小，结构块偏移地址，字符串块偏移地址等。偏移地址是相对于设备树头的起始地址计算的。
 ```cpp
 /* ./scripts/dtc/libfdt/libfdt_env.h */
@@ -671,13 +672,13 @@ struct fdt_header {
 |off_dt_strings| strings block的offset
 |off_mem_rsvmap| memory reserve map的offset。有些系统，我们也许会保留一些memory有特殊用途（例如DTB或者initrd image），或者在有些DSP+ARM的SOC platform上，有写memory被保留用于ARM和DSP进行信息交互。这些保留内存不会进入内存管理系统。
 |version|	该DTB的版本。
-|last_comp_version|兼容版本信息
-|boot_cpuid_phys|	我们在哪一个CPU（用ID标识）上booting
-|size_dt_strings|strings block的size。它和off_dt_strings一起确定了strings block在内存中的位置
-|size_dt_struct_size|structure block的size。它和off_dt_struct一起确定了 structure block在内存中的位置
+|last_comp_version|兼容版本信息。如果设备树版本为1~3，则设置为1.如果设备树版本为16或17则设置为16|
+|boot_cpuid_phys|	我们在哪一个CPU（用ID标识）上booting。只适用于版本2
+|size_dt_strings|strings block的size。它和off_dt_strings一起确定了strings block在内存中的位置，只有版本3及以后才有该字段
+|size_dt_struct|structure block的size。它和off_dt_struct一起确定了 structure block在内存中的位置，只有版本17及以后才有该字段
 |&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;||
 
-## 4.2 memory reserve map
+## 3.2 memory reserve map
  ```c
  /* ./scripts/dtc/libfdt/fdt.h */:
  struct fdt_reserve_entry {
@@ -688,7 +689,7 @@ struct fdt_header {
 &emsp;&emsp;这个区域包括了若干的reserve memory描述符。每个reserve memory描述符是由address和size组成。其中address和size都是用U64来描述。
 
 
-## 4.3 DT structure block
+## 3.3 DT structure block
 
 &emsp;&emsp;设备树结构块是一个线性化的结构体，是设备树的主体，以节点的形式保存了主板上的设备信息。在结构块中，以宏`FDT_BEGIN_NODE`标志一个节点的开始，以宏`FDT_END_NODE`标识一个节点的结束，整个结构块以宏`FDT_END` 结束。在`scripts/dtc/libfdt/fdt.h`中有相关定义，我们把这些宏称之为tag。共计有5种tag，定义如下：
 ```c
@@ -702,7 +703,7 @@ struct fdt_header {
 #define FDT_NOP     0x4  /*NOP*/
 #define FDT_END     0x9  /*标识了一个DTB的结束位置。*/
 
-#define FDT_V1_SIZE (7*sizeof(fdt32_t))
+#define FDT_V1_SIZE (7*sizeof(fdt32_t))   /*不同版本fdt_header具有不同的大小*/
 #define FDT_V2_SIZE (FDT_V1_SIZE + sizeof(fdt32_t))
 #define FDT_V3_SIZE (FDT_V2_SIZE + sizeof(fdt32_t))
 #define FDT_V16_SIZE FDT_V3_SIZE
@@ -742,14 +743,14 @@ struct  fdt_property  {
 
 ![5](https://www.github.com/liao20081228/blog/raw/master/图片/Linux设备树/5.jpg)
 
-## 4.4 DT strings block
+## 3.4 DT strings block
 &emsp;&emsp;通过节点的定义知道节点都有若干属性，而不同的节点的属性又有大量相同的属性名称，因此将这些属性名称提取出一张表，当节点需要应用某个属性名称时直接在属性名字段保存该属性名称在字符串块中的偏移量。
 
 
 
 
 
-# 5 设备树编译与调试
+# 4 设备树编译与调试
 &emsp;&emsp;DTC为编译工具，它可以将.dts文件编译成.dtb文件。DTC的源码位于内核的`scripts/dtc`目录，内核选中CONFIG_OF，编译内核的时候，可执行程序DTC就会被编译出来。 即scripts/dtc/Makefile中
 ```makefile
 hostprogs-y := dtc
@@ -760,7 +761,7 @@ always := $(hostprogs-y) 
 ifeq ($(CONFIG_OF),y)
 dtb-$(CONFIG_ARCH_TEGRA) += tegra20-harmony.dtb tegra30-beaver.dtb tegra114-dalmore.dtb tegra124-ardbeg.dtb 
 ```
-## 5.1 dtc 
+## 4.1 dtc 
 **命令**：dtc [options] input_file
 **描述**：设备树编译器dtc将给定格式的设备树作为输入，输出另一种格式设备树，用于在嵌入式系统上引导内核。
 
@@ -786,7 +787,7 @@ dtb-$(CONFIG_ARCH_TEGRA) += tegra20-harmony.dtb tegra30-beaver.dtb tegra114-da
 |-v|打印DTC版本并退出。|
 | -H phandle_format|legacy , epapr ,both |
 
-## 5.2 fdtget和fdtput
+## 4.2 fdtget和fdtput
 **命令**：fdtget [options] dt_file [node  property]...
 &emsp;&emsp;&emsp;fdtget -p [options] dt file [node]...
 **描述**：从二进制设备树中读取数据
@@ -815,7 +816,7 @@ dtb-$(CONFIG_ARCH_TEGRA) += tegra20-harmony.dtb tegra30-beaver.dtb tegra114-da
 |-t type|--type arg| s=string, i=int, u=unsigned, x=hex，可选前缀:hh/b=1B, h=2B, l=4B(default)
 
 
-## 5.3 fdtdump
+## 4.3 fdtdump
 * **命令**：fdtdump [options] DTB_file_name
 * **描述**：输出二进制设备树的可读版本
 |短选项|长选项|描述|
@@ -825,7 +826,7 @@ dtb-$(CONFIG_ARCH_TEGRA) += tegra20-harmony.dtb tegra30-beaver.dtb tegra114-da
 |-h|--help   | 显示帮助并退出|
 |-V|--version |显示版本号并退出|
 
-# 6 设备树工作原理
+# 5 设备树工作原理
 
 
 
