@@ -142,7 +142,25 @@ tags: Linux教程
 *  请注意：xxd使用的是“lazy”解析器，它不会检查超过选项字母的其它字母，除非该选项后跟参数。 因此所有选项应放在infile的前面，并且选项不能连写。
 *  单个选项字母与其参数之间的空格是可选的。 可以使用十进制，十六进制或八进制表示法指定选项的参数。 因此-c8，-c 8，-c 010和-cols 8都是等价的。
 
-
+|短选项|长选项|描述|
+|:--|:--|:--|
+|-a|-autoskip|使用星号代替空行|
+|-b|-bits|每个字节用8个二进制数表示，每个输出行前面是十六进制的偏移量，后面是对应的ASCII字符|
+|-c cols | -cols cols|每个输出行 cols个字节，默认 16 (-i: 12, -ps: 30, -b: 6).最大256.
+-E |-EBCDIC|将右侧列中的字符编码从ASCII更改为EBCDIC。 这不会改变十六进制表示。 与-r，-p或-i组合使用该选项毫无意义。
+|-e||切换到little-endian hexdump。 此选项将字节分组视为以little-endian字节顺序排列的。 可以使用-g更改4字节的默认分组。 此选项仅适用于hexdump，而ASCII（或EBCDIC）表示不变。 命令行开关-r，-p，-i不适用于此模式。
+|-g bytes | -groupsize bytes|用空格分隔每个bytes字节的输出。指定-g 0以禁止分组。 Bytes在普通模式下默认为2，在little-endian模式下默认为4，在位模式下默认为1。分组不适用于postscript或include style。
+|-h | -help|显示帮助信息并退出|
+|-i | |以C无符号字符数组显示. 数组名为文件名，除非从标准输入读入.
+|-l len | -len len|只输出len个字节|
+|-o offset||将offset添加到被显示的文件位置
+|-p | -ps  -postscript  -plain|连续十六进制输出。也称为普通hexdump风格。
+|-r | -revert|反向操作：将hexdump转换（或补丁）为二进制。 如果没有输出到stdout，xxd会写入其输出文件而不截断它。 使用组合-r -p可以读取没有偏移信息且没有特定列布局的普通十六进制转储。 任何地方都允许使用额外的空格和换行符。
+||-seek offset|在-r后使用：将offset恢复为在hexdump中找到的文件位置。
+|-s [+][-]seek|| 从seek字节开始输出。  +表示相对于开头，-表示相对于结尾
+| -u||使用大写十六进制字母。 默认为小写。
+|-v | -version| 显示版本。
+|&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;|&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;||
 
 ------
 
