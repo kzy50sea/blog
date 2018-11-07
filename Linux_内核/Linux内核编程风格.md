@@ -6,7 +6,7 @@ tags: Linux内核
 
 ------
 
-&emsp;&emsp;<font color=blue>**_版权声明_**</font>：本文参考了<font color=blue>[《内核官方文档》](https://www.kernel.org/doc/html/latest/translations/zh_CN/coding-style.html)。</font><font color=red>未经作者允许，<font color=blue>严禁用于商业出版</font>，否则追究法律责任。网络转载请注明出处，这是对原创者的起码的尊重！！！</font>
+&emsp;&emsp;<font color=blue>**_版权声明_**</font>：本文参考了<font color=blue>[《Documentation/process/coding-style.rst》](https://www.kernel.org/doc/html/latest/translations/zh_CN/coding-style.html)。</font><font color=red>未经作者允许，<font color=blue>严禁用于商业出版</font>，否则追究法律责任。网络转载请注明出处，这是对原创者的起码的尊重！！！</font>
 
 ------
 
