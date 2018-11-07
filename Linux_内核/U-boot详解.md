@@ -42,7 +42,7 @@ tags: Linux内核
 |tools  | 该目录下保存着用于生成u-boot的工具,用于编译和检查uboot目标文件
 |**文件**|**描述**
 | config.mk|
-|  Kbuild|
+| Kbuild|
 |Kconfig |
 |Makefile|  
 
