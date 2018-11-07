@@ -1,6 +1,6 @@
 ---
 title:  Linux设备与主机规划
-tags: 未分类
+tags: Linux教程
 ---
 
 ------
