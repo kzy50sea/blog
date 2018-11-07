@@ -286,6 +286,7 @@ cpus {
 #### 2.3.4.2 内存映射设备
 &emsp;&emsp;与CPU节点中的单一地址值不同，内存映射设备会被分配一个它能响应的地址范围。`#size-cells`用来说明每个子节点中reg元组的大小的长度。在下面的示例中，每个地址值是1 cell (32位) ，并且每个的长度值也为1 cell，这在32位系统中是非常典型的。64位计算机可以在设备树中使用2作为`#address-cells`和`#size-cells`的值来实现64位寻址。
 ```dts
+/dts-v1/;
 / {  
     #address-cells = <1>;  
     #size-cells = <1>;  
@@ -388,6 +389,7 @@ i2c@1,0 {
 &emsp;&emsp;根节点总是从CPU的角度描述地址空间。如果根节点的子节点已经使用了CPU地址域，就不需要任何显式映射了，例如，串口serial@101f0000被直接分配到地址0x101f0000。
 &emsp;&emsp;如果根节点的间接子节点没有使用CPU的地址域，为了获得一个内存映射地址，设备树必须指定如何翻译地址。
 ```dts
+/dts-v1/;
 / {  
     compatible = "acme,coyotes-revenge";  
     #address-cells = <1>;  
@@ -488,6 +490,7 @@ dcsr: dcsr@f00000000 {
 &emsp;&emsp;中断说明符是一个或多个cell的数据（由#interrupt-cells指定），指定设备连接到哪些中断输入。下面的例子中，大多数设备只有一个中断输出，但也有一个设备上有多个中断输出的情况。一个中断符的含义完全取决于绑定的中断控制器设备。每个中断控制器可以决定它需要多少cell来唯一地确定一个中断输入。下面的代码将中断添加到我们的Coyote's Revenge：
 
 ```dts
+/dts-v1/;
 / {  
     compatible = "acme,coyotes-revenge";  
     #address-cells = <1>;  
