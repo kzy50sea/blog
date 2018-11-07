@@ -600,6 +600,13 @@ aliases {
     ethernet0 = &eth0;  
     serial0 = &serial0;  
 };  
+
+#或者
+
+aliases {  
+    ethernet0 = 节点全路径;  
+    serial0 = 节点全路径;  
+};
 ```
 &emsp;&emsp;分配标识符给设备时，使用别名是受操作系统欢迎的。这里使用了一个新的语法`property = &label`;该语法指定通过标签引用的完整节点路径为一个字符串属性。这与phandle = <&label>;不同，它是把一个pHandle值插入到一个cell。
 
