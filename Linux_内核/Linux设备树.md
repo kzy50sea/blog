@@ -34,7 +34,7 @@ tags: Linux内核
 
 &emsp;&emsp;**EPAPR**中规定了设备树源文件的语法，可以分为两个层次的。第一层是关于设备树组织形式的，如设备树结构，节点名字的构成等，第一个层次是基础，是理解第二个层次的前提。第二层是关于设备树内容的，如多核CPU怎样描述，一个具体的设备如何描述。第二层可以看成是第一层的具体应用。相对来说第二层内容更多，更具体，根据描述的内容不同，定义规范的方式也有差别，比如关于CPU，内存，中断这些基础的内容，是在epapr中说明的，而关于外设的规范是在专门的地方说明的。说设备树的规范可以分成两个层次，是针对DTS的，关于DTB的结构不在此范围内。
 
-&emsp;&emsp;**dts**文件是一种ASCII文本格式的Device Tree描述，此文本格式非常人性化，适合人类的阅读习惯。基本上，在ARM Linux在，一个.dts文件对应一个ARM的machine，一般放置在内核的`arch/arm/boot/dts/`目录。由于一个SoC可能对应多个machine（一个SoC可以对应多个产品和电路板），势必这些dts文件需包含许多共同的部分，Linux内核为了简化，把SoC公用的部分或者多个machine共同的部分一般提炼为**dtsi**，类似于C语言的头文件。其他的machine对应的dts就include这个dtsi。
+&emsp;&emsp;**dts**文件是一种ASCII文本格式的Device Tree描述，此文本格式非常人性化，适合人类的阅读习惯。基本上，在ARM Linux在，一个.dts文件对应一个ARM的machine，一般放置在内核的`arch/arm/boot/dts/`目录。由于一个SoC可能对应多个machine（一个SoC可以对应多个产品和电路板），势必这些dts文件需包含许多共同的部分，Linux内核为了简化，把SoC公用的部分或者多个machine共同的部分一般提炼为**dtsi**，类似于C语言的头文件，使用`/include/ "file.dtsi"` 或 `#include "file.dtsi"`。其他的machine对应的dts就include这个dtsi。
 
 ## 2.1 基本结构
 ```dts
