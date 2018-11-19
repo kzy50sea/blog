@@ -16,14 +16,14 @@ tags: Linux内核
 
 
 &emsp;&emsp;kobject是组成设备device、驱动driver、总线bus、class的基本结构。如果把前者看成基类，则后者均为它的派生产物。device、driver、bus、class构成了设备模型，而kobject内嵌于其中，将这些设备模型的部件组织起来，并形成了sysfs文件系统。kobject就是device、driver、bus、class在sysfs文件系统中的代表。在sysfs操作设备时，也必须通过kobject这个中间人来完成。kobject的主要功能如下：
-* 对象的引用计数：通常一个内核对象被创建时，不可能知道该对象存活的时间。跟踪此对象生命周期的一个方法是使用引用计数。当内核中没有代码持有该对象的引用时，该对象将结束自己的有效生命周期，并且可以被删除。
-* sysfs表述：在sysfs中显示的每一个对象，都对应一个kobject，它被用来与内核交互并创建它的可见表述。
-* 数据结构关联：从整体上看，设备模型是一个友好而复杂的数据结构，通过在其间的大量连接而构成一个多层次的体系结构。Kobject实现了该结构并把它们聚合在一起。
-* uevent事件处理：当系统中的硬件被热插拔时，在kobject子系统控制下，将产生事件以通知用户空间。
+* **对象的引用计数**：通常一个内核对象被创建时，不可能知道该对象存活的时间。跟踪此对象生命周期的一个方法是使用引用计数。当内核中没有代码持有该对象的引用时，该对象将结束自己的有效生命周期，并且可以被删除。
+* **sysfs表述**：在sysfs中显示的每一个对象，都对应一个kobject，它被用来与内核交互并创建它的可见表述。
+* **数据结构关联**：从整体上看，设备模型是一个友好而复杂的数据结构，通过在其间的大量连接而构成一个多层次的体系结构。Kobject实现了该结构并把它们聚合在一起。
+* **uevent事件处理**：当系统中的硬件被热插拔时，在kobject子系统控制下，将产生事件以通知用户空间。
 
-# 2 kobject
-kobject结构定义于include/linux/kobject.h，如下：
+# 2 kobject分析
 ```c
+/*位于include/linux/kobject.h*/
 struct kobject {
 	const char		*name;
 	struct list_head	entry;
@@ -67,7 +67,13 @@ state_remove_uevent_sent:用来表示该内核对象是否向用户空间发送�
 
 uevent_suppress: 用来表示该内核对象状态发生改变时，时候向用户空间发送uevent事件，1表示不发送。
 */
-	
+
+/* 双向链表位于 drivers/gpu/drm/nouveau/include/nvif/list.h */
+struct list_head{
+	struct list_head *next, *prev;
+};
+
+/*位于include/linux/kobject.h*/
 struct kset {  
 	struct list_head list;
 	spinlock_t list_lock;
@@ -75,12 +81,18 @@ struct kset {
 	const struct kset_uevent_ops *uevent_ops;
 } __randomize_layout;
 
+/*位于include/linux/kobject.h*/
 struct kobj_type {
 	void (*release)(struct kobject *kobj);
 	const struct sysfs_ops *sysfs_ops;
 	struct attribute **default_attrs;
 	const struct kobj_ns_type_operations *(*child_ns_type)(struct kobject *kobj);
 	const void *(*namespace)(struct kobject *kobj);
+};
+
+/*位于include/linux/kref.h*/
+struct kref {
+	refcount_t refcount;
 };
 ```
 kobject数据结构通常的用法就是嵌入到某一个对象的数据结构中，比如struct cdev结构:
@@ -101,19 +113,35 @@ struct cdev {
 
 # 3 相关函数
 
-* kobject_init()；// kobject 初始化函数;
+* **`void kobject_init(struct kobject *kobj, struct kobj_type *ktype)；`**
+	*  初始化kobject 以便可以通过kobject_add（）调用;
+* **`int kobject_add(struct kobject *kobj, struct kobject *parent,const char *fmt, ...) `**
+	*  将kobj 对象加入Linux 设备层次。挂接该kobject 对象到kset 的list 链中，增加父目录各级kobject 的引用计数，在其 parent 指向的目录下创建文件节点，并启动该类型内核对象的hotplug 函数
+*  **`int kobject_init_and_add(struct kobject *kobj, struct kobj_type *ktype,struct kobject *parent, const char *fmt, ...)`**
+	*  kobject_init() and kobject_add()函数的结合，返回值与kobject_add（）相同；与kobject_create_and_add的区别是，kobject结构体必须已经创建好，动态创建或者静态声明均可
+*  **`void kobject_del(struct kobject *kobj)`**
+	* 从Linux 设备层次(hierarchy)中删除kobj 对象;
+* **`struct kobject *kobject_create(void)`**
+	* 动态的创建一个kobject结构体；
+* **`struct kobject *kobject_create_and_add(const char *name, struct kobject *parent);`**
+	*  动态创建了一个kobject结构体，将其初始化，将其加入到kobject层次中，并最终返回所创建的 kobject的指针，当然如果函数执行失败，则返回NULL；
+* **`int kobject_rename(struct kobject *kobj, const char *new_name)`**
+	* 改变一个kobject的名字;
+* **`int kobject_move(struct kobject *kobj, struct kobject *new_parent)`**
+	* 将一个kobject从一个层次移动到另一个层次;
+* **`struct kobject *kobject_get(struct kobject *kobj)`** 
+	* 将kobj 对象的引用计数加1，同时返回该对象的指针;
+* **`void kobject_put(struct kobject *kobj)`**
+	*  将kobj 对象的引用计数减1，如果引用计数降为0，则调用kobject_release()释放该kobject 对象;
+* **`char *kobject_get_path(struct kobject *kobj, gfp_t gfp_mask)`**
+	*  返回kobject的路径；
+* **`int kobject_set_name(struct kobject *kobj, const char *fmt, ...)`** 
+	* 设置kobject的名字
 
-* kobject_add();//将kobj 对象加入Linux 设备层次。挂接该kobject 对象到kset 的list 链中，增加父目录各级kobject 的引用计数，在其 parent 指向的目录下创建文件节点，并启动该类型内核对象的hotplug 函数
-* kobject_init_and_add();//kobject_init() and kobject_add()函数的结合，返回值与kobject_add（）相同；与kobject_create_and_add的区别是，kobject结构体必须已经创建好，动态创建或者静态声明均可
-* kobject_del();//从Linux 设备层次(hierarchy)中删除kobj 对象;
-* kobject_create();//动态的创建一个kobject结构体；
-* kobject_create_and_add();// kobject_create_and_add动态创建了一个kobject结构体，将其初始化，将其加入到kobject层次中，并最终返回所创建的 kobject的指针，当然如果函数执行失败，则返回NULL；
-* kobject_rename(); //改变一个kobject的名字;
-* kobject_move(); //将一个kobject从一个层次移动到另一个层次;
-* kobject_get(); //将kobj 对象的引用计数加1，同时返回该对象的指针;
-* kobject_put(); //将kobj 对象的引用计数减1，如果引用计数降为0，则调用kobject_release()释放该kobject 对象;
-* kobject_get_path(); //返回kobject的路径；
-* kobject_set_name()； //设置kobject的名字
+
+
+
+
 
 ------
 
