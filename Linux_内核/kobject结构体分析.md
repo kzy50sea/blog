@@ -112,33 +112,54 @@ struct cdev {
 
 
 # 3 相关函数
-
-* **`void kobject_init(struct kobject *kobj, struct kobj_type *ktype)；`**
-	*  初始化kobject 以便可以通过kobject_add（）调用;
-* **`int kobject_add(struct kobject *kobj, struct kobject *parent,const char *fmt, ...) `**
-	*  将kobj 对象加入Linux 设备层次。挂接该kobject 对象到kset 的list 链中，增加父目录各级kobject 的引用计数，在其 parent 指向的目录下创建文件节点，并启动该类型内核对象的hotplug 函数
-*  **`int kobject_init_and_add(struct kobject *kobj, struct kobj_type *ktype,struct kobject *parent, const char *fmt, ...)`**
-	*  kobject_init() and kobject_add()函数的结合，返回值与kobject_add（）相同；与kobject_create_and_add的区别是，kobject结构体必须已经创建好，动态创建或者静态声明均可
-*  **`void kobject_del(struct kobject *kobj)`**
-	* 从Linux 设备层次(hierarchy)中删除kobj 对象;
-* **`struct kobject *kobject_create(void)`**
-	* 动态的创建一个kobject结构体；
-* **`struct kobject *kobject_create_and_add(const char *name, struct kobject *parent);`**
-	*  动态创建了一个kobject结构体，将其初始化，将其加入到kobject层次中，并最终返回所创建的 kobject的指针，当然如果函数执行失败，则返回NULL；
-* **`int kobject_rename(struct kobject *kobj, const char *new_name)`**
-	* 改变一个kobject的名字;
-* **`int kobject_move(struct kobject *kobj, struct kobject *new_parent)`**
-	* 将一个kobject从一个层次移动到另一个层次;
-* **`struct kobject *kobject_get(struct kobject *kobj)`** 
-	* 将kobj 对象的引用计数加1，同时返回该对象的指针;
-* **`void kobject_put(struct kobject *kobj)`**
-	*  将kobj 对象的引用计数减1，如果引用计数降为0，则调用kobject_release()释放该kobject 对象;
-* **`char *kobject_get_path(struct kobject *kobj, gfp_t gfp_mask)`**
-	*  返回kobject的路径；
-* **`int kobject_set_name(struct kobject *kobj, const char *fmt, ...)`** 
-	* 设置kobject的名字
+```c?linenums=false
+//初始化kobject 以便可以通过kobject_add（）调用;
+void kobject_init(struct kobject *kobj, struct kobj_type *ktype)；
+ 
+ 
+//将kobj 对象加入sysfs
+int kobject_add(struct kobject *kobj, struct kobject *parent,const char *fmt, ...) ;
 
 
+//kobject_init() and kobject_add()函数的结合，返回值与kobject_add（）相同；与kobject_create_and_add的区别是，kobject结构体必须已经创建好，动态创建或者静态声明均可
+int kobject_init_and_add(struct kobject *kobj, struct kobj_type *ktype,struct kobject *parent, const char *fmt, ...);
+
+
+//从Linux 设备层次(hierarchy)中删除kobj 对象;
+void kobject_del(struct kobject *kobj)
+
+
+//动态的创建一个kobject结构体；
+struct kobject *kobject_create(void)
+
+
+//动态创建了一个kobject结构体，将其初始化，将其加入到kobject层次中，并最终返回所创建的 kobject的指针，当然如果函数执行失败，则返回NULL；
+struct kobject *kobject_create_and_add(const char *name, struct kobject *parent);
+
+
+//改变一个kobject的名字;
+int kobject_rename(struct kobject *kobj, const char *new_name);
+	
+
+//将一个kobject从一个层次移动到另一个层次;
+int kobject_move(struct kobject *kobj, struct kobject *new_parent);
+
+
+//将kobj 对象的引用计数加1，同时返回该对象的指针;
+struct kobject *kobject_get(struct kobject *kobj);
+
+
+//将kobj 对象的引用计数减1，如果引用计数降为0，则调用kobject_release()释放该kobject 对象;
+void kobject_put(struct kobject *kobj);
+
+
+//返回kobject的路径；
+char *kobject_get_path(struct kobject *kobj, gfp_t gfp_mask);
+
+
+//设置kobject的名字
+int kobject_set_name(struct kobject *kobj, const char *fmt, ...);
+```
 
 
 
