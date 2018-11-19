@@ -1,0 +1,130 @@
+---
+title: kobject结构体分析
+tags: Linux内核
+---
+
+------
+
+&emsp;&emsp;<font color=blue>**_版权声明_**</font>：本文参考了<font color=blue>。</font><font color=red>未经作者允许，<font color=blue>严禁用于商业出版</font>，否则追究法律责任。网络转载请注明出处，这是对原创者的起码的尊重！！！</font>
+
+------
+
+# 1 简介
+&emsp;&emsp;随着Linux内核的发展壮大，其支持的设备也越来越多，但一直没有一个很好的方法来管理慢慢增多的设备驱动。为了能够在内核中提供统一的机制来对设备进行分类，同时在更高的功能层面上描述这些设备，并使得这些设备对用户空间可见。从2.6开始，Linux内核引入一个新的设备模型来对系统结构做一般性的抽象描述，可以用于支持不同的任务需求，并提供了用户空间访问的接口。
+
+&emsp;&emsp;Kobject是linux设备驱动模型的基础，也是设备模型中抽象的一部分。如果想了解设备驱动模型就需要明白Kobject的构成或原理。linux内核为了兼容各种形形色色的设备，就需要对各种设备的共性进行抽象，抽象出一个基类，其余的设备只需要继承此基类就可以了。而此基类就是kobject，但是C语言没有面向对象语法，这时候就需要将此基类(kobject)嵌入到具体的结构体中（作为其结构体成员），从而就可以访问控制此设备的操作。通常驱动程序员很少使用到kobject结构及其相关接口，而是使用封装之后的更高层的接口函数。
+
+
+&emsp;&emsp;kobject是组成设备device、驱动driver、总线bus、class的基本结构。如果把前者看成基类，则后者均为它的派生产物。device、driver、bus、class构成了设备模型，而kobject内嵌于其中，将这些设备模型的部件组织起来，并形成了sysfs文件系统。kobject就是device、driver、bus、class在sysfs文件系统中的代表。在sysfs操作设备时，也必须通过kobject这个中间人来完成。kobject的主要功能如下：
+* 对象的引用计数：通常一个内核对象被创建时，不可能知道该对象存活的时间。跟踪此对象生命周期的一个方法是使用引用计数。当内核中没有代码持有该对象的引用时，该对象将结束自己的有效生命周期，并且可以被删除。
+* sysfs表述：在sysfs中显示的每一个对象，都对应一个kobject，它被用来与内核交互并创建它的可见表述。
+* 数据结构关联：从整体上看，设备模型是一个友好而复杂的数据结构，通过在其间的大量连接而构成一个多层次的体系结构。Kobject实现了该结构并把它们聚合在一起。
+* uevent事件处理：当系统中的硬件被热插拔时，在kobject子系统控制下，将产生事件以通知用户空间。
+
+# 2 kobject
+```c
+struct kobject{
+	const char  *name; /*kobject的名字，每个kobject都对应着sysfs下的一个文件夹，该名字也是对应的文件夹的名字。*/
+	
+	struct list_head entry; /*双向链表指针，用于将同一kset集合中的kobject链接到一起，便于访问*/
+	
+	struct kobject *parent; /*kobject对应的父kobject节点，在sysfs表现为上一级目录*/
+	
+	struct kset *kset; /*kobject所在的集合的指针，kset概念将在kset一节中描述*/
+	
+	struct kobj_type *ktype; /*kobject对象类型指针，随后将会介绍*/
+	
+	struct sysfs_dirent *sd; /*sd用于表示VFS文件系统的目录项，由此可见它是设备与文件之间的桥梁。在sysfs节会对此结构进行分析*/
+	
+	struct kref  kref; /*对象引用计数器。引用计数器的作用前面已经讲过*/
+	
+	unsigned int state_initialized:1; /*初始化标志位，在对象初始化时被置位*/
+	
+	unsigned int state_in_sysfs:1; /*kobject对象在sysfs中的状态，创建则置1，否则为0。亦即kobject对应的目录在sysfs中是否被创建*/
+	
+	unsigned int state_add_uevent_sent:1; /*添加设备的uevent事件是否发送标志，添加设备时会向用户空间发送uevent事件，请求新增设备*/
+	
+	unsigned int state_remove_uevent_sent:1; /*删除设备的uevent事件是否发送标志，删除设备时会向用户空间发送uevent事件，请求卸载设备*/
+	
+	unsigned int uevent_suppress:1;
+};
+```
+
+
+
+name： kobject的名称，它将以一个目录的形式出现在sysfs文件系统中
+
+entry：list_head入口，用于将该kobject链接到所属kset的链表
+
+parent：kobject结构的父节点
+
+kset：kobject所属的kset
+
+ktype：kobject相关的操作函数和属性。
+
+sd：kobject对应的sysfs目录
+
+kref：kobject的引用计数，本质上是atomic_t变量
+
+state_initialize：为1代表kobject已经初始化过了
+
+state_in_sysfs：kobject是否已经在sysfs文件系统建立入口
+
+
+
+
+相关函数：
+
+kobject_init()；
+
+// kobject 初始化函数;
+
+kobject_add();
+
+//将kobj 对象加入Linux 设备层次。挂接该kobject 对象到kset 的list 链中，增加父目录各级kobject 的引用计数，在其 parent 指向的目录下创建文件节点，并启动该类型内核对象的hotplug 函数
+
+kobject_init_and_add();
+
+//kobject_init() and kobject_add()函数的结合，返回值与kobject_add（）相同；与kobject_create_and_add的区别是，kobject结构体必须已经创建好，动态创建或者静态声明均可；
+
+kobject_del();
+
+//从Linux 设备层次(hierarchy)中删除kobj 对象;
+
+kobject_create();
+
+//动态的创建一个kobject结构体；
+
+kobject_create_and_add();
+
+// kobject_create_and_add动态创建了一个kobject结构体，将其初始化，将其加入到kobject层次中，并最终返回所创建的 kobject的指针，当然如果函数执行失败，则返回NULL；
+
+kobject_rename();
+
+//改变一个kobject的名字;
+
+kobject_move();
+
+//将一个kobject从一个层次移动到另一个层次;
+
+kobject_get();
+
+//将kobj 对象的引用计数加1，同时返回该对象的指针;
+
+kobject_put();
+
+//将kobj 对象的引用计数减1，如果引用计数降为0，则调用kobject_release()释放该kobject 对象;
+
+kobject_get_path();
+
+//返回kobject的路径；
+
+kobject_set_name()；
+
+//设置kobject的名字
+
+------
+
+&emsp;&emsp;<font color=blue>**_版权声明_**</font>：本文参考了<font color=blue>。</font><font color=red>未经作者允许，<font color=blue>严禁用于商业出版</font>，否则追究法律责任。网络转载请注明出处，这是对原创者的起码的尊重！！！</font>
+
+------
