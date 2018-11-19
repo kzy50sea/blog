@@ -22,106 +22,98 @@ tags: Linux内核
 * uevent事件处理：当系统中的硬件被热插拔时，在kobject子系统控制下，将产生事件以通知用户空间。
 
 # 2 kobject
+kobject结构定义于include/linux/kobject.h，如下：
 ```c
-struct kobject{
-	const char  *name; /*kobject的名字，每个kobject都对应着sysfs下的一个文件夹，该名字也是对应的文件夹的名字。*/
-	
-	struct list_head entry; /*双向链表指针，用于将同一kset集合中的kobject链接到一起，便于访问*/
-	
-	struct kobject *parent; /*kobject对应的父kobject节点，在sysfs表现为上一级目录*/
-	
-	struct kset *kset; /*kobject所在的集合的指针，kset概念将在kset一节中描述*/
-	
-	struct kobj_type *ktype; /*kobject对象类型指针，随后将会介绍*/
-	
-	struct sysfs_dirent *sd; /*sd用于表示VFS文件系统的目录项，由此可见它是设备与文件之间的桥梁。在sysfs节会对此结构进行分析*/
-	
-	struct kref  kref; /*对象引用计数器。引用计数器的作用前面已经讲过*/
-	
-	unsigned int state_initialized:1; /*初始化标志位，在对象初始化时被置位*/
-	
-	unsigned int state_in_sysfs:1; /*kobject对象在sysfs中的状态，创建则置1，否则为0。亦即kobject对应的目录在sysfs中是否被创建*/
-	
-	unsigned int state_add_uevent_sent:1; /*添加设备的uevent事件是否发送标志，添加设备时会向用户空间发送uevent事件，请求新增设备*/
-	
-	unsigned int state_remove_uevent_sent:1; /*删除设备的uevent事件是否发送标志，删除设备时会向用户空间发送uevent事件，请求卸载设备*/
-	
+struct kobject {
+	const char		*name;
+	struct list_head	entry;
+	struct kobject	*parent;
+	struct kset		*kset;
+	struct kobj_type	*ktype;
+	struct kernfs_node *sd;
+	struct kref		kref;
+#ifdef CONFIG_DEBUG_KOBJECT_RELEASE
+	struct delayed_work	release;
+#endif
+	unsigned int state_initialized:1;
+	unsigned int state_in_sysfs:1;
+	unsigned int state_add_uevent_sent:1;
+	unsigned int state_remove_uevent_sent:1;
 	unsigned int uevent_suppress:1;
+}；
+
+/*
+name: 用来表示内核对象的名称，如果该内核对象加入到系统，则对应着sysfs下的一个同名文件夹。
+
+entry: 双向链表指针，用于将同一kset集合中的kobject链接到一起，便于访问
+
+parent: 用来指向该内核对象的上层节点，从而可以实现内核对象的层次化结构，在sysfs表现为上一级目录
+
+kset: 用来执行内核对象所属的kset。kset对象用来容纳一系列同类型的kobject
+
+ktype: 用来定义该内核对象的sys文件系统的相关操作函数和属性。
+
+sd: 用来表示该内核对象在sys文件系统中的目录项实例
+
+kref: 其核心是原子操作变量，用来表示该内核对象的引用计数。
+
+state_initialized: 用来表示该内核对象的初始化状态，1表示已经初始化，0表示未初始化。
+
+state_in_sysfs: 用来表示该内核对象是否在sys中已经存在，已存在则置1，否则为0。。
+
+state_add_uevent_sent: 用来表示该内核对象是否向用户空间发送了ADD uevent事件
+
+state_remove_uevent_sent:用来表示该内核对象是否向用户空间发送了Remove uevent事件
+
+uevent_suppress: 用来表示该内核对象状态发生改变时，时候向用户空间发送uevent事件，1表示不发送。
+*/
+	
+struct kset {  
+	struct list_head list;
+	spinlock_t list_lock;
+	struct kobject kobj;
+	const struct kset_uevent_ops *uevent_ops;
+} __randomize_layout;
+
+struct kobj_type {
+	void (*release)(struct kobject *kobj);
+	const struct sysfs_ops *sysfs_ops;
+	struct attribute **default_attrs;
+	const struct kobj_ns_type_operations *(*child_ns_type)(struct kobject *kobj);
+	const void *(*namespace)(struct kobject *kobj);
 };
 ```
+kobject数据结构通常的用法就是嵌入到某一个对象的数据结构中，比如struct cdev结构:
+```c
+struct cdev {
+	struct kobject kobj;
+	struct module *owner;
+	const struct file_operations *ops;
+	struct list_head list;
+	dev_t dev;
+	unsigned int count;
+} __randomize_layout;
+```
+
+&emsp;&emsp;kobject结构在sysfs中的入口是一个目录，因此添加一个kobject的动作也会导致在sysfs中新建一个对应kobject的目录，目录名是 `kobject.name`。该入口目录位于kobject的parent指针的目录当中，若parent指针为空，则将parent设置为该kobject中的kset对应的kobject(&kobj->kset->kobj)。如果parent指针和kset都是NULL，此时sysfs的入口目录将会在顶层目录下(/sys)被创建，不过不建议这么做。详细的创建目录过程可以看后面介绍的kobject_init_and_add函数的介绍。
 
 
 
-name： kobject的名称，它将以一个目录的形式出现在sysfs文件系统中
+# 3 相关函数
 
-entry：list_head入口，用于将该kobject链接到所属kset的链表
+* kobject_init()；// kobject 初始化函数;
 
-parent：kobject结构的父节点
-
-kset：kobject所属的kset
-
-ktype：kobject相关的操作函数和属性。
-
-sd：kobject对应的sysfs目录
-
-kref：kobject的引用计数，本质上是atomic_t变量
-
-state_initialize：为1代表kobject已经初始化过了
-
-state_in_sysfs：kobject是否已经在sysfs文件系统建立入口
-
-
-
-
-相关函数：
-
-kobject_init()；
-
-// kobject 初始化函数;
-
-kobject_add();
-
-//将kobj 对象加入Linux 设备层次。挂接该kobject 对象到kset 的list 链中，增加父目录各级kobject 的引用计数，在其 parent 指向的目录下创建文件节点，并启动该类型内核对象的hotplug 函数
-
-kobject_init_and_add();
-
-//kobject_init() and kobject_add()函数的结合，返回值与kobject_add（）相同；与kobject_create_and_add的区别是，kobject结构体必须已经创建好，动态创建或者静态声明均可；
-
-kobject_del();
-
-//从Linux 设备层次(hierarchy)中删除kobj 对象;
-
-kobject_create();
-
-//动态的创建一个kobject结构体；
-
-kobject_create_and_add();
-
-// kobject_create_and_add动态创建了一个kobject结构体，将其初始化，将其加入到kobject层次中，并最终返回所创建的 kobject的指针，当然如果函数执行失败，则返回NULL；
-
-kobject_rename();
-
-//改变一个kobject的名字;
-
-kobject_move();
-
-//将一个kobject从一个层次移动到另一个层次;
-
-kobject_get();
-
-//将kobj 对象的引用计数加1，同时返回该对象的指针;
-
-kobject_put();
-
-//将kobj 对象的引用计数减1，如果引用计数降为0，则调用kobject_release()释放该kobject 对象;
-
-kobject_get_path();
-
-//返回kobject的路径；
-
-kobject_set_name()；
-
-//设置kobject的名字
+* kobject_add();//将kobj 对象加入Linux 设备层次。挂接该kobject 对象到kset 的list 链中，增加父目录各级kobject 的引用计数，在其 parent 指向的目录下创建文件节点，并启动该类型内核对象的hotplug 函数
+* kobject_init_and_add();//kobject_init() and kobject_add()函数的结合，返回值与kobject_add（）相同；与kobject_create_and_add的区别是，kobject结构体必须已经创建好，动态创建或者静态声明均可
+* kobject_del();//从Linux 设备层次(hierarchy)中删除kobj 对象;
+* kobject_create();//动态的创建一个kobject结构体；
+* kobject_create_and_add();// kobject_create_and_add动态创建了一个kobject结构体，将其初始化，将其加入到kobject层次中，并最终返回所创建的 kobject的指针，当然如果函数执行失败，则返回NULL；
+* kobject_rename(); //改变一个kobject的名字;
+* kobject_move(); //将一个kobject从一个层次移动到另一个层次;
+* kobject_get(); //将kobj 对象的引用计数加1，同时返回该对象的指针;
+* kobject_put(); //将kobj 对象的引用计数减1，如果引用计数降为0，则调用kobject_release()释放该kobject 对象;
+* kobject_get_path(); //返回kobject的路径；
+* kobject_set_name()； //设置kobject的名字
 
 ------
 
