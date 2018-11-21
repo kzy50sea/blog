@@ -1,5 +1,6 @@
 ---
 title: Linux内核的构建系统
+tags: Linux内核
 ---
 
 ------
@@ -57,7 +58,7 @@ title: Linux内核的构建系统
 * 首先由make编译生成`scripts/kconfig/mconf.c`生成`scripts/kconfig/mconf`。（xconfig对应qconf，gconfig对应gconf，config对应conf）
 * 然后执行`scripts/kconfig/mconf Kconfig`
 * mconf程序读取内核根目录下的Kconfig文件，Kconfig载入了`arch/$(SRCARCH)/Kconfig`，`arch/$(SRCARCH)/Kconfig`又分别载入各目录下的Kconfig文件，以此递归下去，最后生成主配置界面以及各级配置菜单。`SRCARCH`是由顶层Makefile中定义的，它等于`$(ARCH)`，而`$ARCH`由Makefile或make的命令行参数指定。
-* 在完成配置后，mconf会将配置保存在Linux内核源代码根目录下的`.config`文件中。
+* 在完成配置后，mconf会将配置保存在Linux内核源代码根目录下的`.config`文件中。.config文件实质是一个Makefile文件。
 
 * 当我们使用`make defconfig`这个命令时：系统直接将`arch/$SRCARCH/configs`（**该目录存放内核的默认配置文件**）下的对应的默认配置文件拷贝到Linux内核源代码根目录下的`.config`文件。
 
@@ -277,7 +278,7 @@ comment "module support disabled"
 
 
 # 3  内核编译过程
-* 在输入编译命令后，make首先调用脚本来读取`.config`文件，并根据内容载入对应文件到`include/config/`，并将一些配置项写入`include/config/auto.conf`。
+* 在输入编译命令后，make首先读取`.config`文件（实际是一个Makefile），并根据配置项载入对应头文件到`include/config/`，并将一些配置项写入`include/config/auto.conf`。
 * 脚本程序将`include/config/auto.conf`中的配置项`CONFIG_XXXX=y|m|xxx`翻译为宏定义`#define CONFIG_XXXX[_MODULE] 1|xxx`，并写入`include/generate/autoconf.h`中。
 * autoconf.h就是`include/config/auto.conf`中的配置项的内容的C语言写法，以便在以后使用的时候作为宏定义出现，以实现条件编译。
 * make根据Makefile执行编译。
