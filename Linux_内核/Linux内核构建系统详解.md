@@ -52,8 +52,48 @@ tags: Linux内核
 * menu.c实现菜单控制函数。
 
 ## 2.2 配置过程
+首先预定义了一些makefile变量
+```makefile
+#顶层Makefile
+
+
+VERSION = 4     #主版本号
+PATCHLEVEL = 18  #次版本号
+SUBLEVEL = 7    #修正号
+EXTRAVERSION =  #紧急错误修正版本号
+NAME = Merciless Moray #名称
+
+#_all没有先决条件和命令因此始终需要更新该目标
+PHONY := _all 
+_all:  
+
+
+ifeq ("$(origin V)", "command line")
+  KBUILD_VERBOSE = $(V) 
+endif
+ifndef KBUILD_VERBOSE
+  KBUILD_VERBOSE = 0
+endif
+ 
+ifeq ($(KBUILD_VERBOSE),1)
+  quiet =
+  Q =
+else
+  quiet=quiet_
+  Q = @
+endif
+
+```
 
 当我们使用`make menuconfig`这个命令时（其它配置命令类似）：
+
+
+
+
+
+
+
+
 	
 * 首先由make编译生成`scripts/kconfig/mconf.c`生成`scripts/kconfig/mconf`。（xconfig对应qconf，gconfig对应gconf，config对应conf）
 * 然后执行`scripts/kconfig/mconf Kconfig`
