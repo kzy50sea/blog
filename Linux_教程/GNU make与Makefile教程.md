@@ -564,7 +564,7 @@ endef
 |MAKEFILES|引入的makefile所在路径
 |MAKE|make程序|
 |SHELL|shell程序|
-
+|CURDIR|当前目录
 
 * 特殊变量
 
