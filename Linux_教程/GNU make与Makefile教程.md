@@ -399,7 +399,7 @@ target: dependency_files; command1
 * 命令执行
 	* 当先决条件新于目标项时（时间上新于或者先决条件不存在），就执行命令
 	* make调用子shell执行命令
-	* 每行命令调用一个shell（除非使用了`.ONESHELL`特殊目标）
+	* **每行命令调用一个新的shell**（除非使用了`.ONESHELL`特殊目标）
 	* 如果你要让上一条命令的结果应用在下一条命令，要将命令放在同一行，用分号分隔
 	* 可以使用预定义变量SHELL来指定shell，用.SHELLFLAGS指定shell选项
 	* 并行执行
@@ -424,7 +424,7 @@ target: dependency_files; command1
 		* “-t”,“-n”,和“-q”会失效。
 	* 变量传递
 		* 总控Makefile的变量可以传递到下级的Makefile中，但是不会覆盖下层的Makefile中所定义的变量，除非指定了“-e”参数。
-		* `export <variable...>`：传递变量到下级Makefile
+		* `export <variable...>`：传递变量到子make程序中。
 		* `unexport <variable...>`：禁止变量传递到下级Makefile
 		* `export`：传递所有的变量到下级Makefile
 	* make选项传递
