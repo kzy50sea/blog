@@ -529,7 +529,7 @@ endef
 
 * 预定义（默认）变量：内部事先定义好的变量，但是它的值是固定的，并且有些的值是为空的。
 
-|变量|说明|变量|	说明|
+|默认变量|说明|普通变量|	说明|
 |:--|:--|:--|:--|
 |AR|函数库打包程序，默认“ar”。|ARFLAGS|库打包程序参数，默认是“rv”。
 |AS|编译程序，默认是“as”|ASFLAGS|汇编程序参数
@@ -554,7 +554,8 @@ endef
 |LDLIBS|库文件|LDFLAGS|链接程序参数。
 |||RFLAGS|Ratfor的Fortran编译器参数
 |||LINTFLAGS|lint参数|
-
+|MAKE|默认为make|MAKEFLAGS|make参数
+|SHELL|shell程序,默认为/bin/sh|SHELLFLAGS|shell参数
 
 * 环境变量：设置make运行环境的变量，包括系统环境变量。
 
@@ -562,8 +563,6 @@ endef
 |:--|:--|
 |VPATH|先决条件查找路径
 |MAKEFILES|引入的makefile所在路径
-|MAKE|make程序|
-|SHELL|shell程序|
 |CURDIR|当前目录
 
 * 特殊变量
