@@ -526,7 +526,7 @@ endef
 |+F |所有依赖文件的文件名部分（可存在重复文件）。
 |?D|当前规则中日期新于目标文件的所有依赖文件的目录部分。
 |?F|当前规则中日期新于目标文件的所有依赖文件的文件名部分。
-
+|&emsp;&emsp;||
 
 * 预定义（默认）变量：内部事先定义好的变量，但是它的值是固定的，并且有些的值是为空的。
 
@@ -558,13 +558,14 @@ endef
 |MAKE|默认为make|MAKEFLAGS|make参数
 |SHELL|shell程序,默认为/bin/sh|SHELLFLAGS|shell参数
 
-* 环境变量：设置make运行环境的变量，包括系统环境变量。
+* 环境变量：设置make运行环境的变量，包括系统环境变量。注意：这与origin函数的结果可能不同。
 
 |变量|	说明|
 |:--|:--|
 |VPATH|先决条件查找路径
 |MAKEFILES|引入的makefile所在路径
 |CURDIR|当前目录
+
 
 * 特殊变量
 
@@ -833,8 +834,8 @@ ${function arg1,arg2...}
 	 * 返回：
 		 * “undefined”：未定义变量。
 		 * “default”：预定义变量。
-		 * “environment”：环境变量
-		 * "environment override"，被环境变量覆盖的同名变量
+		 * “environment”：仅指系统环境变量。这与前面说的环境变量有所不同。
+		 * "environment override"，被系统环境变量覆盖的同名变量
 		 * “file”,定义在Makefile中的变量。
 		 * “command line”,变量是被命令行定义的。
 		 * “override”,变量被override定义的。
