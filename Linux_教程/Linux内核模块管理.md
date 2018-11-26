@@ -1,5 +1,5 @@
 ---
-title: Linux内核模块管理
+title: Linux模块管理
 tags: Linux教程
 ---
 
