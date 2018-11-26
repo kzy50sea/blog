@@ -127,7 +127,8 @@ include filename1 filename2... #filename可以保含路径和shell通配符
 
 ## 2.6 环境变量MAKEFILES
 
-&emsp;&emsp;如果你的makefile中定义了环境变量MAKEFILES，那么，make会把这个变量中的值做一个类似于include指令的动作。这个变量中的值是其它的Makefile，用空格分隔。它和include不同的是，从这个环境变中引入的Makefile的“目标”不会称为默认目标(但是可以手动指定），如果MAKEFILES中列出的文件未发现，make也不认为其是一个error。
+&emsp;&emsp;如果你的makefile中定义了环境变量MAKEFILES，那么，make会把这个变量中的值做一个类似于include指令的动作。这个变量中的值是其它的Makefile，用空格分隔。它和include不同的是，从这个环境变中引入的Makefile的“目标”不会成为默认目标(但是可以手动指定），如果MAKEFILES中列出的文件未发现，make也不认为其是一个error。
+
 
 
 
