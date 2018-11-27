@@ -742,11 +742,6 @@ ${function arg1,arg2...}
 	 * 功能：把前缀`<prefix>`加到`<names>`中的每个单词后面。
 	 * 返回：返回加过前缀的文件名序列。
 	 * 示例：`$(addprefix src/,foo bar)`返回值是“src/foo src/bar”。
-* `$(wildcard <patter>)`
-	 * 名称：加前缀函数——addprefix。
-	 * 功能：把前缀`<prefix>`加到`<names>`中的每个单词后面。
-	 * 返回：返回加过前缀的文件名序列。
-	 * 示例：`$(addprefix src/,foo bar)`返回值是“src/foo src/bar”。
  * `$(join <list1>,<list2> )`
 	 * 名称：连接函数——join。
 	 * 功能：把`<list2>`中的单词**对应**地加到`<list1>`的单词后面。如果`<list1>`的单词个数要比`<list2>`的多，那么，`<list1>`中的多出来的单词将保持原样。如果`<list2>`的单词个数要比<list1>多，那么，`<list2>`多出来的单词将被复制到`<list2>`中。
