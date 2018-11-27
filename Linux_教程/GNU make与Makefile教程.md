@@ -748,7 +748,7 @@ ${function arg1,arg2...}
 	 * 返回：返回连接过后的字符串。
 	 * 示例：`$(join aaa bbb , 111 222 333)`返回值是“aaa111 bbb222 333”。
 * `$(wildcard <pattern>)`
-	 * 名称：当前目录文件搜索函数——addprefix。
+	 * 名称：当前目录文件搜索函数——wildcard。
 	 * 功能：使用通配符搜索当前目录下匹配`<pattern>`的文件，文件名以空格间隔。
 	 * 返回：返回匹配`<pattern>`的文件名。
 	 * 示例：假设当前目录下有`main.c add.c `,`$(wildcard m*.c)`返回值是“main.c”。
