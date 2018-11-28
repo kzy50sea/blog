@@ -631,20 +631,25 @@ endif
 
 # 7 函数
 ## 7.1 函数定义与调用
+
 ```makefile
-#定义函数
+#自定义函数
 define fun
 ... ...
 ... ...
 endef
 
-#调用函数
+#调用自定义函数
 
-$(function arg1,arg2...)
-#或
-${function arg1,arg2...}
+$(call function,arg1，arg2，...) #或
+${call function，arg1,arg2...}
+
+#调用内建函数
+
+$(function arg1,arg2,...) #或
+${function arg1,arg2,...}
 ```
-
+在函数中形参用\$(1)、\$(2)、\$(3)……表示，$(0)表示函数本身。
 ## 7.2 字符串处函数
 * `$(subst <from>,<to>,<text> )`
 	 * 名称：字符串替换函数——subst。
