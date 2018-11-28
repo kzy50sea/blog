@@ -817,7 +817,7 @@ ${function arg1,arg2,...}
 	 * 名称：参数化函数——call。
 	 * 功能：用来创建新的参数化的函数。当 make执行这个函数时，`<expression>`参数中的变量，`$(1)，$(2)，$(3)`等，会被参数`<parm1>`，`<parm2>`，`<parm3>`依次取代。
 	 * 返回：`<expression>`被`<parm2>`取代后的值。
-	 * 示例：`ret=$(1) $(2);$(call $(1) $(2),love,you)`返回"love you"。
+	 * 示例：`ret=$(1) $(2);$(call ret,love,you)`返回"love you"。
 
 ## 7.8 取值函数
 * `$(value varname)`
