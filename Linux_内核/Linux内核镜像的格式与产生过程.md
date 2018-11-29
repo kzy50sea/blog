@@ -1,5 +1,5 @@
 ---
-title: Linux内核镜像的格式与产生过程
+title: 内核镜像的格式与产生过程
 tags: Linux内核
 ---
 
