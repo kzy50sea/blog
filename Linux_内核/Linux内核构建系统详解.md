@@ -53,6 +53,7 @@ tags: Linux内核
 
 ## 2.2 配置过程
 以make menuconfig为例
+
 ### 2.2.1 基本变量
 首先需要知道一些顶层Makefile中定义的变量(内核版本号：4.18.7):
 
@@ -395,40 +396,11 @@ endif
 export KBUILD_MODULES KBUILD_BUILTIN
 ```
 
-### 2.2.2 引入的Makefile文件
+### 2.2.2 各Makefile之间的关系
+![Diagram](./attachments/1543471927790.drawio.html)
 
 
-```makefile?linenums=282
-include scripts/Kbuild.include #该文件中最常用的变量就是build。
-```
 
-```makefile?linenums=528
-include arch/$(SRCARCH)/Makefile  #特定架构的makefile文件
-```
-```makefile?linenums=592
--include include/config/auto.conf 
-```
-
-```makefile?linenums=618
--include include/config/auto.conf.cmd
-```
-```makefile?linenums=672
- include scripts/Makefile.kcov
- include scripts/Makefile.gcc-plugins
- ```
- ```makefile?linenums=823
- include scripts/Makefile.kasan
- include scripts/Makefile.extrawarn
- include scripts/Makefile.ubsan
-```
- ```makefile?linenums=1708
-cmd_files := $(wildcard .*.cmd $(foreach f,$(sort $(targets)),$(dir $(f)).$(notdir $(f)).cmd))
-    
- ifneq ($(cmd_files),)
-   $(cmd_files): ;       # Do not try to update included dependency files
-   include $(cmd_files) 
-endif
-```
 
 ### 2.2.3 配置过程分析
 
