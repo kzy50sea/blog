@@ -396,11 +396,8 @@ endif
 export KBUILD_MODULES KBUILD_BUILTIN
 ```
 
-### 2.2.2 各Makefile之间的关系
-![Diagram](./attachments/1543471927790.drawio.html)
-
-
-
+### 2.2.2 Makefile之间的关系
+![1](https://www.github.com/liao20081228/blog/raw/master/图片/Linux内核的构建系统/1.JPG)
 
 ### 2.2.3 配置过程分析
 
