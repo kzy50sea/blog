@@ -84,9 +84,9 @@ tags: Linux内核
 	* 属性值有5种：
 		* 空，如"an-empty-property"；
 		* 字符串，如 "a-string-property"；
-		* 字符串数组 ，用双引号表示，如"a-string-property-list"；
-		* Cells（单位为u32bit），用尖括号表示，如"second-child-property"，
-		* 无符号整数（u32，u64），用方括号表示，如“a-binary-data-property"。
+		* 字符串数组 ，用双引号括起来，如"a-string-property-list"；
+		* Cells（单位为u32bit），如"second-child-property"，
+		* 无符号整数（u32，u64），如“a-binary-data-property"。
 	* EPAPR规范预定义了一些标准的属性:
 		* 设备型号有关：`compatible、model、device_type`……		
 		* 地址相关：`#address-cells、#size-cells、reg、range、dma-range`……
