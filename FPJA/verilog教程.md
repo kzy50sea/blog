@@ -251,14 +251,14 @@ inout  [信号位宽-n ：0] 端口名;     //输入输出口
 ```
 
 * I/O说明也可以写在端口声明语句里。其格式如下：
-```
+```verilog
 module module_name(input port1,output port1,inout port2… );
 ```
 
 ### 3.1.3 内部信号说明
 
 &emsp;&emsp;在模块内用到的和与端口有关的变量的声明。如：
-```
+```verilog
 reg [width-n : 0] R变量1，R变量2 。。。。；//声明变量为寄存器型
 wire [width-n : 0] W变量1，W变量2 。。。。；//声明变量为线网型
 ```
@@ -266,11 +266,10 @@ wire [width-n : 0] W变量1，W变量2 。。。。；//声明变量为线网型
 ### 3.1.4 功能定义
 
 * 模块中最重要的部分是逻辑功能定义部分。有三种方法可在模块中产生逻辑：
-
- * 用“assign”声明语句，如： `assign a = b & c;`
- * 实例化模块，如： `and u1( q, a, b );`
- * 用“always”块，如：
-```
+	* 用“assign”声明语句，如： `assign a = b & c;`
+	* 实例化模块，如： `and u1( q, a, b );`
+	* 用“always”块，如：
+```verilog
 always @(posedge clk or posedge clr)
 begin
     if(clr) 
