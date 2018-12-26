@@ -22,17 +22,15 @@ tags: Linux教程
 
 * fullpath/script-name或者./script-name
 指在当前路径下执行脚本（脚本需要有执行权限），需要将脚本文件的权限改为可执行（即文件权限属性为x位）。具体方法为:chmod a+x script-name。然后通过执行脚本绝对路径或者相对路径就可以执行脚本了。
-注意：在生产环境中，运维人员由于忘记为该脚本设置可执行权限，然后直接使用，导致出错。因此，推荐第一种 bashscript-name。
+
+
 
 * source script-name或者. script-name
-source或者“.”命令的功能是：读入脚本并执行脚本，即在当前Shell中执行source或“.”加载并执行的相关脚本文件的命令及语句，而不是产生一个子Shell来执行文件中的命令。
+source或者“.”命令的功能是：读入脚本并执行脚本，即在当前Shell中执行source或“.”加载并执行的相关脚本文件的命令及语句，而不是产生一个子Shell来执行文件中的命令。这是和其他几种执行shell方式的最大不同。
 
-注意：这是和其他几种执行shell方式的最大不同。
---------------------- 
-作者：timchen525 
-来源：CSDN 
-原文：https://blog.csdn.net/timchen525/article/details/76407735 
-版权声明：本文为博主原创文章，转载请附上博文链接！
+>注意：在生产环境中，运维人员由于忘记为该脚本设置可执行权限，然后直接使用，导致出错。因此，推荐第一种 bashscript-name。
+
+
 
 >**注意**：
 >
@@ -41,7 +39,40 @@ source或者“.”命令的功能是：读入脚本并执行脚本，即在当�
 >3. 空白行也将被忽略掉，并且 [tab] 按键所推开的空白同样视为空格键；
 >4. 如果读取到一个 Enter 符号 (CR) ，就尝试开始执行该行 (或该串) 命令。
 
-## 1.2 shell脚本组成
+
+
+## 1.2 shell解释器
+
+
+不同的shell解释器具备不同的功能。
+
+
+* sh
+  sh 的全称是 Bourne shell，由 AT&T 公司的 Steve Bourne开发，为了纪念他，就用他的名字命名了。sh 是 UNIX 上的标准 shell，很多 UNIX 版本都配有 sh。sh 是第一个流行的 Shell。在Linux中已经成为其它shell解释器的符号链接。
+
+* bash
+ 由 GNU 组织开发，大多数Linux系统默认使用的shell，保持了对 sh 的兼容性，支持c shell 和 korn shell 的特色功能，是各种 Linux 发行版默认配置的 shell。bash 兼容 sh 意味着，针对 sh 编写的 Shell 代码可以不加修改地在 bash 中运行。尽管如此，bash 和 sh 还是有一些不同之处：
+  * 一方面，bash 扩展了一些命令和参数；
+  * 另一方面，bash 并不完全和 sh 兼容，它们有些行为并不一致，但在大多数企业运维的情况下区别不大，特殊场景可以使用 bash 代替 sh。
+
+* dash
+GNU/Linux操作系统中的 /bin/sh 本是 bash (Bourne-Again Shell) 的符号链接，但鉴于 bash 过于复杂，有人把 bash 从 NetBSD 移植到 Linux 并更名为 dash (Debian Almquist Shell)，并建议将 /bin/sh 指向它，以获得更快的脚本执行速度。Dash Shell 比 Bash Shell 小的多，符合POSIX标准。Debian和Ubuntu中，/bin/sh默认已经指向dash，这是一个不同于bash的shell，它主要是为了执行脚本而出现，而不是交互，它速度更快，但功能相比bash要少很多，语法严格遵守POSIX标准。可以使用`sudo dpkg-reconfigure dash`来禁用dash。
+
+* csh
+C shell 使用的是“类C”语法，csh是具有C语言风格的一种shell，由bill joy开发，其内部命令有52个，较为庞大。目前使用的并不多，已经被/bin/tcsh所取代。
+
+* ksh
+Korn shell 的语法与Bourne shell相同，同时具备了C shell的易用特点。许多安装脚本都使用ksh,ksh 有42条内部命令，与bash相比有一定的限制性。
+
+* tcsh
+tcsh是csh的增强版，与C shell完全兼容。
+
+* zsh
+目前Linux里最庞大的一种shell：zsh。它有84个内部命令，使用起来也比较复杂。一般情况下，不会使用
+该shell。
+
+
+## 1.3 shell脚本组成
 * 第一行用`#!/bin/shell解释器`开头 ，声明这个脚本使用的 shell 名称，一般有bash、dash、sh、csh、ksh，如果省略，则使用默认的shell解释器。
 * 程序内容的说明，包括：
   * script 的功能；
