@@ -17,11 +17,22 @@ tags: Linux教程
 # 1 shell脚本简介
 &emsp;&emsp;shell script 是利用 shell 的功能所写的一个程序 ，这个程序是使用纯文本文件，将一些shell的语法与指令(含外部指令)写在里面，搭配正则表达式、管道命令与数据流重导向等功能，以达到我们所想要的处理目的。
 ## 1.1 执行shell脚本
-* 作为可执行程序，要求脚本文件至少具有rx权限。有三种执行方式：
-  * 绝对路径：直接输入shell脚本的绝对路径
-  * 相对路径：`./filename.sh`
-  * 变量PATH：将filename.sh 放在 `PATH` 指定的目录内。
-* 作为解释器参数：`shell解释器 filename.sh`，要求脚本文件至少具有r权限。
+*  bash script-name或者sh script-name
+这是当脚本文件本身没有可执行权限（即文件权限属性x位为-号）时常使用的方法，或者脚本文件开头没有指定解释器时需要使用的方法。推荐使用这种方法。
+
+* fullpath/script-name或者./script-name
+指在当前路径下执行脚本（脚本需要有执行权限），需要将脚本文件的权限改为可执行（即文件权限属性为x位）。具体方法为:chmod a+x script-name。然后通过执行脚本绝对路径或者相对路径就可以执行脚本了。
+注意：在生产环境中，运维人员由于忘记为该脚本设置可执行权限，然后直接使用，导致出错。因此，推荐第一种 bashscript-name。
+
+* source script-name或者. script-name
+source或者“.”命令的功能是：读入脚本并执行脚本，即在当前Shell中执行source或“.”加载并执行的相关脚本文件的命令及语句，而不是产生一个子Shell来执行文件中的命令。
+
+注意：这是和其他几种执行shell方式的最大不同。
+--------------------- 
+作者：timchen525 
+来源：CSDN 
+原文：https://blog.csdn.net/timchen525/article/details/76407735 
+版权声明：本文为博主原创文章，转载请附上博文链接！
 
 >**注意**：
 >
