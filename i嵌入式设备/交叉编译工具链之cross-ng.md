@@ -81,9 +81,9 @@ crosstool-NG的前端命令是ct-ng：
 在安装crosstool-NG之前，您可能需要在主机操作系统上安装其他软件包。这里提供了几个支持的操作系统和发行版的具体说明。请注意，当前配置脚本不能检测到所有依赖项;缺少其中一些可能会导致ct-ng build失败。
 
 有两种方法可以获得crosstool-NG源码：
-* [通过下载已发布的tarball](#通过下载已发布的tarball) ;
+* [通过下载已发布的源码包](#通过下载已发布的tarball) ;
 
-* 或者通过克隆当前的开发仓库。
+* 或者通过[克隆当前的开发仓库](#克隆仓库)。
 
 您还可以通过两种方式使用crosstool-NG：
 
@@ -91,7 +91,7 @@ crosstool-NG的前端命令是ct-ng：
 
 * 或者只构建它，然后从源目录运行。
 
-**<span id='通过下载已发布的tarball'>下载已发布的tarball</span>**
+**<span id='通过下载已发布的tarball'>下载已发布的源码包</span>**
 
 首先，下载源码包
 ```bash
@@ -110,14 +110,14 @@ wget http://crosstool-ng.org/download/crosstool-ng/crosstool-ng-VERSION.tar.xz
 ```bash?linenums=false
 64AA FBF2 1475 8C63 4093 45F9 7848 649B 11D6 18A4`
 ```
-公钥可在 http://pgp.surfnet.nl/ 上找到。要验证发布的tarball，您需要从密钥服务器导入密钥并下载tarball的签名，然后在同一目录中使用tarball和签名验证tarball：
+公钥可在 http://pgp.surfnet.nl/ 上找到。要验证发布的源码包，您需要从密钥服务器导入密钥并下载tarball的签名，然后在同一目录中使用tarball和签名验证tarball：
 
 ```bash
 gpg --keyserver http://pgp.surfnet.nl --recv-keys 35B871D1 11D618A4
 wget http://crosstool-ng.org/download/crosstool-ng/crosstool-ng-VERSION.tar.bz2.sig
 gpg --verify crosstool-ng-VERSION.tar.bz2.sig
 ```
-Crosstool-NG 1.19.0及更早版本为tarball提供MD5 / SHA1 / SHA512摘要。使用md5sum / sha1sum / sha512sum命令验证tarball：
+Crosstool-NG 1.19.0及更早版本为tarball提供MD5 / SHA1 / SHA512摘要。使用md5sum / sha1sum / sha512sum命令验证源码包l：
 
 ```bash
 md5sum -c crosstool-ng-VERSION.tar.bz2.md5
@@ -125,7 +125,7 @@ sha1sum -c crosstool-ng-VERSION.tar.bz2.sha1
 sha512sum -c crosstool-ng-VERSION.tar.bz2.sha512
 ```
 
-**克隆一个仓库**
+**<span id='克隆仓库'>克隆一个仓库</span>**
 如果发布的版本不够用于您的目的，您可以尝试使用当前开发的版本进行构建。为此，克隆Git存储库：
 ```bash
 git clone https://github.com/crosstool-ng/crosstool-ng
@@ -135,7 +135,35 @@ git clone https://github.com/crosstool-ng/crosstool-ng
 ./bootstrap
 ```
 
+**安装方法**
 
+首先解压缩源码包并cd进入crosstool-ng-VERSION目录。
+```
+tar -xf 源码包
+cd crosstool-ng-VERSION
+```
+>1.22.0版本由于发布脚本的一些bug，没有VERSION后缀
+
+然后按照经典配置方式: `./configure` :
+
+```bash
+./configure --prefix=/some/place #配置
+make                    #编译
+make install               #安装
+export PATH="${PATH}:/some/place/bin" #添加执行程序的搜索路径
+```
+>此处如果不指定–prefix 那么默认目录是/usr/local
+
+然后你可以退出crosstool-NG源码目录。创建一个目录作为工作区，进入该目录并运行：
+
+```bash
+mkdir work-dir
+cd work-dir
+ct-ng help
+```
+>如果使用ct-ng --help，则会进入make（1），因为cn-ng实际是一个make脚本。
+
+还安装了ct-ng实用程序的man手册页。您可以输入man ct-ng来获得一些简短的帮助。
 
 
 
