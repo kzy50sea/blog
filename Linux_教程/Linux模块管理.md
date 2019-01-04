@@ -1,6 +1,6 @@
 ---
 title: Linux模块管理
-tags: Linux教程
+tags: Linux使用教程
 ---
 
 ------
