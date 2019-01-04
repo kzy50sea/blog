@@ -1,6 +1,6 @@
 ---
 title: 磁盘管理工具diskpart
-tags: windows教程
+tags: windows
 ---
 
 ------
