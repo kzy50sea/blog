@@ -1,6 +1,6 @@
 ---
 title: vim插件——cscope
-tags: vim
+tags: vim插件
 ---
 
 ------
