@@ -1,6 +1,6 @@
 ---
 title: Linux设备树
-tags: Linux内核
+tags: Linux驱动
 ---
 
 ------
