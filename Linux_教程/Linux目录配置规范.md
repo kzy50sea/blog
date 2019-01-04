@@ -1,6 +1,6 @@
 ---
 title: Linux目录配置规范
-tags: Linux教程
+tags: Linux使用教程
 
 ---
 
