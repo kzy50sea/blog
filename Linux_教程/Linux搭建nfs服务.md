@@ -1,6 +1,6 @@
 ---
 title: Linux搭建nfs服务
-tags: Linux教程
+tags: Linux使用教程
 ---
 
 ------
