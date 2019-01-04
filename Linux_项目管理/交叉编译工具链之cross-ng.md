@@ -1,6 +1,6 @@
 ---
 title: 交叉编译工具链之cross-ng
-tags: 嵌入式设备
+tags: Linux项目管理
 ---
 
 ------

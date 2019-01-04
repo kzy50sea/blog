@@ -1,6 +1,6 @@
 ---
 title:  GNU make与Makefile教程
-tags: Linux教程
+tags: Linux项目管理
 ---
 
 ------
