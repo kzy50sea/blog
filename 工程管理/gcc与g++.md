@@ -1,6 +1,6 @@
 ---
 title: gcc与g++
-tags: C_or_C++
+tags: 工程管理
 ---
 
 ------
