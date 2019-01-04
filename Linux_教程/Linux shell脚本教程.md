@@ -1,6 +1,6 @@
 ---
 title: Linux shell脚本教程 
-tags: Linux教程
+tags: Linux使用教程
 ---
 
 ------
