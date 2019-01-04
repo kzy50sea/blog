@@ -188,7 +188,7 @@ tags: vim
 ## 5.6 环境变量
 
 |环境变量|描述|
-|--|--|
+|:--|:--|
 |CSCOPE_EDITOR|覆盖EDITOR和VIEWER变量。在cscope中使用不同于EDITOR/VIEWER变量指定的编辑器
 |CSCOPE_LINEFLAG|编辑器行号的格式。cscope默认通过`editor +N file`来调用编辑器，`N`是编辑器应跳转到的行号。emacs和vim都使用此格式。如果您的编辑器需要不同的方式，请在此变量中指定此项，并使用“％s”作为行号的占位符。例如：`editor -＃103 file`，应将此变量设置为` -＃％s`。
 |CSCOPE_LINEFLAG<br />_AFTER_FILE|如果需要在要编辑的文件名后使用行号选项调用编辑器，请将此变量设置为“yes”。例如：`editor file +＃number`
@@ -205,7 +205,7 @@ tags: vim
 
 ## 5.7 相关文件
 |文件|描述|
-|--|--|
+|:--|:--|
 |cscope.files|包含-I，-p，-q和-T选项的默认文件以及源文件列表（由-i选项覆盖）。
 |cscope.out|交叉索引数据库（由-f选项覆盖），如果无法在当前目录中创建，则放在主目录中。
 |cscope.in.out、cscope.po.out|默认的反向索引数据库（由-q选项建立）。如果使用-f选项重命名数据库文件（cscope.out）， 则会在加上.in和.po后缀
