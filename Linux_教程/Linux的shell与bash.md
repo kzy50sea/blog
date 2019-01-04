@@ -1,6 +1,6 @@
 ---
 title: Linux的shell与bash
-tags: Linux教程
+tags: Linux使用教程
 ---
 
 ------
