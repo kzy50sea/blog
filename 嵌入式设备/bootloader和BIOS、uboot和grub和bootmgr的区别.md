@@ -1,5 +1,5 @@
 ---
-title: bootloader和BIOS、uboot和grub和bootmgr的区别
+title: bootloader和BIOS、uboot和grub、bootmgr的区别
 tags: 嵌入式设备
 ---
 
