@@ -1,6 +1,6 @@
 ---
 title: Linxu内核镜像的格式与产生过程
-tags: Linux内核
+tags: Linux内核构建系统
 ---
 
 ------
