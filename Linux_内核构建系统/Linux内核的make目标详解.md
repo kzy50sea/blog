@@ -1,6 +1,6 @@
 ---
 title: Linux内核的make目标详解
-tags: Linux内核
+tags: Linux内核构建系统
 ---
 
 
