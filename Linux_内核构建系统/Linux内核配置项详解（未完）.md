@@ -1,6 +1,6 @@
 ---
 title: Linux内核配置项详解（未完） 
-tags: Linux内核
+tags: Linux内核构建系统
 ---
 
 ------
