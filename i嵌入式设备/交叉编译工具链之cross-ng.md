@@ -79,19 +79,12 @@ crosstool-NG的前端命令是ct-ng：
 # 2  安装crosstool-NG
 
 在安装crosstool-NG之前，您可能需要在主机操作系统上安装其他软件包。这里提供了几个支持的操作系统和发行版的具体说明。请注意，当前配置脚本不能检测到所有依赖项;缺少其中一些可能会导致ct-ng build失败。
+## 2.1 获取源码
+有两种方法可以获得crosstool-NG源码。
+* 下载已发布的源码包
+* 克隆仓库
 
-有两种方法可以获得crosstool-NG源码：
-* [通过下载已发布的源码包](#通过下载已发布的tarball) ;
-
-* 或者通过[克隆当前的开发仓库](#克隆仓库)。
-
-您还可以通过两种方式使用crosstool-NG：
-
-* 构建并安装它，然后摆脱源码，就像像大多数程序那样；
-
-* 或者只构建它，然后从源目录运行。
-
-**<span id='通过下载已发布的tarball'>下载已发布的源码包</span>**
+### 2.1.1  下载源码包
 
 首先，下载源码包
 ```bash
@@ -108,16 +101,16 @@ wget http://crosstool-ng.org/download/crosstool-ng/crosstool-ng-VERSION.tar.xz
 ```
 从1.23.0开始，发行时用Alexey Neyman的PGP密钥签署。指纹是：
 ```bash?linenums=false
-64AA FBF2 1475 8C63 4093 45F9 7848 649B 11D6 18A4`
+64AA FBF2 1475 8C63 4093 45F9 7848 649B 11D6 18A4
 ```
-公钥可在 http://pgp.surfnet.nl/ 上找到。要验证发布的源码包，您需要从密钥服务器导入密钥并下载tarball的签名，然后在同一目录中使用tarball和签名验证tarball：
+公钥可在 http://pgp.surfnet.nl/ 上找到。要验证发布的源码包，您需要从密钥服务器导入密钥并下载tarball的签名，然后在同一目录中验证：
 
 ```bash
 gpg --keyserver http://pgp.surfnet.nl --recv-keys 35B871D1 11D618A4
 wget http://crosstool-ng.org/download/crosstool-ng/crosstool-ng-VERSION.tar.bz2.sig
 gpg --verify crosstool-ng-VERSION.tar.bz2.sig
 ```
-Crosstool-NG 1.19.0及更早版本为tarball提供MD5 / SHA1 / SHA512摘要。使用md5sum / sha1sum / sha512sum命令验证源码包l：
+Crosstool-NG 1.19.0及更早版本为tarball提供MD5 / SHA1 / SHA512摘要。使用md5sum / sha1sum / sha512sum命令验证源码包：
 
 ```bash
 md5sum -c crosstool-ng-VERSION.tar.bz2.md5
@@ -125,7 +118,9 @@ sha1sum -c crosstool-ng-VERSION.tar.bz2.sha1
 sha512sum -c crosstool-ng-VERSION.tar.bz2.sha512
 ```
 
-**<span id='克隆仓库'>克隆一个仓库</span>**
+### 2.1.2 克隆仓库
+
+
 如果发布的版本不够用于您的目的，您可以尝试使用当前开发的版本进行构建。为此，克隆Git存储库：
 ```bash
 git clone https://github.com/crosstool-ng/crosstool-ng
@@ -135,7 +130,15 @@ git clone https://github.com/crosstool-ng/crosstool-ng
 ./bootstrap
 ```
 
-**安装方法**
+## 2.2 使用crosstool-NG
+您还可以通过两种方式使用crosstool-NG：
+
+* 构建并安装它 ，然后摆脱源码，就像像大多数程序那样；
+* 或者只构建它，然后从源目录运行。
+
+
+
+### 2.2.1 构建并安装
 
 首先解压缩源码包并cd进入crosstool-ng-VERSION目录。
 ```
@@ -165,10 +168,43 @@ ct-ng help
 
 还安装了ct-ng实用程序的man手册页。您可以输入man ct-ng来获得一些简短的帮助。
 
+### 2.2.2 构建不安装
+
+```bash
+./configure --enable-local
+make
+```
+现在，不要删除crosstool-NG源码目录。他们需要用于运行crosstool-NG！留在该目录中，然后运行
+```bash
+./ct-ng help
+```
+
+## 2.3 打包准备 
+如果您计划打包crosstool-NG，那么肯定不希望在根文件系统中安装它。crosstool-NG的安装过程支持DESTDIR变量:
+```
+./configure --prefix=/usr
+make
+make DESTDIR=/packaging/place install
+```
+## 2.4 shell补全
+crosstool-NG附带了一个shell脚本片段，它定义了与bash兼容的补全。该shell片段目前没有自动安装。
+要安装shell脚本片段，您有两个方式:
+
+* 为所有用户安装：`cp ct-ng.comp  /etc/bash_completion.d/`
+* 为特定用户安装：`cp ct-ng.comp ${HOME}/`然后，在`${HOME}/.bashrc`添加`source ${HOME}/ct-ng.comp`
 
 
 
+## 2.5 贡献的代码
 
+有些人提供的代码由于各种原因无法合并。此代码在contrib /子目录中以lzma压缩补丁的形式提供。在安装之前，使用以下方式将这些补丁应用于crosstool-NG的源：
+```
+lzcat contrib/foobar.patch.lzma | patch -p1
+```
+
+无法保证特定的补丁适用于当前版本的crosstool-ng，或者它将完全起作用。使用这些补丁需要您自担风险。
+
+# 3 配置cross-NG
 
 
 
