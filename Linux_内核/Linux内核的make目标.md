@@ -1,5 +1,5 @@
 ---
-title: Linux内核的make目标
+title: Linux内核的make目标详解
 tags: Linux内核
 ---
 
