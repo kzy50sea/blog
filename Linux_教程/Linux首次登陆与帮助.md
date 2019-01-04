@@ -1,6 +1,6 @@
 ---
 title: Linux首次登陆与帮助
-tags: Linux教程
+tags: Linux使用教程
 ---
 
 ------
