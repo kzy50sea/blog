@@ -1,6 +1,6 @@
 ---
 title: windows引导过程以及多系统引导原理
-tags: 其它
+tags: windows
 ---
 
 ------
