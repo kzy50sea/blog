@@ -1,6 +1,6 @@
 ---
 title: kobject结构体分析
-tags: Linux内核
+tags: Linux驱动
 ---
 
 ------
