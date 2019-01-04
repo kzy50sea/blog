@@ -12,38 +12,69 @@ tags: Linux教程
 <style>table{word-break:initial;}</style>
 
 
-# 1 shell的概念
-&emsp;&emsp;shell就是向用户提供操作系统的接口。
+# 1 shell的概念与分类
+shell就是向用户提供操作系统的接口。类似DOS下的cmd.exe。
 
-&emsp;&emsp;系统支持的shell存放在`/etc/shells`文件中。
+系统支持的shell存放在`/etc/shells`文件中。
+## 1.1 shell分类
+不同的shell解释器具备不同的功能。
 
-&emsp;&emsp;Bash shell的特点：
+* sh
+sh 的全称是 Bourne shell，由 AT&T 公司的 Steve Bourne开发，为了纪念他，就用他的名字命名了。sh 是 UNIX 上的标准 shell，很多 UNIX 版本都配有 sh。sh 是第一个流行的 Shell。在Linux中已经成为其它shell解释器的符号链接。
+
+* bash
+由 GNU 组织开发，大多数Linux系统默认使用的shell，保持了对 sh 的兼容性，支持c shell 和 korn shell 的特色功能，是各种 Linux 发行版默认配置的 shell。bash 兼容 sh 意味着，针对 sh 编写的 Shell 代码可以不加修改地在 bash 中运行。尽管如此，bash 和 sh 还是有一些不同之处：
+
+>一方面，bash 扩展了一些命令和参数；
+另一方面，bash 并不完全和 sh 兼容，它们有些行为并不一致，但在大多数企业运维的情况下区别不大，特殊场景可以使用 bash 代替 sh。
+
+* dash
+GNU/Linux操作系统中的 /bin/sh 本是 bash (Bourne-Again Shell) 的符号链接，但鉴于 bash 过于复杂，有人把 bash 从 NetBSD 移植到 Linux 并更名为 dash (Debian Almquist Shell)，并建议将 /bin/sh 指向它，以获得更快的脚本执行速度。Dash Shell 比 Bash Shell 小的多，符合POSIX标准。Debian和Ubuntu中，/bin/sh默认已经指向dash，这是一个不同于bash的shell，它主要是为了执行脚本而出现，而不是交互，它速度更快，但功能相比bash要少很多，语法严格遵守POSIX标准。可以使用sudo dpkg-reconfigure dash来禁用dash。
+
+* csh
+C shell 使用的是“类C”语法，csh是具有C语言风格的一种shell，由bill joy开发，其内部命令有52个，较为庞大。目前使用的并不多，已经被/bin/tcsh所取代。
+
+* ksh
+Korn shell 的语法与Bourne shell相同，同时具备了C shell的易用特点。许多安装脚本都使用ksh,ksh 有42条内部命令，与bash相比有一定的限制性。
+
+* tcsh
+tcsh是csh的增强版，与C shell完全兼容。
+
+* zsh
+目前Linux里最庞大的一种shell：zsh。它有84个内部命令，使用起来也比较复杂。一般情况下，不会使用
+该shell。
+
+
+
+## 1.2 Bash shell的特点：
  
-> * 命令历史——`~/.bash_history`记录的是此次登入以前所执行过的指令， 而此次登入所执行的指令都被暂存在内存中，当你成功的注销系统后，该指令记忆才会记录到`~/.bash_history `当中。
+ * 命令历史——`~/.bash_history`记录的是此次登入以前所执行过的指令， 而此次登入所执行的指令都被暂存在内存中，当你成功的注销系统后，该指令记忆才会记录到`~/.bash_history `当中。
  * TAB键命令与文件补全
-  * [Tab] 接在一串指令的第一个字的后面，则为命令补全；
-  * [Tab] 接在一串指令的第二个字以后时，则为『文件补齐』！
+   * [Tab] 接在一串指令的第一个字的后面，则为命令补全；
+   * [Tab] 接在一串指令的第二个字以后时，则为文件补齐！
 * 命令别名
-  * alias new_commad='old_commad'——用新命令名取代原命令名
-  * `alias` ——查看当前命令别名。
+   * alias new_commad='old_commad'——用新命令名取代原命令名
+   * `alias` ——查看当前命令别名。
 * 工作控制、前景背景控制
 * shell脚本
 * 支持通配符
 
 
 
-#2 shell环境配置
-##2.1 欢迎信息与登陆提示
-&emsp;&emsp;本地登陆时欢迎信息记录在`/etc/issue`中，telnet登陆时欢迎信息记录在`/etc/issue.net`中。支持特殊代码。
-&emsp;&emsp;登陆后的提示信息记录在`/etc/motd`中。不支持特殊代码。
+# 2 shell环境配置
+## 2.1 欢迎信息与登陆提示
+本地登陆时欢迎信息记录在`/etc/issue`中，telnet登陆时欢迎信息记录在`/etc/issue.net`中。支持特殊代码。
+
+登陆后的提示信息记录在`/etc/motd`中。不支持特殊代码。
+
 |特殊代码|含义|
-|--|--|
-|\4或\4{interface}|将IPv4地址插入指定的网络接口（例如\ 4 {eth0}），如果未指定接口参数，则选择第一个完全配置的接口。如果未找到任何已配置的接口，则返回到机器主机名的IP地址。
-|\6或\6{interface}|与\ 4相同，但对于IPv6。
+|:--|:--|
+|\4或\4{interface}|将IPv4地址插入指定的网络接口（例如\4 {eth0}），如果未指定接口参数，则选择第一个完全配置的接口。如果未找到任何已配置的接口，则返回到机器主机名的IP地址。
+|\6或\6{interface}|与\4相同，但对于IPv6。
 |\b|插入当前行的波特率。
 |\d|插入当前日期。
 |\s|插入系统名称，操作系统的名称。与'uname -s'相同。
-|\S或\S {VARIABLE}|从/etc/ os-release插入VARIABLE数据，如果文件不存在，回退到/usr/lib/ os-release。如果未指定VARIABLE参数，则使用文件中的PRETTY_NAME或系统名称
+|\S或\S {VARIABLE}|从/etc/os-release插入VARIABLE数据，如果文件不存在，回退到/usr/lib/ os-release。如果未指定VARIABLE参数，则使用文件中的PRETTY_NAME或系统名称
 |\l|插入当前tty的名称。
 |\m|插入机器的架构标识符。与`uname -m'相同。
 |\n|插入机器的节点名称，也称为主机名。与`uname -n'相同。
@@ -58,7 +89,7 @@ tags: Linux教程
 
 ## 2.2 配置文件载入过程
 * login shell——取得bash时需要完整的登入流程。login shell 只读取两个配置文件：
- * `/etc/profile`——系统整体设定，每个使用者登入取得bash 时一定会读取该文件！
+  * `/etc/profile`——系统整体设定，每个使用者登入取得bash 时一定会读取该文件！
      * 设置一些环境变量
          * PATH：会依据 UID 决定 PATH 变量要不要含有 sbin 的系统指令目录；
          * MAIL：依据账号设定好使用者的 mailbox 到 `/var/spool/mail/`账号名；
@@ -70,24 +101,24 @@ tags: Linux教程
      * 读取外部设定文件 `/etc/profile.d/*.sh`——只要在 `/etc/profile.d/ `这个目录内且扩展名为 .sh ，使用者能够具有 r 的权限， 那么该文件就会被 `/etc/profile` 调用进来。在 CentOS 7.x 中，这个目录底下的文件规范了 bash 操作接口的颜色、 语系、ll 与 ls 指令的命令别名、vi的命令别名、which的命令别名等。如果你需要帮所有使用者设定一些共享的命令别名时， 可以在这个目录底下自行建立扩展名为 .sh 的文件，并将所需要的数据写入即可！
          * `/etc/locale.conf`——这个文件是由 `/etc/profile.d/lang.sh` 调用进来的！决定bash预设使用何种语系的配置文件！文件里最重要的就是LANG/LC_ALL 这变量的设定。
          * `/usr/share/bash-completion/completions/*`—— [tab]进行指令的选项/参数补齐功能,就是从这个目录里面找到相对应的指令来处理！其实这个目录底下的内容是由`/etc/profile.d/bash_completion.sh` 这个文件载入！
- * `~/.bash_profile`或`~/.bash_login`或`~/.profile`——属于使用者个人设定。login shell 设定只会读取上面三个文件的其中一个，而读取的顺序则是依照上面的顺序。另外，图形模式登录时，此文件将被读取，即使存在`~/.bash_profile`和`~/.bash_login`。这三个文件的功能在于：
+  * `~/.bash_profile`或`~/.bash_login`或`~/.profile`——属于使用者个人设定。login shell 设定只会读取上面三个文件的其中一个，而读取的顺序则是依照上面的顺序。另外，图形模式登录时，此文件将被读取，即使存在`~/.bash_profile`和`~/.bash_login`。这三个文件的功能在于：
      * 将`$HOME/.local/bin`和`$HOME/bin`添加到环境变量PATH。
      * 读取配置文件`~/.bashrc`。
 
 * non-login shell——取得bash接口的方法不需要重复登入的举动。non-login shell只会读取`/etc/bashrc`（redhat）或`/etc/bash.bashrc`（debian）和`~/.bashrc`。  作用
- * 依据不同的 UID 规范出 umask 的值；
- * 依据不同的 UID 规范出提示字符 (就是 PS1 变量)；
- * 设置命令别名
- * 设置环境变量HISTFILESIZE与HISTSIZE
+  * 依据不同的 UID 规范出 umask 的值；
+  * 依据不同的 UID 规范出提示字符 (就是 PS1 变量)；
+  * 设置命令别名
+  * 设置环境变量HISTFILESIZE与HISTSIZE
 
 * 其它配置文件
- * `/etc/man_db.conf`——这的文件的规范了使用 man 的时候， man page 的路径到哪里去寻找！，如果以 tarball 的方式来安装，man page 可能会放置在 /usr/local/softpackage/man ，这个时候就得以手动的方式将该路径加到 /etc/man_db.conf ，否则使用 man 的时候就会找不到相关的说明档。
- * `~/.bash_history`——该文件用于记录历史命令。这个文件能够记录几笔数据与 HISTFILESIZE 有关。每次登入bash后，bash会先读取这个文件，将所有的历史指令读入内存。
- * `~/.bash_logout`——这个文件则记录了当我注销bash后，系统再帮我做完什么动作后才离开的意思。 
+  * `/etc/man_db.conf`——这的文件的规范了使用 man 的时候， man page 的路径到哪里去寻找！，如果以 tarball 的方式来安装，man page 可能会放置在 /usr/local/softpackage/man ，这个时候就得以手动的方式将该路径加到 /etc/man_db.conf ，否则使用 man 的时候就会找不到相关的说明档。
+  * `~/.bash_history`——该文件用于记录历史命令。这个文件能够记录几笔数据与 HISTFILESIZE 有关。每次登入bash后，bash会先读取这个文件，将所有的历史指令读入内存。
+  * `~/.bash_logout`——这个文件则记录了当我注销bash后，系统再帮我做完什么动作后才离开的意思。 
 
 
 
-#3 环境变量PS1语法
+# 3 环境变量PS1语法
 
 命令提示符的格式和颜色由环境变量PS1设置。三种设置命令提示符的方式：
 
@@ -95,7 +126,7 @@ tags: Linux教程
 * 在全局配置文件`/etc/profile`中添加 `export PS1="xxxx"` ，每个用户使用相同的提示符。
 * 在用户配置文件`~/.bashrc`中添加中添加 `export PS1="xxxx"` ，每个用户使用不同的提示符。
 
-##3.1 颜色与特殊显示
+## 3.1 颜色与特殊显示
 |前景	|背景 	|颜色|前景	|背景 	|颜色|
 |:--:|:--:|:--:|:--:|:--:|:--:|
 |30|40 |黑色|34 |44 |蓝色
@@ -104,13 +135,13 @@ tags: Linux教程
 |33 |43 |黄色|37 |47| 白色 
 
  |代码|描述|代码|描述|代码|描述|
- |:--:|:--:|:--:|:--:|:--:|:--:|
+ |:--:|:--|:--:|:--|:--:|:--|
 | 0 |OFF关闭所有显示效果 | 4 |显示下划线 |7 |反白显示 
 |1 |高亮显示 |5 |闪烁显示 |8 |颜色不可见 
 
-##3.2 特殊字符
+## 3.2 特殊字符
 |序列	|意义|序列	|意义|
-|:--:|--|:--:|--|
+|:--:|:--|:--:|:--|
 |`\`|	ASCII转义字符（也可以键入 \033）|`\\`|	反斜杠
 |`\xxx`|一个用三位数xxx表示的 ASCII 字符|`\a`|	ASCII响铃字符（\007）
 |`\!`|	当前命令在历史缓冲区中的位置|`\#`|	 命令编号（会在每次输入命令时时累加）
@@ -126,7 +157,7 @@ tags: Linux教程
 |`\@`|	带有 am/pm的 12小时制时间|`\d`|	"Wed Sep 06"格式的日期
 	
  
-##3.3 设置颜色
+## 3.3 设置颜色
 ```
 \033[特殊显示;前景;背景m
 #或
@@ -141,14 +172,14 @@ tags: Linux教程
 
 
 
-#4 命令搜寻顺序
+# 4 命令搜寻顺序
 * 先查询命令别名，如果没找到;
 * 再到shell内建命令中查询，如果没找到；
 * 然后到环境变量PATH中查询；
 
 # 5 通配符与特殊符号
 |通配符|意义|
-|--|--|
+|:--|:--|
 |*| 代表0 个到无穷多个任意字符
 |?|代表一个任意字符
 |[abcd]| 代表 a, b,c, d 这四个任何一个字符
@@ -156,7 +187,7 @@ tags: Linux教程
 | [^abc]| 代表 除a, b, c 以外的任意一个的其他字符。
 
 |特殊符号| 内容|
-|:--:|--|
+|:--:|:--|
 |# | 注释符号，在后的数据均不执行
 |\ | 转义符号：将『特殊字符或通配符』还原成一般字符
 |\|| 管道，将前一个命令的输出作为后一个命令的输入；
@@ -175,9 +206,9 @@ tags: Linux教程
 |{ } |在中间为命令区块的组合！
 |&emsp;&emsp;&emsp;&emsp;||
 
-#6  快速编辑命令与快捷键
+# 6  快速编辑命令与快捷键
 |按键|作用
-|--|--|
+|:--|:--|
 |\enter |命令续行
 |!n|执行命令历史的第几个命令|
 |!command|执行最近以command开头的命令|
@@ -194,17 +225,19 @@ tags: Linux教程
 |Ctrl + e |移动到行尾|
 |Ctrl + Z |『暂停』目前的命令|
 
-#7  命令执行的判断依据
+# 7  命令执行的判断依据
 |命令|作用|
-|--|--|
+|:--|:--|
 |\enter |命令续行|
 |cmd1;cmd2|连续执行多个命令|
 |cmd1&&cmd2|若 cmd1 执行完毕且正确执行( \$?=0)，则开始执行 cmd2。若 cmd1 执行完毕且为错误 (\$?≠0)，则 cmd2 不执行。$?表示上个命令执行返回值，0表示成功，非0表示失败。
 |cmd1\|\|cmd2|若 cmd1 执行完毕且正确执行(\$?=0)，则不执行 cmd2。若 cmd1 执行完毕且为错误 (\$?≠0)，则 cmd2 执行。
 
-#8 重定向
-&emsp;&emsp;特殊文件`/dev/null`。任何输入该文件的内容都将被丢弃。
-&emsp;&emsp;重定向：就是将标准输入（fd=0）、标准输出（fd=1）、标准出错输出（fd=2）重定向到文键或者装置。
+# 8 重定向
+特殊文件`/dev/null`。任何输入该文件的内容都将被丢弃。
+
+重定向：就是将标准输入（fd=0）、标准输出（fd=1）、标准出错输出（fd=2）重定向到文键或者装置。
+
 |命令|	说明|
 |--|--|
 |command > file|将标准输出重定向到文件或设备。
@@ -219,19 +252,19 @@ tags: Linux教程
 |fd>&-|关闭输出fd|
 |fd<&-|关闭输入fd|
 
-#9 管道与命令替换
+# 9 管道与命令替换
 |命令|	说明|
 |--|--|
 |cmd1\|cmd2|将cmd1正确执行时的输出作为cmd2的输入
 |cmd1 \`cmd2` 或者 cmd1 $(cmd2)|将cmd2的正确执行时的输出作为cmd1的输入|
 
 
-#10 shell相关命令
-##10.1 查询指令类别——`type`
+# 10 shell相关命令
+## 10.1 查询指令类别——`type`
 
 &emsp;&emsp;**命令**：type [-tpa] name
 &emsp;&emsp;**描述**：查询指令是bash内建指令还是外部指令或者命令别名。
-> |常用选项|作用|
+ |常用选项|作用|
 |:--|--|
 |-t |当加入 -t 参数时，type 会将 name 以底下这些字眼显示出他的意义：file ：表示为外部指令；alias ：表示该指令为命令别名所设定的名称；builtin ：表示该指令为 bash 内建的指令功能；
 |-p |     如果后面接的 name 为外部指令时，才会显示完整文件名；
@@ -241,30 +274,30 @@ tags: Linux教程
 
 
 
-##10.2 命令别名设置与取消——`alias`、`unalias`
+## 10.2 命令别名——`alias`、`unalias`
 
 &emsp;&emsp;**命令**：alias [newcommand=oldcommand]
 &emsp;&emsp;**描述**：查询或者新建命令别名。
-> |常用选项|作用|
+|常用选项|作用|
 |:--|--|
 |**更多信息**|<http://linux.51yip.com/search/alias> 和 man 手册|
 |&emsp;&emsp;&emsp;&emsp;|<http://man.linuxde.net/alias>|
 
 &emsp;&emsp;**命令**：unalias [-a] command
 &emsp;&emsp;**描述**：取消命令别名。
-> |常用选项|作用|
+|常用选项|作用|
 |:--|--|
 |-a|取消所有的命令别名|
 |**更多信息**|<http://linux.51yip.com/search/unalias> 和 man 手册|
 |&emsp;&emsp;&emsp;&emsp;|<http://man.linuxde.net/unalias>|
 
-##10.3 命令历史——`history`
+## 10.3 命令历史——`history`
 &emsp;&emsp;**命令**：history n
 &emsp;&emsp;&emsp;&emsp;&emsp;history [-c]
 &emsp;&emsp;&emsp;&emsp;&emsp;history [-r|a|w] histfiles
 &emsp;&emsp;**描述**：查看、写入、新增命令历史。
-> |常用选项|作用|
-|:--|--|
+|常用选项|作用|
+|:--|:--|
 |n |数字，意思是『要列出最近的 n 笔命令行表』的意思！
 |-c|将目前的 shell 中的所有 history 内容全部消除
 |-a|将目前新增的 history 指令新增入 histfiles 中，若没有加 histfiles ，则预设写入 ~/.bash_history
@@ -274,10 +307,10 @@ tags: Linux教程
 |&emsp;&emsp;&emsp;&emsp;|<http://man.linuxde.net/history>|
 
 
-###10.4 配置文件载入——`source`
+### 10.4 shell文件读取——`source`
 &emsp;&emsp;**命令**：source config_file
 &emsp;&emsp;**描述**：载入配置.
-> |常用选项|作用|
+|常用选项|作用|
 |:--|--|
 |**更多信息**|<http://linux.51yip.com/search/source> 和 man 手册|
 |&emsp;&emsp;&emsp;&emsp;|<http://man.linuxde.net/source>|
@@ -287,14 +320,14 @@ tags: Linux教程
 &emsp;&emsp;**命令**：stty -ag
 &emsp;&emsp;&emsp;&emsp;&emsp;stty option=value
 &emsp;&emsp;**描述**：打印终端机设置或设置终端机。^表示CTRL键。
-> |常用选项|作用|
+|常用选项|作用|
 |:--|--|
 |-a|以人类可读格式|
 |-g|以tty格式|
 |**更多信息**|<http://linux.51yip.com/search/stty> 和 man 手册|
 |&emsp;&emsp;&emsp;&emsp;|<http://man.linuxde.net/stty>|
 
->|参数|意义|
+|参数|意义|
 |--|--|
 |  intr | 送出一个 interrupt (中断) 的讯号给目前正在 run 的程序 (就是终止啰！)；
 | quit | 送出一个 quit 的讯号给目前正在 run 的程序；
@@ -307,7 +340,7 @@ tags: Linux教程
 
 &emsp;&emsp;**命令**：set [-uvCHhmB]
 &emsp;&emsp;**描述**：设置命令输入或输出环境。`echo $-` 可以查看所有的set设置。
-> |常用选项|作用|
+ |常用选项|作用|
 |:--|--|
 |-u |默认不启用。若启用后，当使用未设定变量时，会显示错误讯息；
 |-v |默认不启用。若启用后，在讯息被输出前，会先显示讯息的原始内容；
