@@ -21,14 +21,14 @@ tags: Linux使用教程
 |符号|意义|
 |:----|:--|
 |.| 代表此层目录
-|..| 代表上一层目录
+|  \.\. | 代表上一层目录
 |-| 代表前一个工作目录
 |~ |代表『目前用户身份』所在的家目录
 |~account |代表 account 这个用户的家目录(account 是个账号名称)
 
 ## 1.3 查看目录项——`ls`
-&emsp;&emsp;**命令**： ls [OPTION]... [FILE]...
-&emsp;&emsp;**描述**：列出有关FILE的信息（默认为当前目录）。 
+**命令**： ls [OPTION]... [FILE]...
+**描述**：列出有关FILE的信息（默认为当前目录）。 
 
 |常用选项|作用|
 |:----|:--|
@@ -49,12 +49,12 @@ tags: Linux使用教程
 |--full-time |以完整时间模式 (包含年、月、日、时、分) 输出
 |--time=TIME|TIME为atime或ctime，输出atime或ctime,默认为mtime
 |**更多信息**|<http://linux.51yip.com/search/ls> 和 man 手册|
-|&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;|<http://man.linuxde.net/ls|
+|&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;|<http://man.linuxde.net/ls>|
 
 
 ## 1.4 改变当前目录——`cd`
-&emsp;&emsp;**命令**：cd [相对路径 或 绝对路径] 目录名
-&emsp;&emsp;**描述**：改变工作目录。将当前工作目录改变到指定的目录下。
+**命令**：cd [相对路径 或 绝对路径] 目录名
+**描述**：改变工作目录。将当前工作目录改变到指定的目录下。
 
 |常用选项|作用|
 |:----|:--|
@@ -62,41 +62,42 @@ tags: Linux使用教程
 |**更多信息**|<http://linux.51yip.com/search/cd> 和 man 手册|
 |&emsp;&emsp;&emsp;&emsp;|<http://man.linuxde.net/cd>|
 
-##1.5 查看当前工作目录——`pwd`
-&emsp;&emsp;**命令**：pwd [options]
-&emsp;&emsp;**描述**：显示当前工作目录。
->|常用选项|作用|
+## 1.5 查看当前工作目录——`pwd`
+**命令**：pwd [options]
+**描述**：显示当前工作目录。
+|常用选项|作用|
 |:----|:--|
 |-P|以符号链接所指的目录代替符号链接|
 |**更多信息**|<http://linux.51yip.com/search/pwd> 和 man 手册|
 |&emsp;&emsp;&emsp;&emsp;|<http://man.linuxde.net/pwd>|
 
-##1.6 新建空目录——`mkdir`
-&emsp;&emsp;**命令**： mkdir [OPTION]... DIRECTORY...
-&emsp;&emsp;**描述**：如果目录不存在就创建目录。 
->|常用选项|作用|
+## 1.6 新建空目录——`mkdir`
+**命令**： mkdir [OPTION]... DIRECTORY...
+**描述**：如果目录不存在就创建目录。 
+|常用选项|作用|
 |:----|:--|
 |-m MODE|按给定权限(数字表示)创建目录
 |-p|根据需要创建路径上的所有目录
 |**更多信息**|<http://linux.51yip.com/search/mkdir> 和 man 手册|
-|&emsp;&emsp;&emsp;&emsp;|<http://man.linuxde.net/mkdir>|
+|&emsp;&emsp;|<http://man.linuxde.net/mkdir>|
 
 ## 1.7 删除空目录——`rmdir`
-&emsp;&emsp;**命令**：rmdir [OPTION]... DIRECTORY...
-&emsp;&emsp;**描述**：移除空文件夹。
->|常用选项|作用|
+**命令**：rmdir [OPTION]... DIRECTORY...
+**描述**：移除空文件夹。
+|常用选项|作用|
 |:----|:--|
 |-p|删除路径上的所有空目录
 |**更多信息**|<http://linux.51yip.com/search/rmdir> 和 man 手册|
 |&emsp;&emsp;&emsp;&emsp;|<http://man.linuxde.net/rmdir>|
 
 ## 1.8 拷贝目录或文件——`cp`
-&emsp;&emsp;**命令**：cp [OPTION]... [-T] SOURCE DEST
-&emsp;&emsp;&emsp;&emsp;&emsp;cp [OPTION]... SOURCE... DIRECTORY
-&emsp;&emsp;&emsp;&emsp;&emsp;cp [OPTION]... -t DIRECTORY SOURCE...
-&emsp;&emsp;**描述**：拷贝SOURCE到DEST，或多个SOURCE到DIRECTORY。长选项必须的参数短选项也必须。
->|短选项|长选项|描述（V8.25）|
-|:----|:--|
+**命令**：cp [OPTION]... [-T] SOURCE DEST
+&emsp;&emsp;&emsp;cp [OPTION]... SOURCE... DIRECTORY
+&emsp;&emsp;&emsp;cp [OPTION]... -t DIRECTORY SOURCE...
+**描述**：拷贝SOURCE到DEST，或多个SOURCE到DIRECTORY。长选项必须的参数短选项也必须。
+
+|短选项|长选项|描述（V8.25）|
+|:----|:--|:--|
 |-a| --archive|等效于 -dR --preserve=all
 ||--attributes-only|只拷贝属性|
 ||--backup[=CONTROL]|设置备份方式，可为none、numbered、existing、simple
@@ -132,9 +133,9 @@ tags: Linux使用教程
 |&emsp;&emsp;&emsp;|
 
 ## 1.9 删除目录或文件——`rm`
-&emsp;&emsp;**命令**：rm [OPTION]... [FILE]...
-&emsp;&emsp;**描述**：rm删除每个指定的文件。默认情况下，它不会删除目录。
->|常用选项|作用|
+**命令**：rm [OPTION]... [FILE]...
+**描述**：rm删除每个指定的文件。默认情况下，它不会删除目录。
+|常用选项|作用|
 |:----|:--|
 |-f, --force|强制删除，忽略不存在的文件，从不给出提示。
 |-i| 交互模式删除文件，删除文件前给出提示。
@@ -144,29 +145,29 @@ tags: Linux使用教程
 |**更多信息**|<http://linux.51yip.com/search/rm> 和 man 手册|
 |&emsp;&emsp;&emsp;&emsp;&emsp;|<http://man.linuxde.net/rm>|
 
-##1.10 新建文件
+## 1.10 新建文件
 ### 1.10.1 `touch`
-&emsp;&emsp;**命令**：touch [OPTION]... [FILE]...
-&emsp;&emsp;**描述**：如果文件不存在则创建文件。
->|常用选项|无|
+**命令**：touch [OPTION]... [FILE]...
+**描述**：如果文件不存在则创建文件。
+|常用选项|无|
 |:----|:--|
 |**更多信息**|<http://linux.51yip.com/search/touch> 和 man 手册|
 |&emsp;&emsp;&emsp;&emsp;|<http://man.linuxde.net/touch>| 
 
 ### 1.10.2 `vim`
-&emsp;&emsp;**命令**：vim filename
-&emsp;&emsp;**描述**：如果文件不存在则创建文件。
->|常用选项|无|
+**命令**：vim filename
+**描述**：如果文件不存在则创建文件。
+|常用选项|无|
 |:----|:--|
 |**更多信息**|<http://linux.51yip.com/search/vim> 和 man 手册|
 |&emsp;&emsp;&emsp;&emsp;|<http://man.linuxde.net/vim>| 
 
 ## 1.11 移动目录或文件——`mv`
-&emsp;&emsp;**命令**：mv [OPTION]... [-T] SOURCE DEST
-&emsp;&emsp;&emsp;&emsp;&emsp;mv [OPTION]... SOURCE... DIRECTORY
-&emsp;&emsp;&emsp;&emsp;&emsp;mv [OPTION]... -t DIRECTORY SOURCE...
-&emsp;&emsp;**描述**：移动SOURCE到DEST，或重命名。
->|常用选项|作用|
+**命令**：mv [OPTION]... [-T] SOURCE DEST
+&emsp;&emsp;&emsp;mv [OPTION]... SOURCE... DIRECTORY
+&emsp;&emsp;&emsp;mv [OPTION]... -t DIRECTORY SOURCE...
+**描述**：移动SOURCE到DEST，或重命名。
+|常用选项|作用|
 |:----|:--|
 |-f |force 强制的意思，如果目标文件已经存在，不会询问而直接覆盖；
 |-i |若目标文件 (destination) 已经存在时，就会询问是否覆盖！
@@ -175,19 +176,19 @@ tags: Linux使用教程
 |&emsp;&emsp;&emsp;&emsp;|<http://man.linuxde.net/mv>|
 
 ## 1.12 获取基名和目录名
-###1.12.1 `basename`
-&emsp;&emsp;**命令**： basename NAME [SUFFIX]
-&emsp;&emsp;&emsp;&emsp;&emsp;basename OPTION... NAME...
-&emsp;&emsp;**描述**：打印NAME中的基本名。
->|常用选项|无|
+### 1.12.1 `basename`
+**命令**：basename NAME [SUFFIX]
+&emsp;&emsp;&emsp;basename OPTION... NAME...
+**描述**：打印NAME中的基本名。
+|常用选项|无|
 |:----|:--|
 |**更多信息**|<http://linux.51yip.com/search/basename> 和 man 手册|
 |&emsp;&emsp;&emsp;&emsp;|<http://man.linuxde.net/basename>|
 
-###1.12.1 `dirname`
-&emsp;&emsp;**命令**： dirname [OPTION] NAME...
-&emsp;&emsp;**描述**：输出NAME中的目录名。
->|常用选项|无|
+### 1.12.1 `dirname`
+**命令**： dirname [OPTION] NAME...
+**描述**：输出NAME中的目录名。
+|常用选项|无|
 |:----|:--|
 |**更多信息**|<http://linux.51yip.com/search/dirname> 和 man 手册|
 |&emsp;&emsp;&emsp;&emsp;|<http://man.linuxde.net/dirname>|
@@ -195,20 +196,20 @@ tags: Linux使用教程
 
 
 
-#2 查找文件或目录
-##2.1 在PATH中查找命令文件——`which`
-&emsp;&emsp;**命令**：which [-a] filename ...
-&emsp;&emsp;**描述**：根据当前环境变量PATH查找命令文件所在路径。
->|常用选项&emsp;|作用|
+# 2 查找文件或目录
+## 2.1 在PATH中查找命令文件——`which`
+**命令**：which [-a] filename ...
+**描述**：根据当前环境变量PATH查找命令文件所在路径。
+|常用选项&emsp;|作用|
 |:----|:--|
 |-a|列出所有匹配的路径，而不是第一个
 |**更多信息**|<http://linux.51yip.com/search/which> 和 man 手册|
 |&emsp;&emsp;&emsp;&emsp;|<http://man.linuxde.net/which>| 
 
-##2.2 在特定目录查找文件——`whereis`
-&emsp;&emsp;**命令**：whereis [options] [-BMS directory... -f] name...
-&emsp;&emsp;**描述**： 在特定目录查找文件。
->|常用选项&emsp;|作用|
+## 2.2 在特定目录查找文件——`whereis`
+**命令**：whereis [options] [-BMS directory... -f] name...
+**描述**： 在特定目录查找文件。
+|常用选项&emsp;|作用|
 |:----|:--|
 |-l |可以列出 whereis 会去查询的几个主要目录
 |-b |只找 binary 格式的文件
@@ -220,9 +221,9 @@ tags: Linux使用教程
 |&emsp;&emsp;&emsp;&emsp;|<http://man.linuxde.net/whereis>|
 
 ## 2.3 利用数据库中查找文件——`locate`
-&emsp;&emsp;**命令**：locate [OPTION]... PATTERN...
-&emsp;&emsp;**描述**：利用updatedb创建的数据库中查找匹配PATTERN的文件，如果没有指定-r，则PATTERN可以使用通配符。
->|常用选项&emsp;|作用|
+**命令**：locate [OPTION]... PATTERN...
+**描述**：利用updatedb创建的数据库中查找匹配PATTERN的文件，如果没有指定-r，则PATTERN可以使用通配符。
+|常用选项&emsp;|作用|
 |:----|:--|
 |-i |忽略大小写的差异；
 |-c |不输出文件名，仅计算找到的文件数量
@@ -233,21 +234,21 @@ tags: Linux使用教程
 |&emsp;&emsp;&emsp;&emsp;|<http://man.linuxde.net/locate>|
 
 ## 2.4 查找文件——`find`
-&emsp;&emsp;**命令**：find 起始目录 查找条件 操作
-&emsp;&emsp;**描述**：在指定目录结构中搜索问件，并执行指定的操作。该命令的查找条件可以是一个逻辑运算符 not、and、or 组成的复合条件:
+**命令**：find 起始目录 查找条件 操作
+**描述**：在指定目录结构中搜索问件，并执行指定的操作。该命令的查找条件可以是一个逻辑运算符 not、and、or 组成的复合条件:
 
->|常用选项|无|
+|常用选项|无|
 |:----|:--|
 |**更多信息**|<http://linux.51yip.com/search/find> 和 man 手册|
 |&emsp;&emsp;&emsp;&emsp;|<http://man.linuxde.net/find>|
 
 
->* 逻辑运算符
- * -a——逻辑与
- * -o——逻辑或
- * !——逻辑非
+* 逻辑运算符
+  * -a——逻辑与
+  * -o——逻辑或
+  * !——逻辑非
 * 常用的查找条件有：
- * 根据名称和文件属性查找。
+  * 根据名称和文件属性查找。
      * -name '字串'—— 查找文件名匹配所给字串的所有文件，字串内可用通配符*、?、[ ]。
      * -gid n ——查找属于 ID 号为 n 的用户组的所有文件。
      * -uid n ——查找属于 ID 号为 n 的用户的所有文件。
@@ -257,7 +258,7 @@ tags: Linux使用教程
      * -perm [-|/]MODE ——查找具有指定权限的文件和目录，-表示目标权限要包括MODE，/表示目标权限要包括MODE中的任意权限。
      * -size [+|-]n[bckw] ——查找指定文件大小的文件，n 后面的字符表示单位，缺省为b，代表 512字节的块。+表示大于，-表示小于，省略表示等于。
      * -type x ——查找类型为 x 的文件，x 为下列字符之一：-	l c	d p	s b 	
- * 根据时间查找
+  * 根据时间查找
      * -amin [+|-]n ——查找 n 分钟以前被访问过的所有文件。（+表示 n+1分钟之前，-表示n分钟之内，省略表示n到n+1分钟）
      * -cmin [+|-]n ——查找 n 分钟以前文件状态被修改过的所有文件。
      * -mmin [+|-]n ——查找 n 分钟以前文件内容被修改过的所有文件。
@@ -265,35 +266,38 @@ tags: Linux使用教程
      * -ctime [+|-]n ——查找 n 天以前文件状态被修改过的所有文件。
      * -mtime [+|-]n ——查找 n 天以前文件内容被修改过的所有文件。
 * 可执行的操作。
- * -exec 命令名称 {}——对符合条件的文件执行所给的Linux命令，而不询问用户是否需要执行该命令。{}表示命令的参数即为所找到的文件；命令的末尾必须以“ \;”结束。例如，在“/home/user“目录下查找名为 main.c文件并显示这些文件的详细信息，则使用find /home/user –name main.c –exec ls –l {} \;或者
- * -ok 命令名称 {} ——对符合条件的文件执行所给的 Linux命令，与 exec 不同的是，它会询问用户是否需要执行该命令。
+  * -exec 命令名称 {}——对符合条件的文件执行所给的Linux命令，而不询问用户是否需要执行该命令。{}表示命令的参数即为所找到的文件；命令的末尾必须以“ \;”结束。例如，在“/home/user“目录下查找名为 main.c文件并显示这些文件的详细信息，则使用find /home/user –name main.c –exec ls –l {} \;或者
+  * -ok 命令名称 {} ——对符合条件的文件执行所给的 Linux命令，与 exec 不同的是，它会询问用户是否需要执行该命令。
 
 
 # 3 管理文件权限与属性
 ## 3.1 文件权限与属性
-&emsp;&emsp;Linux中目录也是一种特殊的文件。
-&emsp;&emsp;`ls -al`显示信息如下：
+Linux中目录也是一种特殊的文件。`ls -al`显示信息如下：
+
 |权限与文件类型| 链接数| 文件所有者|  文件所属组 | 文件大小| 最近修改时间| 文件名字
-|:----|:--|:----|:--|:----|:--|
+|:----|:--|:----|:--|:----|:--|:--|
 |drwxr-xr-x   |   2   |   liao20081228|  liao20081228| 4096   |  Jan 15 20:25  | Music
 |-rw------- |      1  |    liao20081228 | liao20081228 |82 |      Jan 17 04:37|  .xsession
+
 ### 3.1.1 文件类型
-&emsp;&emsp;使用 `ls–l`命令显示的信息中，开头是由10个字母构成的字符串，其中第一个字符表示文件类型，它可以是下列类型之一：
+使用 `ls–l`命令显示的信息中，开头是由10个字母构成的字符串，其中第一个字符表示文件类型，它可以是下列类型之一：
+
 |符号	|意义|	符号|	意义|
 |:----|:--|:----|:--|
 |-	|普通文件|d|	目录|
 |l |	符号链接|	
 |c	|字符设备，数据以单个字符为单位|b |	块设备文件，数据以块为单位
 |p|	命名管道|s | 	Socket文件 	|		
+
 ### 3.1.2 文件权限
 * 一般权限
- * 使用 `ls –l`命令显示的信息中，开头是由10个字母构成的字符串，后面的 9 个字符表示文件的访问权限，分为 3 组，每组 3位。
- * 第一组表示文件创建者的权限，，第二组表示同组用户的权限 ， 第三组表示其他用户的权限。
- * 每一组的三个字符分别表示对文件的读、写、执行权限。每一组用一个由三种权限代表的数字相加来表示，例如 r_x :5，rw_:6，R__:4，那么这三组就可以用3个数字表示，例如rwxr_xr_x:755 ，rw_r__r__:644。如下：
+  * 使用 `ls –l`命令显示的信息中，开头是由10个字母构成的字符串，后面的 9 个字符表示文件的访问权限，分为 3 组，每组 3位。
+  * 第一组表示文件创建者的权限，，第二组表示同组用户的权限 ， 第三组表示其他用户的权限。
+  * 每一组的三个字符分别表示对文件的读、写、执行权限。每一组用一个由三种权限代表的数字相加来表示，例如 r_x :5，rw_:6，R__:4，那么这三组就可以用3个数字表示，例如rwxr_xr_x:755 ，rw_r__r__:644。如下：
 
->>>|权限|对文件的意义|对目录的意义|代码
+|权限|对文件的意义|对目录的意义|代码
 |:----|:--|:--|:--|
-|r|读读取文件内容|读取目录项|4
+|r|读取文件内容|读取目录项|4
 |w|修改文件内容|修改目录及目录项|2
 |x|执行文件|进入目录|1
 |\_|没有任何权限|没有任何权限|0
