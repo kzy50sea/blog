@@ -12,7 +12,6 @@ tags: Linux使用教程
 <style>table{word-break:initial;}</style>
 
 
-
 # 1   Linux文件系统
 ## 1.1 Ext2文件系统
 Linux的标准文件系统为Ext2。是一种索引式文件系统。
@@ -147,7 +146,8 @@ VFS有对用户进程的上层接口（POSIX接口），对实际文件系统的
 **目录的链接计数**：新建一个子目录时，该子目录的链接计数为2，而当前目录链接计数加1，因为自目录中有.和..两个目录。
 
 # 2 文件系统管理
-## 2.1 查询Ext家族超级块信息——`dumpe2fs`
+## 2.1 查看文件系统信息
+### 2.1.1 查看EXT文件系统信息——`dumpe2fs`
 **命令**：dumpe2fs [ -bfhixV ] [ -o superblock=superblock ] [ -o blocksize=blocksize ] device
 **描述**：显示ext系列文件系统的超级块和区块群组信息。
 |常用选项|作用|
@@ -157,43 +157,17 @@ VFS有对用户进程的上层接口（POSIX接口），对实际文件系统的
 |**更多信息**|<http://linux.51yip.com/search/dumpe2fs> 和 man 手册|
 ||<http://man.linuxde.net/dumpe2fs>|
 
-## 2.2 查看XFS系统信息——`xfs_info`
+### 2.1.2 查看XFS文件系统信息——`xfs_info`
 **命令**：xfs_info  挂载点 或 装置文件名
 **描述**：显示xfs文件系统的超级块和区块群组信息。
 |常用选项|作用|
-|:----|--|
+|:----|:--|
 |**更多信息**|<http://www.bubuko.com/infodetail-1878036.html> 和 man pages|  
 
-## 2.3 查看文件系统的整体磁盘使用情况——`df`
-**命令**：df [-ahikHTm] [ 目录或文件名] 
-**描述**：可以查看文件系统的整体磁盘使用情况。
-|常用选项|作用|
-|:----|:--|
-|-a |列出所有的文件系统，包括系统特有的 /proc 等文件系统；
-|-k |以 KBytes 的容量显示各文件系统；
-|-m |以 MBytes 的容量显示各文件系统；
-|-h |以人们较易阅读的 GBytes, MBytes, KBytes 等格式自行显示；
-|-H |以 M=1000K 取代 M=1024K 的进位方式；
-|-T |连同该 partition 的 filesystem 名称 (例如 xfs) 也列出；
-|-i |不用磁盘容量，而以 inode 的数量来显示
-|**更多信息**|<http://linux.51yip.com/search/df> 和 man 手册|
-||<http://man.linuxde.net/df>|
 
-## 2.4 评估文件系统的磁盘使用量——`du`
-**命令**：du [-ahskm]  文件或目录 
-**描述**：评估文件系统的磁盘使用量(常用在推估目录所占容量)。
-|常用选项|作用|
-|:----|:--|
-|-a |列出所有的文件与目录容量，因为默认仅统计目录底下的文件量而已。
-|-h |以人们较易读的容量格式 (G/M) 显示；
-|-s |列出总量而已，而不列出每个各别的目录占用容量；
-|-S |不包括子目录下的总计，与 -s 有点差别。
-|-k |以 KBytes 列出容量显示；
-|-m |以 MBytes 列出容量显示；
-|**更多信息**|<http://linux.51yip.com/search/du> 和 man 手册|
-||<http://man.linuxde.net/du>|
-
-## 2.5 硬链接和软链接——`ln`、`link` `unlink`
+## 2.2 管理硬链接和软链接
+### 2.2.1 建立硬链接和软链接——`ln`
+`ln`、`link` `unlink`
 **命令**：ln [-sf]  来源文件 目标文件
 **描述**：建立硬链接和软链接。
 |常用选项|作用|
@@ -203,19 +177,149 @@ VFS有对用户进程的上层接口（POSIX接口），对实际文件系统的
 |**更多信息**|<http://linux.51yip.com/search/ln> 和 man 手册|
 ||<http://man.linuxde.net/ln>|
 
+### 2.2.2 建立硬链接——`link`
 **命令**：link  来源文件 目标文件
 **描述**：建立硬链接
 |常用选项|无|
-|:----|--|
+|:----|:--|
 |**更多信息**|<http://linux.51yip.com/search/link> 和 man 手册|
 ||<http://man.linuxde.net/link>|
 
+### 2.2.3 删除硬链接——`unlink`
 **命令**：unlink  目标文件
 **描述**：删除硬链接 
 |常用选项|无|
-|:----|--|
+|:----|:--|
 |**更多信息**|<http://linux.51yip.com/search/unlink> 和 man 手册|
 ||<http://man.linuxde.net/unlink>|
+
+
+## 2.3 文件系统检验与修复
+### 2.3.1 xfs检验修复——`xfs_repair`
+**命令**：xfs_repair [-fnd]  装置名 
+**描述**：检验与修复xfs文件系统。修复时该文件系统不能被挂载！
+|常用选项|作用|
+|:--|:--|
+|-f |后面的装置其实是个文件而不是实体装置
+|-n |单纯检查并不修改文件系统的任何数据 (检查而已)
+|-d |通常用在单人维护模式底下，针对根目录进行检查与修复！很危险！
+|**更多信息**|<http://linux.51yip.com/search/xfs_repair> 和 man pages|
+
+### 2.3.2 综合检验修复——`fsck`
+**命令**：fsck [-lsAVRTMNP] [-r [fd]] [-C [fd]] [-t fstype] [filesystem...] [--] [fs-specific-options]
+**描述**：根据指定的type调用相关工具来检验与修复文件系统。
+|常用选项|作用|
+|:--|:--|
+|**更多信息**|<http://linux.51yip.com/search/fsck> 和 man 手册|
+||<http://man.linuxde.net/fsck>|
+
+### 2.3.3 ext4检验修复——`fsck.ext4`
+**命令**：fsck.ext4 [-pf] [-b superblock]  装置名
+**描述**：检验与修复ext4文件系统.
+|常用选项|作用|
+|:--|:--|
+|-p |当文件系统在修复时，若有需要回复y的动作时，自动回复 y 来继续进行修复动作。
+|-f|强制检查！一般来说，如果 fsck 没有发现任何 unclean的旗标，不会主动进入细部检查的，如果您想要强制 fsck进入细部检查，就得加上 -f 旗标啰！
+|-D |针对文件系统下的目录进行优化配置。
+|-b |后面接 superblock 的位置！一般来说这个选项用不到。但是如果你的 superblock 因故损毁时，透过这个参数即可利用文件系统内备份的 superblock 来尝试救援。一般来说，superblock 备份在：1K block 放在 8193, 2K block 放在 16384, 4K block 放在 32768
+|**更多信息**|<http://linux.51yip.com/search/fsck.ext4> 和 man pages|
+|&emsp;&emsp;&emsp;&emsp;||
+
+
+## 2.4 文件系统的挂载与卸除
+注意：
+* 单一文件系统不应该被重复挂载在不同的挂载点(目录)中；
+* 单一目录不应该重复挂载多个文件系统；
+* 要作为挂载点的目录，理论上应该都是空目录才是。否则原目录下的内容会被隐藏。
+### 2.4.1 文件系统挂载——`mount`
+**命令**：mount [-l|-h|-V]
+&emsp;&emsp;&emsp;mount -a [-fFnrsvw] [-t fstype] [-O optlist]
+&emsp;&emsp;&emsp;mount [-fnrsvw] [-o options] device|dir
+&emsp;&emsp;&emsp;mount [-fnrsvw] [-t fstype] [-o options] device dir
+**描述**：挂载文件系统。
+|常用选项|作用|
+|:--|:--|
+|-a |依照配置文件 /etc/fstab 的数据将所有未挂载的磁盘都挂载上来
+|-l |单纯的输入mount会显示目前挂载的信息。加上 -l 可增列 Label 名称！
+|-t |可以加上文件系统种类来指定欲挂载的类型。
+|-n |在默认的情况下，系统会将实际挂载的情况实时写入 /etc/mtab 中，以利其他程序的运作。但在某些情况下(例如单人维护模式)为了避免问题会刻意不写入。此时就得要使用 -n 选项。
+|-o |后面可以接一些挂载时额外加上的参数！async, sync: 此文件系统使用同步写入或异步的内存机制，预设为 async。atime,noatime: 是否修订文件的读取时间(atime)。ro, rw: 挂载文件系统成为只读 或可擦写。auto, noauto: 允许此 filesystem 被以 mount -a 自动挂载(auto)。dev, nodev: 是否允许此 filesystem 上，可建立装置文件？ dev 为可允许。suid, nosuid: 是否允许此 filesystem 含有 suid/sgid 的文件格式？exec, noexec: 是否允许此 filesystem 上拥有可执行 binary 文件？user, nouser: 是否允许此 filesystem 让任何使用者执行 mount ？一般来说，mount 仅有 root 可以进行，但下达 user 参数，则可让一般 user 也能够对此 partition 进行 mount 。remount:重新挂载，这在系统出错，或重新更新参数时，很有用！defaults：rw, suid, dev, exec, auto, nouser, and async
+|**更多信息**|<http://linux.51yip.com/search/mount> 和 man 手册|
+|&emsp;&emsp;&emsp;&emsp;|<http://man.linuxde.net/mount>|
+
+基本上，不需要加上-t这个选项，系统会自动的分析最恰当的文件系统来尝试挂载你需要的装置！由于文件系统几乎都有 superblock ， Linux 可以透过分析superblock 搭配Linux自己的驱动程序去测试挂载，如果成功的套和了，就立刻自动的使用该类型的文件系统挂载起来啊！那么系统有没有指定哪些类型的 filesystem 才需要进行上述的挂载测试呢？主要是参考底下这两个文件：
+
+* /etc/filesystems：系统指定的测试挂载文件系统类型的优先级；
+* /proc/filesystems：Linux 系统已经加载的文件系统类型。
+
+那怎么知道Linux有没有相关文件系统类型的驱动程序呢？Linux支持的文件系统之驱动程序都写在`/lib/modules/$(uname -r)/kernel/fs/`目录找中，例如 ext4 的驱动程序就写在`/lib/modules/$(uname -r)/kernel/fs/ext4/`这个目录下啦！
+
+光驱一挂载之后就无法退出光盘片了！除非你将他卸除才能够退出！ 
+```bash
+$ mount -o remount,rw,auto #将/重新挂载。尤其时根目录为只读时。
+
+$ mount  --bind resource destination #将一个目录挂载到另一个目录。
+
+$ mount  -o loop imagefile destination #挂载一个镜像文件，如.iso文件。
+```
+### 2.4.2 文件系统卸载——`umount`
+**命令**：umount [-fn]  装置文件名或挂载点
+**描述**：卸除文件系统或装置。
+
+|常用选项|作用|
+|:--|:--|
+|-f |强制卸除！可用在类似网络文件系统 (NFS) 无法读取到的情况下；
+|-l |立刻卸除文件系统，比 -f 还强！
+|-n |不更新 /etc/mtab 情况下卸除。
+|**更多信息**|<http://linux.51yip.com/search/umount> 和 man 手册|
+||<http://man.linuxde.net/umount>|
+
+### 2.4.3 设置开机挂载
+在开机的时候就将文件系统挂载好，可以通过修改`/etc/fstab`,mount指令就是将所有的选项与参数写入到这个文件中。除此之外，`/etc/fstab `还加入了 dump 这个备份用指令的支持！`/etc/fstab`是开机时的配置文件，实际 filesystem 的挂载是记录到`/etc/mtab`与`/proc/mounts`。但当 `/etc/fstab`数据错误，导致无法开机而进入单人维护模式时，由于根目录是只读状态，无法修改 `/etc/fstab` ，也无法更新 `/etc/mtab `，只能使用`mount -n -o remount,rw /`来重新挂载根目录。
+
+`/etc/fstab`记录的内容：
+
+* 装置/UUID/LABEL等
+* 挂载点
+* 文件系统类型
+* 文件系统参数：也就是mount的-o选项输入的参数，
+* dump ：能否被dump备份指令使用。一般填0.
+* fsck：是否以 fsck 检验扇区。xfs系统不需要，填0。
+
+注意：
+
+* 根目录 / 是必须先于其它 mount point 被挂载进来。
+* 其它 mount point必须为已建立的目录﹐可任意指定﹐但一定要遵守FHS
+* 所有 mount point 或 partition 在同一时间之内只能挂载一次。
+* 如若进行卸除﹐您必须先将工作目录移到 mount point(及其子目录) 之外。
+
+## 2.5 修改文件系统参数
+### 2.5.1 修改xfs参数——`xfs_admin`
+**命令**：xfs_admin [-lu] [-L label] [-U uuid] 装置文件名
+**描述**：修改XFS文件系统的 UUID  与 Label name
+|常用选项|作用|
+|:--|:--|
+|-l |列出这个装置的 label name
+|-u |列出这个装置的 UUID
+|-L |设定这个装置的 Label name
+|-U |设定这个装置的 UUID 喔！
+|**更多信息**|<http://linux.51yip.com/search/xfs_admin> 和 man pages|
+|||
+
+### 2.5.2 修改ext4参数——`tune2fs`
+**命令**：tune2fs [-l] [-L Label] [-U uuid]  装置文件名
+**描述**：修改ext4文件系统的 UUID  与 Label name
+|常用选项|作用|
+|:--|:--|
+|-l |类似 dumpe2fs -h 的功能～将 superblock 内的数据读出来
+|-L |修改 LABEL name
+|-U |修改 UUID 啰！
+|**更多信息**|<http://linux.51yip.com/search/tune2fs> 和 man 手册|
+||<http://man.linuxde.net/tune2fs>|
+
+
+
+
 
 # 3 磁盘管理
 新增磁盘的步骤：
@@ -225,8 +329,8 @@ VFS有对用户进程的上层接口（POSIX接口），对实际文件系统的
 3. 若想要仔细一点，则可对刚刚建立好的 filesystem 进行检验；
 4. 在 Linux 系统上，需要建立挂载点 (亦即是目录)，并将他挂载上来
 
-## 3.1 观察磁盘分区状态
-### 3.1.1 列出磁盘——`lsblk`
+## 3.1 查看磁盘信息
+### 3.1.1 列出块设备——`lsblk`
 **命令**：lsblk [-dfimpt ] [device]
 **描述**：列出系统上的所有磁盘列表。
 |常用选项|作用|
@@ -241,26 +345,61 @@ VFS有对用户进程的上层接口（POSIX接口），对实际文件系统的
 ||<http://man.linuxde.net/lsblk>|
 
 ### 3.1.2 查看块设备信息——`blkid`
-**命令**：blkid 
+**命令**：blkid device
 **描述**：可以查看块设备（包括交换分区）的文件系统类型、LABEL、UUID、挂载目录等信息。
 |常用选项|无|
 |:----|:--|
 |**更多信息**|<http://linux.51yip.com/search/blkid> 和 man 手册|
 ||<http://man.linuxde.net/blkid>|
 
-###3.1.3 查看分区信息——`parted`
+### 3.1.3 查看分区信息——`parted`
 **命令**：parted device_name print
 **描述**：列出磁盘的分区表类型与分区信息。
-> |常用选项|无|
-|:----|--|
+|常用选项|无|
+|:----|:--|
 |**更多选项**|<http://linux.51yip.com/search/parted> 和 man pages|
 
+
+### 3.1.4 查看文件系统的整体磁盘使用情况——`df`
+**命令**：df [-ahikHTm] [ 目录或文件名] 
+**描述**：可以查看文件系统的整体磁盘使用情况。
+|常用选项|作用|
+|:----|:--|
+|-a |列出所有的文件系统，包括系统特有的 /proc 等文件系统；
+|-k |以 KBytes 的容量显示各文件系统；
+|-m |以 MBytes 的容量显示各文件系统；
+|-h |以人们较易阅读的 GBytes, MBytes, KBytes 等格式自行显示；
+|-H |以 M=1000K 取代 M=1024K 的进位方式；
+|-T |连同该 partition 的 filesystem 名称 (例如 xfs) 也列出；
+|-i |不用磁盘容量，而以 inode 的数量来显示
+|**更多信息**|<http://linux.51yip.com/search/df> 和 man 手册|
+||<http://man.linuxde.net/df>|
+
+
+### 3.1.5 评估文件系统的磁盘使用量——`du`
+**命令**：du [-ahskm]  文件或目录 
+**描述**：评估文件系统的磁盘使用量(常用在推估目录所占容量)。
+|常用选项|作用|
+|:----|:--|
+|-a |列出所有的文件与目录容量，因为默认仅统计目录底下的文件量而已。
+|-h |以人们较易读的容量格式 (G/M) 显示；
+|-s |列出总量而已，而不列出每个各别的目录占用容量；
+|-S |不包括子目录下的总计，与 -s 有点差别。
+|-k |以 KBytes 列出容量显示；
+|-m |以 MBytes 列出容量显示；
+|**更多信息**|<http://linux.51yip.com/search/du> 和 man 手册|
+||<http://man.linuxde.net/du>|
+
+
+
+
+
 ## 3.2 磁盘分区
-###3.2.1 综合分区——`parted`
+### 3.2.1 综合分区——`parted`
 **命令**：parted [装 置] [ 指令 [ 参数 ]]
 **描述**：对GPT或者MBR磁盘建立分区
-> |常用指令|无|
-|:----|--|
+|常用指令|无|
+|:----|:--|
 |新增分区|mkpart [primary\logical\extended] [ext4\vfat\xfs] 开始 结束|
 |显示分区|print
 |删除分区|rm [partition]
@@ -270,8 +409,8 @@ VFS有对用户进程的上层接口（POSIX接口），对实际文件系统的
 ### 3.2.2 gpt分区——`gdisk`
 **命令**：gdisk  装置名
 **描述**：对GPT格式磁盘分区。
-> |常用命令|无|
-|:----|--|
+|常用命令|无|
+|:----|:--|
 |d|	删除分区
 |n|	新建分区
 |p|	打印分区表
@@ -283,8 +422,8 @@ VFS有对用户进程的上层接口（POSIX接口），对实际文件系统的
 ### 3.2.3 mbr分区——`fdisk`
 **命令**：fdisk  装置名
 **描述**：对MBR格式磁盘分区。
-> |常用命令|无|
-|:----|--|
+|常用命令|无|
+|:----|:--|
 |d|	删除分区
 |n|	新建分区
 |p|	打印分区表
@@ -297,8 +436,8 @@ VFS有对用户进程的上层接口（POSIX接口），对实际文件系统的
 ### 3.2.4 重载分区表——`partprobe`
 **命令**：partprobe [-s] 
 **描述**：更新分区表信息。
-> |常用选项|无|
-|:--|--|
+|常用选项|无|
+|:--|:--|
 |**更多信息**|<http://linux.51yip.com/search/partprobe> 和 man 手册|
 ||<http://man.linuxde.net/partprobe>|
 
@@ -306,212 +445,93 @@ VFS有对用户进程的上层接口（POSIX接口），对实际文件系统的
 ### 3.3.1 综合格式化——`mkfs`
 **命令**：mkfs [-t type] [fs-options] device [size]
 **描述**：根据指定的文件系统类型调用对应的格式化工具格式化磁盘。
-> |常用选项|无|
-|:--|--|
+|常用选项|无|
+|:--|:--|
 |**更多信息**|<http://linux.51yip.com/search/mkfs> 和 man 手册|
 ||<http://man.linuxde.net/mkfs>|
 
-#### 3.3.1.1 xfs格式化——`mkfs.xfs`
+### 3.3.2 xfs格式化——`mkfs.xfs`
 **命令**：mkfs.xfs [-b bsize] [-d parms] [-i parms] [-l parms] [-L label] [-f] [-r parms]  装置名
 **描述**：将磁盘进行xfs格式化
-> |常用选项|无|
-|:--|--|
+|常用选项|无|
+|:--|:--|
 |**更多信息**|<http://linux.51yip.com/search/mkfs.xfs> 和 man 手册|
 
-#### 3.3.1.2 ext4格式化——`mkfs.ext4`
+#### 3.3.3 ext4格式化——`mkfs.ext4`
 **命令**：mkfs.ext4 [-b size] [-L label] 装置名
 **描述**：将磁盘进行ext4格式化
-> |常用选项|无|
-|:--|--|
+|常用选项|无|
+|:--|:--|
 |**更多信息**|<http://linux.51yip.com/search/mkfs.ext4> 和 man pages|
 
-## 3.4 文件系统检验与修复
-### 3.4.1 xfs检验修复——`xfs_repair`
-**命令**：xfs_repair [-fnd]  装置名 
-**描述**：检验与修复xfs文件系统。修复时该文件系统不能被挂载！
-> |常用选项|作用|
-|:--|--|
-|-f |后面的装置其实是个文件而不是实体装置
-|-n |单纯检查并不修改文件系统的任何数据 (检查而已)
-|-d |通常用在单人维护模式底下，针对根目录进行检查与修复！很危险！
-|**更多信息**|<http://linux.51yip.com/search/xfs_repair> 和 man pages|
-
-### 3.4.2 综合检验修复——`fsck`
-**命令**：fsck [-lsAVRTMNP] [-r [fd]] [-C [fd]] [-t fstype] [filesystem...] [--] [fs-specific-options]
-**描述**：根据指定的type调用相关工具来检验与修复文件系统。
-> |常用选项|作用|
-|:--|--|
-|**更多信息**|<http://linux.51yip.com/search/fsck> 和 man 手册|
-||<http://man.linuxde.net/fsck>|
-
-### 3.4.3 ext4检验修复——`fsck.ext4`
-**命令**：fsck.ext4 [-pf] [-b superblock]  装置名
-**描述**：检验与修复ext4文件系统.
-> |常用选项|作用|
-|:--|--|
-|-p |当文件系统在修复时，若有需要回复y的动作时，自动回复 y 来继续进行修复动作。
-|-f|强制检查！一般来说，如果 fsck 没有发现任何 unclean的旗标，不会主动进入细部检查的，如果您想要强制 fsck进入细部检查，就得加上 -f 旗标啰！
-|-D |针对文件系统下的目录进行优化配置。
-|-b |后面接 superblock 的位置！一般来说这个选项用不到。但是如果你的 superblock 因故损毁时，透过这个参数即可利用文件系统内备份的 superblock 来尝试救援。一般来说，superblock 备份在：1K block 放在 8193, 2K block 放在 16384, 4K block 放在 32768
-|**更多信息**|<http://linux.51yip.com/search/fsck.ext4> 和 man pages|
-|||
-
-## 3.5 文件系统的挂载与卸除
-注意：
->* 单一文件系统不应该被重复挂载在不同的挂载点(目录)中；
-* 单一目录不应该重复挂载多个文件系统；
-* 要作为挂载点的目录，理论上应该都是空目录才是。否则原目录下的内容会被隐藏。
-### 3.5.1 文件系统挂载——`mount`
-**命令**：mount [-l|-h|-V]
-&emsp;mount -a [-fFnrsvw] [-t fstype] [-O optlist]
-&emsp;mount [-fnrsvw] [-o options] device|dir
-&emsp;mount [-fnrsvw] [-t fstype] [-o options] device dir
-**描述**：挂载文件系统。
-> |常用选项|作用|
-|:--|--|
-|-a |依照配置文件 /etc/fstab 的数据将所有未挂载的磁盘都挂载上来
-|-l |单纯的输入mount会显示目前挂载的信息。加上 -l 可增列 Label 名称！
-|-t |可以加上文件系统种类来指定欲挂载的类型。
-|-n |在默认的情况下，系统会将实际挂载的情况实时写入 /etc/mtab 中，以利其他程序的运作。但在某些情况下(例如单人维护模式)为了避免问题会刻意不写入。此时就得要使用 -n 选项。
-|-o |后面可以接一些挂载时额外加上的参数！async, sync: 此文件系统使用同步写入或异步的内存机制，预设为 async。atime,noatime: 是否修订文件的读取时间(atime)。ro, rw: 挂载文件系统成为只读 或可擦写。auto, noauto: 允许此 filesystem 被以 mount -a 自动挂载(auto)。dev, nodev: 是否允许此 filesystem 上，可建立装置文件？ dev 为可允许。suid, nosuid: 是否允许此 filesystem 含有 suid/sgid 的文件格式？exec, noexec: 是否允许此 filesystem 上拥有可执行 binary 文件？user, nouser: 是否允许此 filesystem 让任何使用者执行 mount ？一般来说，mount 仅有 root 可以进行，但下达 user 参数，则可让一般 user 也能够对此 partition 进行 mount 。remount:重新挂载，这在系统出错，或重新更新参数时，很有用！defaults：rw, suid, dev, exec, auto, nouser, and async
-|**更多信息**|<http://linux.51yip.com/search/mount> 和 man 手册|
-||<http://man.linuxde.net/mount>|
-
-基本上，不需要加上-t这个选项，系统会自动的分析最恰当的文件系统来尝试挂载你需要的装置！由于文件系统几乎都有 superblock ， Linux 可以透过分析superblock 搭配Linux自己的驱动程序去测试挂载，如果成功的套和了，就立刻自动的使用该类型的文件系统挂载起来啊！那么系统有没有指定哪些类型的 filesystem 才需要进行上述的挂载测试呢？主要是参考底下这两个文件：
->* /etc/filesystems：系统指定的测试挂载文件系统类型的优先级；
-* /proc/filesystems：Linux 系统已经加载的文件系统类型。
-
-那怎么知道Linux有没有相关文件系统类型的驱动程序呢？Linux支持的文件系统之驱动程序都写在`/lib/modules/$(uname -r)/kernel/fs/`目录找中，例如 ext4 的驱动程序就写在`/lib/modules/$(uname -r)/kernel/fs/ext4/`这个目录下啦！
-
-光驱一挂载之后就无法退出光盘片了！除非你将他卸除才能够退出！ 
-```sh
-$ mount -o remount,rw,auto #将/重新挂载。尤其时根目录为只读时。
-
-$ mount  --bind resource destination #将一个目录挂载到另一个目录。
-
-$ mount  -o loop imagefile destination #挂载一个镜像文件，如.iso文件。
-```
-### 3.5.2 文件系统卸载——`umount`
-**命令**：umount [-fn]  装置文件名或挂载点
-**描述**：卸除文件系统或装置。
-
-> |常用选项|作用|
-|:--|--|
-|-f |强制卸除！可用在类似网络文件系统 (NFS) 无法读取到的情况下；
-|-l |立刻卸除文件系统，比 -f 还强！
-|-n |不更新 /etc/mtab 情况下卸除。
-|**更多信息**|<http://linux.51yip.com/search/umount> 和 man 手册|
-||<http://man.linuxde.net/umount>|
 
 
-## 3.6  磁盘/文件系统该参数修订
-### 3.6.1 设置设备代码——`mknod`
+
+
+## 3.4 设置设备代码——`mknod`
 **命令**：mknod  装置文件名 [bcp] [Major] [Minor]
 **描述**：设置装置的主次设备代码。
-> |常用选项|作用|
-|:--|--|
+|常用选项|作用|
+|:--|:--|
 |b|设定装置名称成为一个周边储存设备文件，例如磁盘等；
 |c|设定装置名称成为一个周边输入设备文件，例如鼠标/键盘等；
 |p|设定装置名称成为一个 FIFO 文件；
 |**更多信息**|<http://linux.51yip.com/search/mknod> 和 man 手册|
 ||<http://man.linuxde.net/mknod>|
 常见的磁盘文件名 /dev/sda 与 /dev/loop0装置代码如下所示：
->|磁盘文件名| Major |Minor|
-|--|--|--
+|磁盘文件名| Major |Minor|
+|:--|:--|--
 |/dev/sda |8 |0-15
 |/dev/sdb |8 |16-31
 |/dev/loop0 |7| 0
 |/dev/loop1 |7 |1
 
-### 3.6.2 修改xfs参数——`xfs_admin`
-**命令**：xfs_admin [-lu] [-L label] [-U uuid] 装置文件名
-**描述**：修改XFS文件系统的 UUID  与 Label name
-> |常用选项|作用|
-|:--|--|
-|-l |列出这个装置的 label name
-|-u |列出这个装置的 UUID
-|-L |设定这个装置的 Label name
-|-U |设定这个装置的 UUID 喔！
-|**更多信息**|<http://linux.51yip.com/search/xfs_admin> 和 man pages|
-|||
 
-### 3.6.3 修改ext4参数——`tune2fs`
-**命令**：tune2fs [-l] [-L Label] [-U uuid]  装置文件名
-**描述**：修改ext4文件系统的 UUID  与 Label name
-> |常用选项|作用|
-|:--|--|
-|-l |类似 dumpe2fs -h 的功能～将 superblock 内的数据读出来
-|-L |修改 LABEL name
-|-U |修改 UUID 啰！
-|**更多信息**|<http://linux.51yip.com/search/tune2fs> 和 man 手册|
-||<http://man.linuxde.net/tune2fs>|
 
-# 4 设置开机挂载
-在开机的时候就将文件系统挂载好，可以通过修改`/etc/fstab`,mount指令就是将所有的选项与参数写入到这个文件中。除此之外，`/etc/fstab `还加入了 dump 这个备份用指令的支持！`/etc/fstab`是开机时的配置文件，实际 filesystem 的挂载是记录到`/etc/mtab`与`/proc/mounts`。但当 `/etc/fstab`数据错误，导致无法开机而进入单人维护模式时，由于根目录是只读状态，无法修改 `/etc/fstab` ，也无法更新 `/etc/mtab `，只能使用`mount -n -o remount,rw /`来重新挂载根目录。
 
->`/etc/fstab`记录的内容：
->
-* 装置/UUID/LABEL等
-* 挂载点
-* 文件系统类型
-* 文件系统参数：也就是mount的-o选项输入的参数，
-* dump ：能否被dump备份指令使用。一般填0.
-* fsck：是否以 fsck 检验扇区。xfs系统不需要，填0。
->
->注意：
->
->* 根目录 / 是必须先于其它 mount point 被挂载进来。
-* 其它 mount point必须为已建立的目录﹐可任意指定﹐但一定要遵守FHS
-* 所有 mount point 或 partition 在同一时间之内只能挂载一次。
-* 如若进行卸除﹐您必须先将工作目录移到 mount point(及其子目录) 之外。
->
 
-# 5 建立swap分区
->**步骤**：
->1. 分区或建立一个文件——先磁盘中划分一个分区或建立一个文件。由于 Linux 的 gdisk 预设会将分区槽的ID设定为Linux的文件系统，所以可能还得要设定一下 system ID 。
+# 4 建立swap分区
+**步骤**：
+1. 分区或建立一个文件——先磁盘中划分一个分区或建立一个文件。由于 Linux 的 gdisk 预设会将分区槽的ID设定为Linux的文件系统，所以可能还得要设定一下 system ID 。
 2. 格式化——用`mkswap 装置/文件`将该分区或文件格式化为swap 格式。
 3. 使用——用`swapon 装置文件名`启用该分区。
 4. 观察——用` free `与 `swapon -s `这个指令来观察一下内存的用量吧！
 5. 使用——用`swapoff 装置/文件名`关闭该分区。
 
 
-## 5.1 swap格式化——`mkswap`
+## 4.1 swap格式化——`mkswap`
 **命令**：mkswap [options] device [size]
 **描述**：用于在一个文件或者设备上建立交换分区。
-> |常用选项|无|
-|:--|--|
+|常用选项|无|
+|:--|:--|
 |**更多信息**|<http://linux.51yip.com/search/mkswap> 和 man 手册|
 ||<http://man.linuxde.net/mkswap>|
 
-## 5.2 挂载swap分区——`swapon`
+## 4.2 挂载swap分区——`swapon`
 **命令**：swapon [options] [specialfile...]
 **描述**：用于在一个文件或者设备上建立交换分区。
-> |常用选项|无|
-|:--|--|
+|常用选项|无|
+|:--|:--|
 |**更多信息**|<http://linux.51yip.com/search/swapon> 和 man 手册|
 ||<http://man.linuxde.net/swapon>|
 
-## 5.3 卸载swap分区——`swapoff` 
+## 4.3 卸载swap分区——`swapoff` 
 **命令**：swapoff [-va] [specialfile...]
 **描述**：用于在一个文件或者设备上建立交换分区。
-> |常用选项|无|
-|:--|--|
+|常用选项|无|
+|:--|:--|
 |**更多信息**|<http://linux.51yip.com/search/swapoff> 和 man 手册|
 ||<http://man.linuxde.net/swapoff>|
 
-## 5.4 查看内存使用量——`free`
+# 5 查看内存使用量——`free`
 **命令**：free [options]
 **描述**：显示当前系统内存使用情况。
-> |常用选项|无|
-|:--|--|
+|常用选项|无|
+|:--|:--|
 |**更多信息**|<http://linux.51yip.com/search/free> 和 man 手册|
 ||<http://man.linuxde.net/free>|
 
----
 
-***<font color=blue>版权声明</font>***：*本文章参考了<font color=blue >**。**</font><font color=red>未经作者允许，**<font color=blue>严禁用于商业出版</font>**，否则追究法律责任。网络转载请注明出处，这是对原创者的起码的尊重！！！*</font>
-
----
 
 ------
 
