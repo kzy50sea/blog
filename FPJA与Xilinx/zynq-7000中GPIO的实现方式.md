@@ -11,57 +11,49 @@ tags: FPJA与Xilinx
 
 <style>table{word-break:initial;}</style>
 
-# 
 
-标签（空格分隔）：XILINX
-
-
----
-
-&emsp;&emsp;***<font color=blue>版权声明</font>***：*本文参考了*<font color=red> *未经作者允许，**<font color=blue>严禁用于商业出版</font>**，否则追究法律责任。网络转载请注明出处，这是对原创者的起码的尊重！！！*</font>
-
----
 
 &emsp;&emsp;ZYNQ可以使用多种方式提供GPIO的能力，ZYNQ中GPIO有四种，其中PS中MIO/EMIO两种，而PL中同样有两种情况，AXI_GPIO和AXI_LITE自定义的GPIO；下面就这四种情况进行说明：
-#1 PS的MIO实现的GPIO
+# 1 PS的MIO实现的GPIO
 * MIO实现的GPIO需要在做PCB板卡之前就对功能有所限制：
 
- * 其中MIO和EMIO是直接挂在PS上的GPIO。而AXI_GPIO是通过AXI总线挂在PS上的GPIO上。
+  * 其中MIO和EMIO是直接挂在PS上的GPIO。而AXI_GPIO是通过AXI总线挂在PS上的GPIO上。
 
- * 其中MIO分布在BANK0，BANK1，而EMIO则分布在BANK2、BANK3。
+  * 其中MIO分布在BANK0，BANK1，而EMIO则分布在BANK2、BANK3。
  
 * 注意一下几项：
 
- * 首先、MIO在zynq上的管脚是固定的，而EMIO，是通过PL部分扩展的，所以**使用EMIO时候需要在约束文件中分配管脚**，所以设计EMIO的程序时，需要生成PL部分的bit文件，烧写到FPGA中。
+  * 首先、MIO在zynq上的管脚是固定的，而EMIO，是通过PL部分扩展的，所以**使用EMIO时候需要在约束文件中分配管脚**，所以设计EMIO的程序时，需要生成PL部分的bit文件，烧写到FPGA中。
  
- * 其次、MIO共占54bit，而EMIO占64bit。其中MIO占用IO号为0-53。而EMIO占用IO号为54-117。
+  * 其次、MIO共占54bit，而EMIO占64bit。其中MIO占用IO号为0-53。而EMIO占用IO号为54-117。
  
- * 无论是EMIO还是MIO都属于PS上的IO，直接由PS操作。在调用头文件，只调用`#include "xgpiops.h"`即可，而在调用AXI_GPIO时，则需要`#include "xgpio.h"`。
+  * 无论是EMIO还是MIO都属于PS上的IO，直接由PS操作。在调用头文件，只调用`#include "xgpiops.h"`即可，而在调用AXI_GPIO时，则需要`#include "xgpio.h"`。
 
 
 >**MIO与EMIO概念**
 MIO：多功能IO接口，属于Zynq的PS部分，在芯片外部有54个引脚。这些引脚可以用在GPIO、SPI、UART、TIMER、Ethernet、USB等功能上，每个引脚都同时具有多种功能，故叫多功能。
 EMIO：扩展MIO，依然属于Zynq的PS部分，只是连接到了PL上，再从PL的引脚连到芯片外面实现数据输入输出。
->
-**MIO与EMIO的使用例程**:双串口、双网口等的实现
+
+>**MIO与EMIO的使用例程**:双串口、双网口等的实现
 实现数据直接从PS的MIO口接收与发送
 通过PL口实现数据的接收与发送
 实现数据的双串口/双网口接收与发送（即PS可同时从两个UART口或网口接收或发送数据）
 
-#2 PS的EMIO实现GPIO
+# 2 PS的EMIO实现GPIO
 EMIO实现GPIO也使用PS，但是有FPGA的灵活
 
 EMIO实现是在平台设置
 
-![在平台设置](https://img-blog.csdn.net/20180717221623670?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2xpYW8yMDA4MTIyOA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+![1](https://www.github.com/liao20081228/blog/raw/master/图片/zynq-7000中GPIO的实现方式/1.JPG)
 
 
 
 EMIO设置之后如果实现为IO方式就需要添加一个自定义的iobuf,如图
-![添加一个自定义的iobuf](https://img-blog.csdn.net/2018071722170597?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2xpYW8yMDA4MTIyOA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+
+![2](https://www.github.com/liao20081228/blog/raw/master/图片/zynq-7000中GPIO的实现方式/2.JPG)
 
 IOBUF的实现代码如下
-```
+```verilog
   
 module ad_iobuf
 (
