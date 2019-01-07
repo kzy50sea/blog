@@ -53,7 +53,7 @@ tags: Linux使用教程
 **命令**： nl [OPTION]... [FILE]...
 **描述**：将FILE输出到标准输出，并加上行号。
 |常用选项|作用|
-|:----|--|
+|:----|:--|
 |-b STYLE|按照STYLE显示行号，a全部显示行号，t空行不显示行号，n不显示行号，pBRE含有正则表达式BRE匹配的行显示行号|
 |-n FORMAT|根据FORMAT设置行号样式，ln向左对齐，前面不加零补位，rn 向右对齐，前面不加零补位，rz 向右对齐，前面加零补位
 |-w NUMBER|设置行号的位数
@@ -64,7 +64,7 @@ tags: Linux使用教程
 **命令**：more [options] file...
 **描述**：将FILE按页输出到标准输出。
 |常用选项|作用|
-|:----|--|
+|:----|:--|
 |-d |提示使用者，在画面下方显示 [Press space to continue, 'q' to quit.] ，如果使用者按错键，则会显示 [Press 'h' for instructions.] 而不是 '哔' 声
 |-s  | 当遇到有连续两行以上的空白行，就代换为一行的空白行 
 |-number|一页可显示的行数 
@@ -74,7 +74,7 @@ tags: Linux使用教程
 |&emsp;&emsp;&emsp;&emsp;|<http://man.linuxde.net/more>|
 
 |常用交互命令|作用|
-|:----|--|             
+|:----|:--   |          
 |h or ? | 显示帮助
 | SPACE |显示接下来的k行，默认一屏 
 | z|显示接下来的k，默认一屏，若有参数则按照参数
@@ -103,13 +103,13 @@ tags: Linux使用教程
 **命令**：less [options] file...
 **描述**：将FILE按页输出到标准输出。
 |常用选项|无|
-|:----|--|
+|:----|:--|
 |**更多信息**|<http://linux.51yip.com/search/less> 和 man 手册|
 |&emsp;&emsp;&emsp;&emsp;|<http://man.linuxde.net/less>|
 
 
 |常用交互命令|作用|
-|:----|--|  
+|:----|:--|  
 |  空格键 |向下翻动一页；
 |  [pagedown]|向下翻动一页；
 |  [pageup] |向上翻动一页；
@@ -127,7 +127,7 @@ tags: Linux使用教程
 **命令**：head [OPTION]... [FILE]...
 **描述**：默认将每个FILE的前10行输出到标准输出。
 |常用选项|作用|
-|:----|--|
+|:----|:--|
 |-c [-]NUM|输出每个文件的前NUM字节，如果带有-，则输出除最后NUM字节以外的所有内容，NUM可以有前缀单位，如KB，GB
 |-n [-]NUM|输出每个文件的前NUM行，如果带有-，则输出除最后NUM行以外的所有内容，NUM可以有前缀单位，如K，G
 |**更多信息**|<http://linux.51yip.com/search/head> 和 man 手册|
@@ -137,7 +137,7 @@ tags: Linux使用教程
 **命令**：tail [OPTION]... [FILE]...
 **描述**：默认将每个FILE的后10行输出到标准输出。
 |常用选项|作用|
-|:----|--|
+|:----|:--
 |-c [+]NUM|输出每个文件的后NUM字节，如果带有+，则输出除前NUM字节以外的所有内容，NUM可以有前缀单位，如KB
 |-n [+]NUM|输出每个文件的后NUM行，如果带有+，则输出除前NUM行以外的所有内容，NUM可以有前缀单位，如K
 |--pid=PID|与-f联用，当指定的进程号的进程终止后，自动退出tail命令
@@ -154,7 +154,7 @@ tags: Linux使用教程
 
 **描述**：等同于`压缩工具 -d -c`。不解压文件查看文件内容。
 |常用选项|作用|备注|
-|:--|--|:--:
+|:--|:--|:--|
 |-c|将压缩的数据输出到屏幕上
 |-d|解压缩；默认选项
 |-f| 目标存在时覆盖，或原文件是符号链接|
@@ -183,7 +183,7 @@ tags: Linux使用教程
 &emsp;&emsp;&emsp;xzmore  [file...]
 **描述**：查看压缩文件，但只能向后查看。
 |常用选项|无|
-|:--|--|
+|:--|:--
 |**更多信息**|<http://linux.51yip.com/search/zmore> |
 |&emsp;&emsp;&emsp;&emsp;|<http://man.linuxde.net/zmore>|
 ||<http://linux.51yip.com/search/bzmore>|
@@ -198,7 +198,7 @@ tags: Linux使用教程
 &emsp;&emsp;&emsp;xzless  [file...]
 **描述**：查看压缩文件，可以向前向后查看。
 |常用选项|无|
-|:--|--|
+|:--|:--
 |**更多信息**|<http://linux.51yip.com/search/zless> |
 |&emsp;&emsp;&emsp;&emsp;|<http://man.linuxde.net/zless>|
 ||<http://linux.51yip.com/search/bzless>|
@@ -219,7 +219,7 @@ tags: Linux使用教程
 **命令**：diff [-bBi]  file1 file2
 **描述**：将file1与file2按行比较，以查看两个文件的差异。
 |常用选项|作用|
-|:--|--|
+|:--|:--
 |-b|忽略空白的差异。
 |-B|忽略空白行的差异|
 |-i|忽略大小写的差异
@@ -232,7 +232,7 @@ tags: Linux使用教程
 &emsp;&emsp;&emsp;xzdiff [ diff_options ] file1 [ file2 ]
 **描述**：*Zdiff用于在压缩文件上调用diff程序。指定的所有选项都直接传递给diff。如果只指定file1，则将其与file1.gz的未压缩内容进行比较。如果指定了两个文件，则它们的内容（如果需要则先解压）会被传送到diff。输入文件不会被修改。 diff的退出状态将被保留。
 |常用选项|无|
-|:--|--|
+|:--|:--
 |**更多信息**|<http://linux.51yip.com/search/diff> 和 man 手册|
 |&emsp;&emsp;&emsp;&emsp;|<http://man.linuxde.net/diff>|
 
@@ -244,7 +244,7 @@ tags: Linux使用教程
 **命令**：cmp [-s]  file1 file2
 **描述**：将file1与file2按字节比较，以查看两个文件的差异。
 |常用选项|作用|
-|:--|--|
+|:--|:--
 |-s|将所有的不同的字节都列出来。因为cmp预设仅会输出第一个发现的不同点。
 |**更多信息**|<http://linux.51yip.com/search/cmp> 和 man 手册|
 |&emsp;&emsp;&emsp;&emsp;|<http://man.linuxde.net/cmp>|
@@ -256,7 +256,7 @@ tags: Linux使用教程
 &emsp;&emsp;&emsp;xzcmp [ cmp_options ] file1 [ file2 ]
 **描述**：*cmp用于在压缩文件上调用cmp程序。指定的所有选项都直接传递给cmp。如果只指定file1，则将其与file1.gz的未压缩内容进行比较。如果指定了两个文件，则它们的内容（如果需要则先解压）会被传送到cmp。输入文件不会被修改。 cmp的退出状态将被保留。只显示第一个不同字节
 |常用选项|作用|
-|:--|--|
+|:--|:--
 |-b|显示不同的字节|
 |-i skip|输入的文件都跳过前skip字节
 |-i skip1:skip2|第一个文件跳过skip1字节，第二个文件跳过skip2字节
@@ -274,7 +274,7 @@ tags: Linux使用教程
 **描述**：取出含有PATTERN的行。
 
 |常用选项|	作用|
-|--|--|
+|:----|:--|
 |-a|	将 binary 文件以 text 文件的方式搜寻数据
 |-c	|计算找到 '搜寻字符串' 的次数
 |-i	|忽略大小写的不同，所以大小写视为相同
@@ -296,7 +296,7 @@ tags: Linux使用教程
 &emsp;&emsp;&emsp;xzgrep [ grep_options ] [ -e ] pattern filename...
 **描述**：\*Zgrep用于在通过gzip压缩的文件上调用grep。选项 -[drRzZ] | --di\* | --exc* | --inc\* | --rec* | --nu\*导致 zgrep以错误代码终止。所有其他选项直接传递给grep。如果没有输入文件就读取标准输入。
 |常用选项|无|
-|:--|--|
+|:--|:--
 |**更多信息**|<http://linux.51yip.com/search/grep> 和 man 手册|
 |&emsp;&emsp;&emsp;&emsp;|<http://man.linuxde.net/grep>|
 
@@ -305,8 +305,8 @@ tags: Linux使用教程
 &emsp;&emsp;&emsp;bzegrep [ grep_options ] pattern filename...
 &emsp;&emsp;&emsp;xzegrep [ grep_options ] pattern filename...
 **描述**：*Zegrep等同于*zgrep -E，使用扩展的正则表达式对文本进行搜索。
-> |常用选项|无|
-|:--|--|
+|常用选项|无|
+|:--|:--
 |**更多信息**|<http://linux.51yip.com/search/egrep> 和 man 手册|
 |&emsp;&emsp;&emsp;&emsp;|<http://man.linuxde.net/egrep>|
 
@@ -316,19 +316,11 @@ tags: Linux使用教程
 &emsp;&emsp;&emsp;xzfgrep [ grep_options ] pattern filename...
 **描述**：*Zfgrep等同于*zgrep -F，利用固定的字符串来对文本进行搜索，但不支持正则表达式的引用，所以此命令的执行速度也最快。
 |常用选项|无|
-|:--|--|
+|:--|:--
 |**更多信息**|<http://linux.51yip.com/search/fgrep> 和 man 手册|
 |&emsp;&emsp;&emsp;&emsp;|<http://man.linuxde.net/fgrep>|
 
 
-
-
-
----
-
-***<font color=blue>版权声明</font>***：*本文章参考了<font color=blue >**[《鸟哥的Linux私房菜》](http://linux.vbird.org "点击跳转")、[《Linux命令手册》](http://linux.51yip.com "点击跳转")、[《Linux命令大全》](http://man.linuxde.net "点击跳转")以及[《Linux man pages》](https://linux.die.net/man/ "点击跳转")。**</font><font color=red>未经作者允许，**<font color=blue>严禁用于商业出版</font>**，否则追究法律责任。网络转载请注明出处，这是对原创者的起码的尊重！！！*</font>
-
----
 
 
 # 5 文本处理工具——`sed`
@@ -336,7 +328,7 @@ tags: Linux使用教程
 &emsp;&emsp;&emsp;sed [options] -f scriptfile file(s)
 **描述**：文本处理。
 |常用选项|作用|
-|:--|--|
+|:--|:--
 |-n| 使用安静(silent)模式。在一般 sed 的用法中，所有来自 STDIN 的数据一般都会被列出到屏幕上。但如果加上 -n 参数后，则只有经过 sed 特殊处理的那一行(或者动作)才会被列出来。
 |-e|直接在命令行模式上进行 sed 的动作编辑；
 |-f| -f  scriptfile 可以执行  scriptfile 内的 sed 动作；
@@ -360,7 +352,7 @@ tags: Linux使用教程
 **命令**：awk '条件1{动作1 } 条件2{动作2}...' filename
 **描述**：文本处理。awk主要是处理每一行的字段内的数据，而默认的字段的分隔符为 "空格键" 或 "[tab]键"。若动作需要多个命令辅助时可用分号隔开。awk支持逻辑运算符<、<=、=、!=、>、>=。
 |变量名称|作用|
-|--|--|
+|:----|:--|
 |\$0|整行数据|
 |\$n|n为大于0的整数，代表当前行的第n个字段的内容|、
 |NF |每一行 (\$0) 拥有的字段总数|
@@ -373,7 +365,7 @@ tags: Linux使用教程
 **命令**：pr [OPTION]... [FILE]...
 **描述**：pr命令用来将文本文件转换成适合打印的格式，它可以把较大的文件分割成多个页面进行打印，并为每个页面添加标题。
 |常用选项|作用|
-|:--|--|
+|:--|:--
 |-h<标题>|为页指定标题；
 |-l<行数>|指定每页的行数。
 |**更多信息**|<http://linux.51yip.com/search/pr> 和 man 手册|
@@ -384,7 +376,7 @@ tags: Linux使用教程
 **命令**：printf '打印格式 '  实际内容
 **描述**：格式化输出。
 |格式参数|作用|
-|:--|--|
+|:--|:--
 |\a| 警告声音输出
 |\b| 退格键(backspace)
 |\f |清除屏幕 (form feed)
@@ -405,7 +397,7 @@ tags: Linux使用教程
 **描述**：从输入数据的每一行中取出指定的数据。
 
 |常用选项|	作用|
-|--|
+|:--|:--|
 |-d	|设置用来将输入数据截断为几段的单个字符
 |-s	|不显示不包含分隔符的行
 |-f	|以段为单位
@@ -424,7 +416,7 @@ tags: Linux使用教程
 **描述**：排序。
 
 |常用选项|	作用|
-|--|--|
+|:----|:--|
 |-f|	忽略大小写的差异，例如 A 与 a 视为编码相同；
 |-b|	忽略最前面的空格符部分；
 |-M|	以月份的名字来排序，例如 JAN, DEC 等等的排序方法；
@@ -442,7 +434,7 @@ tags: Linux使用教程
 **描述**：用于报告或忽略文件中的连续的重复行。
 
 |常用选项|	作用|
-|--|--|
+|:----|:--|
 |-c|	显示每行重复次数
 |-d|	只显示重复行
 |-f|	跳过哪几段
@@ -458,7 +450,7 @@ tags: Linux使用教程
 **描述**：计算文件行数、词数、字节数。
 
 |常用选项|	作用|
-|--|--|
+|:----|:--|
 |-c	|显示字节数
 |-m	|显示字符数
 |-l	|显示行数
@@ -472,7 +464,7 @@ tags: Linux使用教程
 **描述**：对来自标准输入的字符进行替换、去重、删除。
 
 |常用选项|	作用|
-|--|--|
+|:----|:--|
 |-c|	使用SET1的补集
 |-d|	删除 SET1 ；
 |-s|	把连续重复的字符以SET1中的单个字符表示
@@ -485,7 +477,7 @@ tags: Linux使用教程
 **描述**：过滤控制字符。
 
 |常用选项|	作用|
-|--|--|
+|:----|:--|
 |-b| 不输出任何退格符,在每列的位置上只打印最后写的那个字符.
 |-h|	输出TAB符而不是空格
 |-x	输出空格来代替TAB符
@@ -499,7 +491,7 @@ tags: Linux使用教程
 **描述**：将文件1和文件2中指定数据相同的行合并为一行，且将相同字段放在第一个。
 
 |常用选项|	作用|
-|--|--|
+|:----|:--|
 |-t delimiter|	设置分隔字符，默认为空格
 |-i|	忽略大小写的差异；
 |-1 FIELD|	设置第一个文件用于比较的字段，默认1
@@ -512,7 +504,7 @@ tags: Linux使用教程
 **描述**：将两行贴在一起，且中间以 TAB 键隔开。
 
 |常用选项|	作用|
-|--|--|
+|:----|:--|
 |-d|	设置分隔符，默认为TAB
 |-s|	粘贴一个文件而不是对应行并删除换行符
 |更多信息|	<http://linux.51yip.com/search/paste> 和 man 手册
@@ -523,7 +515,7 @@ tags: Linux使用教程
 **描述**：将TAB转为空格。
 
 |常用选项|	作用|
-|--|--|
+|:----|:--|
 |-t n|	一个tab转为n个空格，缺省为8
 |更多信息|	<http://linux.51yip.com/search/expand> 和 man 手册
 |&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;|	<http://man.linuxde.net/expand>
