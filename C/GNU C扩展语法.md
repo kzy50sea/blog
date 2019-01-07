@@ -1,6 +1,6 @@
 ---
 title: GNU C扩展语法
-tags: C_or_C++
+tags: C
 ---
 
 ------
