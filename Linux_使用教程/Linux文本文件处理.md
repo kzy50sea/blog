@@ -1,5 +1,5 @@
 ---
-title: Linux文本文件处理
+title: Linux文本文件查看与编辑
 tags: Linux使用教程
 ---
 
