@@ -102,13 +102,13 @@ tags: Linux使用教程
 ### 1.1.5 `less`
 **命令**：less [options] file...
 **描述**：将FILE按页输出到标准输出。
->|常用选项|无|
+|常用选项|无|
 |:----|--|
 |**更多信息**|<http://linux.51yip.com/search/less> 和 man 手册|
 |&emsp;&emsp;&emsp;&emsp;|<http://man.linuxde.net/less>|
 
 
->|常用交互命令|作用|
+|常用交互命令|作用|
 |:----|--|  
 |  空格键 |向下翻动一页；
 |  [pagedown]|向下翻动一页；
