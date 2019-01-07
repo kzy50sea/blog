@@ -1,0 +1,54 @@
+---
+title: C与C++中的隐式转化
+tags: C_and_C++
+---
+
+------
+
+&emsp;&emsp;<font color=blue>**_版权声明_**</font>：本文参考了<font color=blue>。</font><font color=red>未经作者允许，<font color=blue>严禁用于商业出版</font>，否则追究法律责任。网络转载请注明出处，这是对原创者的起码的尊重！！！</font>
+
+------
+
+<style>table{word-break:initial;}</style>
+
+
+# 1 算术转换
+
+* 低于int的整型变量运算时全部转为int，结果为int
+* 两个float变量运算转为double，结果为double
+* 两个运算数不同类型时按下图顺序，将二者中低精度转为高精度的，结果为高精度的类型
+![转换](http://img-blog.csdn.net/20180519184349685?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2xpYW8yMDA4MTIyOA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+
+```mermaid!
+graph TD
+A[char,short,bool,usigned short,unsigned char]
+```
+
+# 2 赋值转换
+在赋值运算中，赋值号两边操作数的数据类型不同时，赋值号右边的操作数类型将转换为左边操作数的类型。 
+
+* 浮点转浮点：可能丢失精度
+* 整型转整型：直接复制低n位，n为更短的长度，其余高位丢弃
+* 整型与浮点：不推荐做这样的转换，以十进制来看，一般为小数部分的丢失和添加。
+
+
+* 常量的默认转换类型：
+ * 整型常量的默认数据类型是int类型
+ * 浮点数常量的默认类型是double类型
+
+# 3 函数调用转换
+如果实参与形参的数据类型不同，则将实参的数据类型转为实参的数据类型，转换规则与赋值转换的规则相同。
+# 4 输出转换
+如果与指定的数据类型不同，转为指定的数据类型后输出，转换规则与赋值转换的规则相同。
+
+# 5 类转换（C中没有）
+当子类对象赋值给父类对象 、实参是子类而形参是父类时，子类对象可以隐式转换为父类对象。
+
+
+
+
+------
+
+&emsp;&emsp;<font color=blue>**_版权声明_**</font>：本文参考了<font color=blue>。</font><font color=red>未经作者允许，<font color=blue>严禁用于商业出版</font>，否则追究法律责任。网络转载请注明出处，这是对原创者的起码的尊重！！！</font>
+
+------
