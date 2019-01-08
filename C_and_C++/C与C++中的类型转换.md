@@ -69,7 +69,7 @@ C++中当派生类对象赋值给基类对象 、实参是派生类而形参是�
 
 # 2 强制转换
 在C中使用`（type）expr`;
-在C++中使用`cast_name<ttype>(expr)`,其中cast_name有四种
+在C++中使用`cast_name<ttype>(expr)`,其中cast_name有四种:
   * static_cast
   * const_cast
   * dynamic_cast
