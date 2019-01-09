@@ -27,8 +27,8 @@ tags:  vim插件
 
 # 3 使用
 
-./config_gen.py [OPTIONS]PROJECT_DIRECTORY
-:YcmGenerateConfig [OPTIONS] PROJECT_DIRECTORY
+`~/.vim/bundle/YCM-Generator/config_gen.py [OPTIONS]PROJECT_DIRECTORY`
+`:YcmGenerateConfig [OPTIONS] PROJECT_DIRECTORY`
 # 4 选项
 
 
