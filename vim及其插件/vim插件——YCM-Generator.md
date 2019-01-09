@@ -1,5 +1,5 @@
 ---
-title: vim插件——Vundle 
+title: vim插件——YCM-Generator 
 tags:  vim插件
 ---
 
