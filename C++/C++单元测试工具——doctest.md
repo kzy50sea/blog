@@ -64,16 +64,16 @@ tags: C++
 &emsp;&emsp;doctest和其他测试框架之间的主要区别在于它很轻而且没有侵入性:
                          
 >* 就[包括头文件](https://github.com/onqtam/doctest/blob/master/doc/markdown/benchmarks.md#cost-of-including-the-header)和编写[数千个断言](https://github.com/onqtam/doctest/blob/master/doc/markdown/benchmarks.md#cost-of-an-assertion-macro)方面，编译时间都非常短。
-* 即使在MSVC / GCC /Clang的[最严格](https://github.com/onqtam/doctest/blob/master/scripts/cmake/common.cmake#L84)的警告级别也不会产生任何警告。
-* 提供了一种使用[DOCTEST_CONFIG_DISABLE](https://github.com/onqtam/doctest/blob/master/doc/markdown/configuration.md#doctest_config_disable)标识符从二进制文件中删除所有与测试相关的代码的方法。
-* 不污染全局命名空间（一切都在命名空间doctest），并不拖动任何标题。
-* 完全[兼容](https://github.com/onqtam/doctest/blob/master/doc/markdown/features.md#extremely-portable)C++98——每次提交之前，都在CI上通过超过300个案例（静态分析，杀毒）![此处输入图片的描述][3]
+>* 即使在MSVC / GCC /Clang的[最严格](https://github.com/onqtam/doctest/blob/master/scripts/cmake/common.cmake#L84)的警告级别也不会产生任何警告。
+>* 提供了一种使用[DOCTEST_CONFIG_DISABLE](https://github.com/onqtam/doctest/blob/master/doc/markdown/configuration.md#doctest_config_disable)标识符从二进制文件中删除所有与测试相关的代码的方法。
+>* 不污染全局命名空间（一切都在命名空间doctest），并不拖动任何标题。
+>* 完全[兼容](https://github.com/onqtam/doctest/blob/master/doc/markdown/features.md#extremely-portable)C++98——每次提交之前，都在CI上通过超过300个案例（静态分析，杀毒）![此处输入图片的描述][3]
 
-这允许框架有比其他测试工具更多的使用方式 - 测试可以直接写在生产代码中！
+这允许框架有比其他测试工具更多的使用方式—— 测试可以直接写在生产代码中！
 
 Mantra说：*测试可以被认为是一种文档形式，应该能够靠近他们测试的产品代码。*
 
->* 这使得写测试的障碍非常低。
+* 这使得写测试的障碍非常低。
   * 你不必制作一个单独的源文件。
   * 不用包括一堆东西在里面。
   * 不用将其添加到构建系统。
@@ -93,7 +93,7 @@ Mantra说：*测试可以被认为是一种文档形式，应该能够靠近他�
 
 
 
-#3 功能和设计目标
+# 3 功能和设计目标
 &emsp;&emsp;doctest从一开始就被设计为尽可能轻量级和透明。这些主要特点应该保留下来。
 
 ## 3.1 透明
@@ -161,15 +161,15 @@ Mantra说：*测试可以被认为是一种文档形式，应该能够靠近他�
 * 控制测试执行顺序。
 * 可以在程序的一次执行中，可以创建不同的doctest::Context s并运行多次。
 * 在测试中可以查询代码当前是否在运行——` doctest::isRunningInTest()`。
-* 有一个很重要的规划功能列表 - [见路线图](https://github.com/onqtam/doctest/blob/master/doc/markdown/roadmap.md)。
+* 有一个很重要的规划功能列表——[见路线图](https://github.com/onqtam/doctest/blob/master/doc/markdown/roadmap.md)。
 
 # 4 发展规划图
 &emsp;&emsp;该框架是和将保持自由，但需要你的支持，以维持其发展。有很多新功能特性和维护要做。如果您使用doctest为公司工作，或者有办法这样做，请考虑财务支持。每月通过Patreon捐款和通过PayPal的一次性捐款。[![Patreon](https://cloud.githubusercontent.com/assets/8225057/5990484/70413560-a9ab-11e4-8942-1a63607c0b00.png)](http://www.patreon.com/onqtam)[![PayPal](https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif)](https://www.paypal.me/onqtam/10)
 &emsp;&emsp;未来版本的计划功能——不断改变……
 
 * FOR 1.3
- * 控制台输出由printf改为stream
- * 报告生成器
+  * 控制台输出由printf改为stream
+  * 报告生成器
      * 输出文件
      * 自定义报告系统
      * 一次生成多个报告但只输出一次
@@ -178,9 +178,9 @@ Mantra说：*测试可以被认为是一种文档形式，应该能够靠近他�
      * 生成xml格式报告
      * 生成xUnit格式报告
      * 一个类似[Catch](https://github.com/catchorg/Catch2)的监听接口或者是报告生成器
- * 每个测试都通过时不输出任何东西
- * 仅输出摘要的选项
- * 类似[boost test](http://www.boost.org/doc/libs/1_63_0/libs/test/doc/html/boost_test/utf_reference/rt_param_reference/log_level.html)的日志级别
+  * 每个测试都通过时不输出任何东西
+  * 仅输出摘要的选项
+  * 类似[boost test](http://www.boost.org/doc/libs/1_63_0/libs/test/doc/html/boost_test/utf_reference/rt_param_reference/log_level.html)的日志级别
  * 匹配器——想知道是什么？看看 google test/mock 和 Catch (或 predicates 和 boost test)
  * 断言宏（带谓词）支持卷积
  * 值参数化的测试用例
