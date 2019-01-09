@@ -5,80 +5,166 @@ tags:  vim插件
 
 ------
 
-&emsp;&emsp;<font color=blue>**_版权声明_**</font>：本文参考了<font color=blue>[《Vundle 官方文档》](https://github.com/VundleVim/Vundle.vim.git "点击跳转")。</font><font color=red>未经作者允许，<font color=blue>严禁用于商业出版</font>，否则追究法律责任。网络转载请注明出处，这是对原创者的起码的尊重！！！</font>
+&emsp;&emsp;<font color=blue>**_版权声明_**</font>：本文参考了<font color=blue>[《YCM-Generator 官方文档》](https://github.com/rdnetto/YCM-Generator "点击跳转")。</font><font color=red>未经作者允许，<font color=blue>严禁用于商业出版</font>，否则追究法律责任。网络转载请注明出处，这是对原创者的起码的尊重！！！</font>
 
 ------
 
 <style>table{word-break:initial;}</style>
 
 
-
 # 1 简介
-* **插件介绍**：管理vim插件。
-* **仓库地址**：<https://github.com/VundleVim/Vundle.vim.git>
+* **插件介绍**：在输入/删除左括号时，能自动补上/删除右括号。
+* **仓库地址**：<https://github.com/jiangmiao/auto-pairs>
+
 
 # 2 安装
+* `$vim ~/.vimrc`
+* 在`call vundle#begin()`和`call vundle#end()`之间添加`Plugin 'jiangmiao/auto-pairs'`
+* `:wq`
+* `$vim`
+* `:PluginInsttall`
 
-* 下载代码仓库
-```
-$git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
-$vim ~/.vimrc
-```
-* 在`~/.vimrc`添加以下内容：
-```
-set nocompatible 
-filetype off 
-set rtp+=~/.vim/bundle/Vundle.vim 
-call vundle#begin() 
-Plugin 'VundleVim/Vundle.vim'
-call vundle#end() 
-filetype plugin indent on 
-```
-* 保存但不退出vim
-* 安装插件管理器Vundle
-```
-:PluginInstall
-```
-* 显示done则成功
 
 # 3 使用
-## 3.1 安装插件
- * 在~/.vimrc文件中加上下面的语句，保存后执行执行PluginInstall即可自动下载并安装插件。
-```vim-scripts
-set nocompatible              "不与vi兼容
-filetype off                  "关闭打开文件类型检测
-set runtimep+=~/.vim/bundle/Vundle.vim 
-call vundle#begin() 
-Plugin 'VundleVim/Vundle.vim'
-plugin '用户名/插件仓库名'          "GitHub上的插件
-Plugin 'vim-scripts/插件仓库名'     "来自vim-scripts.org的插件
-Plugin 'git clone 后面的地址'        "由Git支持但不再github上的插件仓库
-Plugin 'file:///+本地插件仓库绝对路径'  "本地的Git仓库(例如自己的插件)
-Plugin 'rstacruz/sparkup', {'rtp':'vim/'} "插件在仓库的子目录vim/中
-... ...
-call vundle#end() 
-filetype plugin indent on           "打开文件类型检测，并加载相关插件，根据文件类型设置缩进距离
-```
-* 可以先用git clone克隆仓库源码到 ~/.vim/bundle 文件夹， 或者直接将别人下载好的仓库拷贝到~/.vim/bundle，直接安装。
+<table border=1>
+<caption>字符'|'表示光标所在位置</caption>
+    <tr>
+        <th>功能</th>
+        <th>支持</th>
+        <th>原文本</th>
+        <th>按键</th>
+        <th>新文本</th>
+    </tr>
+    <tr>
+        <td>成对插入</td>
+        <td>{}，[]，()，""，''，``</td>
+        <td></td>
+        <td>[</td>
+        <td>[|]</td>
+    </tr>
+    <tr>
+        <td>成对删除</td>
+        <td>{}，[]，()，""，''，``</td>
+        <td>foo[|]</td>
+        <td>BACKSPACE</td>
+        <td>foo|</td>
+    </tr>
+    <tr>
+        <td>换行并自动缩进</td>
+        <td>{}，[]，()</td>
+        <td>node{|}</td>
+        <td>ENTER</td>
+        <td>node{<br>&emsp;&emsp;|<br>}</td>
+    </tr>
+    <tr>
+        <td>在括号内两侧各插入空格</td>
+        <td>{}，[]，()</td>
+        <td>foo{|}</td>
+        <td>SPACE</td>
+        <td>foo{ | }</td>
+    </tr>
+    <tr>
+        <td>词后单引号不成对插入</td>
+        <td>'</td>
+        <td>foo|</td>
+        <td>'</td>
+        <td>foo'|</td>
+    </tr>
+    <tr>
+        <td>跳过右括号</td>
+        <td>{}，[]，()</td>
+        <td>[ foo| ]</td>
+        <td>]</td>
+        <td>[ foo ]|</td>
+    </tr>
+    <tr>
+        <td>在转义符\后禁用插件</td>
+        <td>{}，[]，()，""，''，``</td>
+        <td>foo\|</td>
+        <td>{</td>
+        <td>foo\{|</td>
+    </tr>
+    <tr>
+        <td>对字符串加小括号</td>
+        <td>C风格字符串</td>
+        <td>|'foo'</td>
+        <td>ALT+e</td>
+        <td>('foo')|</td>
+    </tr>
+    <tr>
+    <td>删除重复成对符号</td>
+        <td>{}，[]，()，''，""，``</td>
+        <td>foo'''|'''</td>
+        <td>BACKSPACE</td>
+        <td>foo|</td>
+    </tr>
+    <tr>
+     <td>飞行模式，跳出括号对而不插入</td>
+        <td>{}，[]，()</td>
+        <td>if(a[3|])</td>
+        <td>)</td>
+        <td>if(a[3])|</td>
+    </tr>
+     <tr>
+     <td>撤销飞行模式，插入而不是跳出括号对</td>
+        <td>{}，[]，()</td>
+        <td>if(a[3])|</td>
+        <td>ALT+b</td>
+        <td>if(a[3])|</td>
+    </tr>
+</table>
 
-## 3.2 卸载插件
-* 先在`~/.vimrc`中删除相应插件
-* 然后输入vim,再输入`:BundleClean`
+# 4 选项
+* `let g:AutoPairs = {'(':')', '[':']', '{':'}',"'":"'",'"':'"'}`
+  设置要自动配对的符号
+  
+* `let g:AutoPairs['<']='>'`
+  添加要自动配对的符号\<>
+  
+* `let b:AutoPairs = g:AutoParis`
+ 设置要自动配对的符号，默认为`g:AutoPairs`，可以通过自动命令来对不同文件类型设置不同自动匹配对符号。
+ 
+* `let g:AutoPairsShortcutToggle = '<M-p>'`
+  设置插件打开/关闭的快捷键，默认为ALT+p。
+  
+* `let g:AutoPairsShortcutFastWrap = '<M-e>'`
+   设置自动为文本添加圆括号的快捷键，默认为ALT+e。
+   
+* `let g:AutoPairsShortcutJump = '<M-n>'`
+   设置调到下一层括号对的快捷键，默认为ALT+n。
+   
+* `let g:AutoPairsShortcutBackInsert = '<M-b>'`
+ 设置撤销飞行模式的快捷键，默认为ALT+b。
+ 
+* `let g:AutoPairsMapBS = 1`
+ 把BACKSPACE键映射为删除括号对和引号，默认为1。
+ 
+* `let g:AutoPairsMapCh = 1`
+ 把ctrl+h键映射为删除括号对和引号，默认为1。
+ 
+* `let g:AutoPairsMapCR = 1`
+ 把ENTER键映射为换行并缩进，默认为1。
+ 
+* `let g:AutoPairsCenterLine = 1 `
+ 当`g:AutoPairsMapCR`为1时，且文本位于窗口底部时，自动移到窗口中间。
+ 
+* `let g:AutoPairsMapSpace = 1`
+ 把SPACE键映射为在括号两侧添加空格，默认为1。
+ 
+* `let g:AutoPairsFlyMode = 0`
+ 启用飞行模式，默认为0。
+ 
+* `let g:AutoPairsMultilineClose = 1`
+ 启用跳出多行括号对，默认为1，为0则只能跳出同一行的括号。
 
-## 3.3 Vundle常用命令
-```
-BundleList         -列举列表(也就是.vimrc)中配置的所有插件  
-BundleInstall      -安装列表中的全部插件  
-BundleInstall!     -更新列表中的全部插件  
-BundleSearch foo   -查找foo插件  
-BundleSearch! foo  -刷新foo插件缓存  
-BundleClean        -清除列表中没有的插件  
-BundleClean!       -清除列表中没有的插件
-```
+
+
+
+
 
 
 ------
 
-&emsp;&emsp;<font color=blue>**_版权声明_**</font>：本文参考了<font color=blue>[《Vundle 官方文档》](https://github.com/VundleVim/Vundle.vim.git "点击跳转")。</font><font color=red>未经作者允许，<font color=blue>严禁用于商业出版</font>，否则追究法律责任。网络转载请注明出处，这是对原创者的起码的尊重！！！</font>
+&emsp;&emsp;<font color=blue>**_版权声明_**</font>：本文参考了<font color=blue>[《YCM-Generator 官方文档》](https://github.com/rdnetto/YCM-Generator "点击跳转")。</font><font color=red>未经作者允许，<font color=blue>严禁用于商业出版</font>，否则追究法律责任。网络转载请注明出处，这是对原创者的起码的尊重！！！</font>
 
 ------
