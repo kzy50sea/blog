@@ -24,13 +24,13 @@ tags: vim插件
 
 # 2 安装
 * 手动编译安装
- * 从<http://http://ctags.sourceforge.net//>下载源码
- * 解压后进入源码根目录
- * 配置：`./configure --with-flex ` (注：如果平台是Linux,最好带上 --with-flex选项)
- * 编译：`make ` (注：我没有遇到错误)
- * 安装：`make install `
+  * 从<http://http://ctags.sourceforge.net//>下载源码
+  * 解压后进入源码根目录
+  * 配置：`./configure --with-flex ` (注：如果平台是Linux,最好带上 --with-flex选项)
+  * 编译：`make ` (注：我没有遇到错误)
+  * 安装：`make install `
 * 下载已编译的二进制包
- * `sudo apt install ctags` 
+  * `sudo apt install ctags` 
 
 
 
@@ -48,7 +48,7 @@ tags: vim插件
 &emsp;&emsp;除非指定了`--language-force`选项，否则将根据文件名到语言的映射自动选择每个源文件的语言。可以使用`--list-maps`选项显示对文件名与语言对应的的映射关系，并且可以使用`--langmap`选项更改这些映射关系。在支持ctags的平台上，如果文件名未映射到语言并且文件可执行，则检查文件的第一行以查看文件是否为一个可识别语言的“＃！”脚本。
 &emsp;&emsp;默认情况下，将忽略所有其他文件名。 这允许对单个目录的所有文件（例如`ctags * `）或整个源目录树中的所有文件（例如`ctags -R`）运行ctags，因为只有名称映射到语言的那些文件才会 被扫描。
 
-&emsp;&emsp;[.h扩展名映射到C++文件而不是C文件的原因是因为在C++中使用.h扩展名是很常见的，并且不会产生有害的结果
+&emsp;&emsp;.h扩展名映射到C ++ 文件而不是C文件的原因是因为在C ++ 中使用.h扩展名是很常见的，并且不会产生有害的结果
 
 # 7  选项
 * 尽管选项很多，但最常用的默认方式是不带任何选择（如`CTAGS *`或`ctags -R`），这将在当前目录下为所有可识别的源文件创建一个的tag数据库文件。下面描述的选项用于定制定制以满足特殊需要。
