@@ -1,6 +1,6 @@
 ---
 title: 命令行参数处理——getopt系列函数
-tags: unix环境编程
+tags: Linux系统API
 ---
 
 ------
