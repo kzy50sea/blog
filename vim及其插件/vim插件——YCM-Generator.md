@@ -26,12 +26,13 @@ tags:  vim插件
 
 
 # 3 使用
-
+* 独立使用
 `~/.vim/bundle/YCM-Generator/config_gen.py [OPTIONS]PROJECT_DIRECTORY`
+* 作为vim插件
 `:YcmGenerateConfig [OPTIONS] PROJECT_DIRECTORY`
 # 4 选项
 
-
+# 5  
 
 
 
