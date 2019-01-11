@@ -106,6 +106,9 @@ session-setup-script=command
 session-cleanup-script=command 
 session-wrapper=command 
 greeter-wrapper=command (Not in Ubuntu 12.04 LTS) 
+guest-wrapper=command
+xserver-command-command
+
 ```
 **display-setup-script** 在 X server 启动后,欢迎界面启动之前运行。该命令由 root 运行,如果命令执行出现错误,X server 会停止运行。 
 
@@ -120,6 +123,10 @@ greeter-wrapper=command (Not in Ubuntu 12.04 LTS)
 **session-wrapper** 该命令用于运行会话。该命令使用用户身份运行，需要执行传递来的参数以完成运行会话。默认值为 lightdm-session。因此如果需要覆盖此设置，您应该链接到它 
 
 **greeter-wrapper** 该命令用于运行欢迎界面。等同于 session-wrapper。
+
+**guest-wrapper** 该命令用于运行欢迎界面。等同于guest-wrapper。
+
+**xserver-command** 设置xserver启动时要执行的命令。
 
 ## 2.7 修改墙纸 
 
@@ -144,6 +151,11 @@ background=/usr/share/lubuntu/wallpapers/lubuntu-default-wallpaper.png
 >上面列举的文件中可能有些是不存在的，只要新建即可达到效果。比如入口文件目录：/usr/share/lightdm/lightdm.conf.d/
 >其次是默认的文件，一定有这个文件：/usr/share/lightdm/lightdm.conf.d/50-ubuntu.conf，很多情况只需要编辑这个文件即可。
 
+# 2.8 禁止日志备份
+默认备份设置保存在 `/usr/share/lightdm/lightdm.conf.d/ `备份设置包中。 
+```
+backup-logs=false
+```
 # 3 LightDM 相关操作 
  
 LightDM 日志:/var/log/lightdm。 
