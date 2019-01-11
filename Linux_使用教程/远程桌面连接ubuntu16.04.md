@@ -1,5 +1,5 @@
 ---
-title: 远程桌面ubuntu16.04 
+title: 远程连接ubuntu16.04 
 tags: Linux教程
 ---
 
@@ -11,7 +11,8 @@ tags: Linux教程
 
 <style>table{word-break:initial;}</style>
 
-# 1 使用 XDMCP+xmanager
+# 1 图形界面
+# 1.1 使用 XDMCP+xmanager+lightdm
 第一步：开启XDMCP server
 ```bash
 sudo vim /usr/share/lightdm/lightdm.conf.d/50-ubuntu.conf
@@ -22,7 +23,9 @@ sudo vim /usr/share/lightdm/lightdm.conf.d/50-ubuntu.conf
 enabled=true
 ```
 
-第二步：打开 177端口
+第二步：如果启动了ufw，则打开 177端口，
+
+
 ```
 sudo ufw allow 177
 ```
@@ -36,7 +39,42 @@ sudo apt install xubuntu-desktop
 sudo service lightdm restart
 ```
 
+
+
+# 1.2 使用 mate+xstart
+```
+
+sudo apt install ssh mate-desktop-evironment mate-desktop
+
+```
+
+# 1.3 xshell+ssh+xmanager
+```
+sudo apt install ssh
+```
+xshell转发x11连接到xmanager
+
 # 使用Xrdp+VNC
+
+```
+sudo apt install tightvncserver
+
+echo unity > ~/.xsesstion
+
+sudo apt install xrdp
+
+sudo service xrdp restart
+
+gsetttings set org.gnome.desktop.remote-access.requre-encryption false
+
+```
+
+# 2 终端连接
+
+# 2. 1 xshell+ssh
+
+# 2.2  xstart+ssh
+
 
 
 
