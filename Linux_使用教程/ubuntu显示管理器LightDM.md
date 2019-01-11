@@ -42,7 +42,7 @@ LightDM 配置文件包括:
 [SeatDefaults] 
 user-session=mysession 
 ```
-在 `/usr/share/doc/lightdm/lightdm.conf.gz` 文件中保存着所有可能的配置情况。
+**在 `/usr/share/doc/lightdm/lightdm.conf.gz` 文件中保存着所有可能的配置选项**。
 
 还有一个配置文件：`/etc/lightdm/users.conf`,但是如果您的系统上运行了accountsservice，则会忽略此配置文件（如果您不确定，请使用命令ps -aef | grep accountsservice从shell进行检查）。
 
