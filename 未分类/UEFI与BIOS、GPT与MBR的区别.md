@@ -136,6 +136,7 @@ tags: 其它
 &emsp;&emsp;另外，与BIOS模式相比，虽然UEFI可以直接取得GPT的分区表，不过最好依旧拥有BIOS boot的支持，同时，为了与windows兼容，并且提供其他第三方厂商所使用的UEFI应用程序储存的空间，你必须要格式化一个vfat的文件系统， 大约提供512MB到1G左右的容量，以让其他 UEFI 执行较为方便。
 &emsp;&emsp;由于UEFI已经克服了BIOS的1024柱面的问题，因此你的开机管理程序与内核可以放置在磁盘开始的前2TB位置内即可！加上之前提到的 BIOS boot 以及 UEFI 支持的分区槽，基本上你的/boot目录几乎都是/dev/sda3之后的号码了！这样开机还是没有问题的！所以要注意喔！与以前熟悉的分区状况已经不同，/boot不再是/dev/sda1 ！
 
+>所以BIOS也可以支持mbr和gpt，uefi也可以支持mbr和gpt，但是操作系统有一定要求，比如window使用uefi时只能用gpt，而linux则都可以。
 
 ------
 
