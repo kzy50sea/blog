@@ -15,22 +15,23 @@ tags: Linux教程
 # 1.1 使用 XDMCP+xmanager+lightdm
 第一步：开启XDMCP server
 ```bash
-sudo vim /usr/share/lightdm/lightdm.conf.d/50-ubuntu.conf
+vim /etc/lightdm/lightdm.conf
 
 #添加
-
+[Seat:*]
+Xserver-allow-tcp=true
 [XDMCPserver]
 enabled=true
 ```
 
-第二步：如果启动了ufw，则打开 177端口，
+第二步：如果启动了ufw，则打开 177端口，默认情况下，ubuntu桌面版没有开启ufw
 
 
 ```
 sudo ufw allow 177
 ```
 
-第三步：安装xubuntu
+第三步：安装xubuntu，因为unit有bug
 ```
 sudo apt install xubuntu-desktop
 ```
@@ -39,7 +40,7 @@ sudo apt install xubuntu-desktop
 sudo service lightdm restart
 ```
 
-
+第五步：使用xmanager连接即可
 
 # 1.2 使用 mate+xstart
 ```
@@ -47,7 +48,7 @@ sudo service lightdm restart
 sudo apt install ssh mate-desktop-evironment mate-desktop
 
 ```
-
+然后用xstart建立会话，会话命令使用：`/usr/bin/mate-session --display $DISPLAY`
 # 1.3 xshell+ssh+xmanager
 ```
 sudo apt install ssh
@@ -68,13 +69,19 @@ sudo service xrdp restart
 gsetttings set org.gnome.desktop.remote-access.requre-encryption false
 
 ```
+然后在桌面上搜索 `Desktop sharing`,打开远程桌面，设置好密码。
+
+* windows可用远程桌面
+* 也可用VNC viewer 连接
 
 # 2 终端连接
 
 # 2. 1 xshell+ssh
-
+正常建立即可，要注意的是：
+* 小键盘设置为普通模式
+* backspace和delete设置为backspace（ctrl+h）
 # 2.2  xstart+ssh
-
+xstar 运行命令 选择`gnome-terminal`
 
 
 
