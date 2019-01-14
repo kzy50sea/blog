@@ -248,7 +248,6 @@ tcsh是csh的增强版，与C shell完全兼容。
 |Alt  + p |    逆序搜索指定字符串的历史命令 
 |Alt  + \<|   第一条历史命令
 |Alt  + \>|   最后一条历史命令
-
 |**程序相关**|||
 |Ctrl +c |终止目前的命令|
 |Ctrl + \ |终止程序，并产生core文件|
@@ -259,6 +258,8 @@ tcsh是csh的增强版，与C shell完全兼容。
 |Ctrl + z |暂停目前的命令|
 |Ctrl + l|清屏|
 |Ctrl + i|补全|
+|shift + Pageup|向上翻页|
+|shift + Pagedown|向下翻页|
 
 # 7  命令执行的判断依据
 |命令|作用|
