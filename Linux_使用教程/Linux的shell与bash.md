@@ -257,7 +257,7 @@ tcsh是csh的增强版，与C shell完全兼容。
 |Ctrl + m |就是 Enter 啦|
 |Ctrl + z |暂停目前的命令|
 |Ctrl + l|清屏|
-|Ctrl + i|补全|
+|Ctrl + i、TAB|补全|
 |shift + Pageup|向上翻页|
 |shift + Pagedown|向下翻页|
 
