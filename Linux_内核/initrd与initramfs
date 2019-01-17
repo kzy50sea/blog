@@ -34,7 +34,7 @@ tmpfs是从ramfs派生出的,添加了大小的限制以及回写数据到交换
 
 ## 1.3 rootfs
 
-rootfs是ramfs或tmpfs的特殊实例，用于挂载真实文件系统，在2.6的内核中必然存在。rootfs不能被卸载这个理由近似于你不能杀死init进程，它小巧且简单的为内核确保某些列表不能为空，而不是用特定的代码来检查和处理一个空列表。大部分其他的文件系统安装于rootfs之上。一个空白ramfs实例的空间总量占用是极小的。
+rootfs是ramfs或tmpfs的特殊实例，**用于挂载真实文件系统**，在2.6的内核中必然存在。rootfs不能被卸载这个理由近似于你不能杀死init进程，它小巧且简单的为内核确保某些列表不能为空，而不是用特定的代码来检查和处理一个空列表。大部分其他的文件系统安装于rootfs之上。一个空白ramfs实例的空间总量占用是极小的。
 
 >tmpfs, rootfs, initramfs都是ramfs的一种,它们或者是对它的一些特殊的应用,或者是对它某一方面能力的改进加强.
 
@@ -48,18 +48,16 @@ rootfs是ramfs或tmpfs的特殊实例，用于挂载真实文件系统，在2.6�
 
 
 
-# 2 initrd
-
+# 2 initrd和initramfs
+## 2.1 initrd
 
 initrd是linux在系统引导过程中使用的一个临时的根文件系统，用来支持两阶段的引导过程。
 
-再白话一点，initrd就是一个带有根文件系统的虚拟RAM盘，里面包含了根目录‘/’，以及其他的目录，比如：bin，dev，proc，sbin，sys等linux启动时必须的目录，以及在bin目录下加入了一下必须的可执行命令。
+再白话一点，initrd就是一个带有根文件系统的ramdisk，里面包含了根目录‘/’，以及其他的目录，比如：bin，dev，proc，sbin，sys等linux启动时必须的目录，以及在bin目录下加入了一下必须的可执行命令。
 
 PC或者服务器linux内核使用这个initrd来挂载真正的根文件系统，然后将此initrd从内存中卸掉，这种情况下initrd其实就是一个过渡使用的东西。 当然也可以不卸载这个initrd，直接将其作为根文件系统使用，这当然是在没有硬盘的情况下了，这种情况多用在没有磁盘的超轻量级的嵌入式系统。 其实现在的大多数嵌入式系统也是有自己的磁盘的，所以，initrd在现在大多数的嵌入式系统中也作过渡使用。
 
- 
-
-‘第二阶段引导程序’，常用的是grub将内核解压缩并拷贝到内存中，然后内核接管了CPU开始执行，然后内核调用init()函数，注意，此init函数并不是后来的init进程！！！然后内核调用函数initrd_load()来在内存中加载initrd根文件系统。Initrd_load()函数又调用了一些其他的函数来为RAM磁盘分配空间，并计算CRC等操作。然后对RAM磁盘进行解压，并将其加载到内存中。现在，内存中就有了initrd的映象。
+常用的是grub将内核解压缩并拷贝到内存中，然后内核接管了CPU开始执行，然后内核调用init()函数，注意，此init函数并不是后来的init进程！！！然后内核调用函数initrd_load()来在内存中加载initrd根文件系统。Initrd_load()函数又调用了一些其他的函数来为RAM磁盘分配空间，并计算CRC等操作。然后对RAM磁盘进行解压，并将其加载到内存中。现在，内存中就有了initrd的映象。
 
 然后内核会调用mount_root()函数来创建真正的跟分区文件系统，然后调用sys_mount()函数来加载真正的根文件系统，然后chdir到这个真正的根文件系统中。
 
@@ -72,7 +70,7 @@ PC或者服务器linux内核使用这个initrd来挂载真正的根文件系统�
 
 # 3 initramfs
 
-所有的2.6 Linux内核包含了一个gzip压缩过的cpio格式存档，当内核启动时它将被提取到rootfs。在提取之后，内核检测rootfs是否包含了一个"init"文件，如果包含就来执行它并设置PID为1。这个init进程将负责引导系统的其余内容，包扩定位和挂载真正根设备(若有的话)。如果rootfs在提取cpio存档以后并不包含一个init程序，内核将失败并通过旧的代码来寻找和挂载一个根分区，接着执行一些/sbin/init的变种。
+所有的2.6 Linux内核包含了一个gzip压缩过的cpio格式存档，当内核启动时它将被提取到rootfs。在提取之后，内核检测rootfs是否包含了一个"init"文件，如果包含就来执行它并设置PID为1。这个init进程将负责引导系统的其余内容，包括定位和挂载真正根设备(若有的话)。如果rootfs在提取cpio存档以后并不包含一个init程序，内核将失败并通过旧的代码来寻找和挂载一个根分区，接着执行一些/sbin/init的变种。
 
 rootfs可以被打包为一个cpio压缩包，并通过initrd=命令行参数传递给内核，这就是initramfs。也可以通过INITRAMFS_SOURCE选项直接编译进内核。
 
@@ -82,7 +80,7 @@ Linux内核在初始化之后会执行init进程，而init进程会挂载我们�
 
 initrd和initramfs是两种概念，initrd出现在initramfs之前，它也是一种ramfs镜像文件，但它不会被作为rootfs的，它是用来在启动过程中初始化系统的，它可以被卸载。
 
-*  initrd是一个单独的文件，必须是和kernel分离的一种形式存在。；initramfs和Linux内核链接在一起(/usr目录下的程序负责生成initramfs文档)。
+*  initrd是一个单独的文件，必须是和kernel分离的一种形式存在。；initramfs和Linux内核可以链接在一起。
 
 * initrd是一个压缩的文件系统映像(可以是ext2等，需要内核的驱动)；initramfs是类似tar的cpio压缩文档。内核中的cpio解压缩代码很小，而且init数据在boot后可以丢弃。
 
@@ -94,10 +92,10 @@ initrd和initramfs是两种概念，initrd出现在initramfs之前，它也是�
 其实**两种最大的区别就是一个可以卸载，一个不可以卸载**。那么作为外部文件传入的时候，kernel如何区分到底是initramfs还是initrd镜像呢？其实就是通过它的格式，到底是zip的cpio呢？还是zip的文件系统呢？由此就决定是否要卸载它。并且当initramfs作为外部文件时，会覆盖掉kernel内部的initramfs的。
 
 
- 一般initramfs+ramfs，initrd+ramdisk+(ext2,ext3,ext4)可作为rootfs。其中initramfs,initrd是一种image格式的文件，PC有相应的工具制作这些image。tmpfs可存储设备节点，mount到/dev下
+ 一般initramfs+ramfs，initrd+ramdisk+(ext2,ext3,ext4)可作为rootfs。其中initramfs,initrd是一种image格式的文件，PC有相应的工具制作这些image。
 
 
-
+更多资料: <https://www.ibm.com/developerworks/cn/linux/l-k26initrd/>
 
 
 ------
