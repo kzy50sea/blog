@@ -44,6 +44,22 @@ ram disk被弃用的另外一个原因是环回设备(loopback)引入。环回�
 
 initrd是 bootloader initialized ram disk的缩写，就是由 bootloader 初始化的内存盘。在 linux内核启动前， boot loader 会将存储介质中的 initrd 文件加载到ram disk中。内核启动时会在访问真正的根文件系统前先访问ram disk中的 initrd 文件系统。在 boot loader 配置了 initrd 的情况下，内核启动被分成了两个阶段，第一阶段先执行 initrd 文件系统中的"/linuxrc"，完成加载驱动模块等任务，第二阶段才会执行真正的根文件系统中的 /sbin/init 进程。第一阶段启动的目的是为第二阶段的启动扫清一切障爱，最主要的作用就是是加载根文件系统存储介质的驱动模块。我们知道根文件系统可以存储在包括IDE、SCSI、USB在内的多种介质上，如果将这些设备的驱动都编译进内核，可以想象内核会多么庞大、臃肿。
 
+
+```
+initrd是linux在系统引导过程中使用的一个临时的根文件系统，用来支持两阶段的引导过程。
+
+再白话一点，initrd就是一个带有根文件系统的ramdisk，里面包含了根目录‘/’，以及其他的目录，比如：bin，dev，proc，sbin，sys等linux启动时必须的目录，以及在bin目录下加入了一下必须的可执行命令。
+
+PC或者服务器linux内核使用这个initrd来挂载真正的根文件系统，然后将此initrd从内存中卸掉，这种情况下initrd其实就是一个过渡使用的东西。 当然也可以不卸载这个initrd，直接将其作为根文件系统使用，这当然是在没有硬盘的情况下了，这种情况多用在没有磁盘的超轻量级的嵌入式系统。 其实现在的大多数嵌入式系统也是有自己的磁盘的，所以，initrd在现在大多数的嵌入式系统中也作过渡使用。
+
+常用的是grub将内核解压缩并拷贝到内存中，然后内核接管了CPU开始执行，然后内核调用init()函数，注意，此init函数并不是后来的init进程！！！然后内核调用函数initrd_load()来在内存中加载initrd根文件系统。Initrd_load()函数又调用了一些其他的函数来为RAM磁盘分配空间，并计算CRC等操作。然后对RAM磁盘进行解压，并将其加载到内存中。现在，内存中就有了initrd的映象。
+
+然后内核会调用mount_root()函数来创建真正的跟分区文件系统，然后调用sys_mount()函数来加载真正的根文件系统，然后chdir到这个真正的根文件系统中。
+
+最后，init函数调用run_init_process函数，利用execve来启动init进程，从而进入init的运行过程。
+```
+
+
 **Linux2.4内核对 Initrd 的处理流程：**
 
 1. boot loader把内核以及/dev/initrd的内容加载到内存，/dev/initrd是由bootloader初始化的设备，存储着initrd。
@@ -85,32 +101,21 @@ cpio-initrd 的处理流程
 Linux2.4内核的initrd的格式是文件系统镜像文件， linux2.4内核对initrd的处理流程如下：
 
 
-```
-initrd是linux在系统引导过程中使用的一个临时的根文件系统，用来支持两阶段的引导过程。
-
-再白话一点，initrd就是一个带有根文件系统的ramdisk，里面包含了根目录‘/’，以及其他的目录，比如：bin，dev，proc，sbin，sys等linux启动时必须的目录，以及在bin目录下加入了一下必须的可执行命令。
-
-PC或者服务器linux内核使用这个initrd来挂载真正的根文件系统，然后将此initrd从内存中卸掉，这种情况下initrd其实就是一个过渡使用的东西。 当然也可以不卸载这个initrd，直接将其作为根文件系统使用，这当然是在没有硬盘的情况下了，这种情况多用在没有磁盘的超轻量级的嵌入式系统。 其实现在的大多数嵌入式系统也是有自己的磁盘的，所以，initrd在现在大多数的嵌入式系统中也作过渡使用。
-
-常用的是grub将内核解压缩并拷贝到内存中，然后内核接管了CPU开始执行，然后内核调用init()函数，注意，此init函数并不是后来的init进程！！！然后内核调用函数initrd_load()来在内存中加载initrd根文件系统。Initrd_load()函数又调用了一些其他的函数来为RAM磁盘分配空间，并计算CRC等操作。然后对RAM磁盘进行解压，并将其加载到内存中。现在，内存中就有了initrd的映象。
-
-然后内核会调用mount_root()函数来创建真正的跟分区文件系统，然后调用sys_mount()函数来加载真正的根文件系统，然后chdir到这个真正的根文件系统中。
-
-最后，init函数调用run_init_process函数，利用execve来启动init进程，从而进入init的运行过程。
-```
 
 
 
-Initrd 的用途主要有以下四种：
-1. linux 发行版的必备部件
+
+**Initrd 的用途主要有以下四种：**
+* linux 发行版的必备部件
 linux 发行版必须适应各种不同的硬件架构，将所有的驱动编译进内核是不现实的，initrd 技术是解决该问题的关键技术。Linux 发行版在内核中只编译了基本的硬件驱动，在安装过程中通过检测系统硬件，生成包含安装系统硬件驱动的 initrd，无非是一种即可行又灵活的解决方案。
 
-2. livecd 的必备部件
+* livecd 的必备部件
 同 linux 发行版相比，livecd 可能会面对更加复杂的硬件环境，所以也必须使用 initrd。
 
-3. 制作 Linux usb 启动盘必须使用 initrd
+*  制作 Linux usb 启动盘必须使用 initrd
 usb 设备是启动比较慢的设备，从驱动加载到设备真正可用大概需要几秒钟时间。如果将 usb 驱动编译进内核，内核通常不能成功访问 usb 设备中的文件系统。因为在内核访问 usb 设备时， usb 设备通常没有初始化完毕。所以常规的做法是，在 initrd 中加载 usb 驱动，然后休眠几秒中，等待 usb设备初始化完毕后再挂载 usb 设备中的文件系统。
-4. 在 linuxrc 脚本中可以很方便地启用个性化 bootsplash。
+
+* 在 linuxrc 脚本中可以很方便地启用个性化 bootsplash。
 
 
 
