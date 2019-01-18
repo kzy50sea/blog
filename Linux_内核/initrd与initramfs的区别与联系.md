@@ -52,7 +52,7 @@ linux内核使用这个initrd来挂载真正的根文件系统，然后将此ini
 然后内核会调用mount_root()函数来创建真正的跟分区文件系统，然后调用sys_mount()函数来加载真正的根文件系统，然后chdir到这个真正的根文件系统中。
 
 最后，init函数调用run_init_process函数，利用execve来启动init进程，从而进入init的运行过程。
-```
+
 
 
 **Linux2.4内核对 Initrd 的处理流程：**
@@ -68,7 +68,7 @@ linux内核使用这个initrd来挂载真正的根文件系统，然后将此ini
 
 linux2.4 内核的 initrd 的执行是作为内核启动的一个中间阶段，也就是说 initrd 的 /linuxrc 执行以后，内核会继续执行初始化代码，我们后面会看到这是 linux2.4 内核同 2.6 内核的 initrd 处理流程的一个显著区别。
 
-**Linux2. 内核对Initrd 的处理流程：**
+**Linux2.6 内核对Initrd 的处理流程：**
 
 1. boot loader把内核以及initrd文件加载到内存的特定位置。
 2. 内核判断initrd的文件格式，如果不是cpio格式，将其作为image-initrd处理。
