@@ -37,7 +37,7 @@ ram disk是一种实现文件系统的后备存储的过时的机制，它用一
 
 ram disk被弃用的另外一个原因是环回设备(loopback)引入。环回设备提供了一种更加灵活、方便的从文件而不是从内存块中创建合成块设备的方法，有关详细信息，请参阅losetup（8）。
 
-简单说来，ramdisk就是一个基于ram的block device，是一个大小固定的内存块，可像disk一样格式化和挂载。Ramdisk像所有的block device一样，它需要一个文件系统驱动。此外还有一些弊端，比如：如果ramdisk没有满，那么它占有的额外内存不能被使用；如果满了，那么不能进行扩展。由于caching，ramdisk浪费了更多的内存。因为Linux设计为缓存所有从block device中读取或写入的文件和目录，ramdisk（实际上也是在内存里）和caching一起，浪费很多内存。
+简单说来，**ramdisk就是一个基于ram的block device**，是一个大小固定的内存块，可像disk一样格式化和挂载。Ramdisk像所有的block device一样，它需要一个文件系统驱动。此外还有一些弊端，比如：如果ramdisk没有满，那么它占有的额外内存不能被使用；如果满了，那么不能进行扩展。由于caching，ramdisk浪费了更多的内存。因为Linux设计为缓存所有从block device中读取或写入的文件和目录，ramdisk（实际上也是在内存里）和caching一起，浪费很多内存。
 
  
 ## 2.2 initrd
