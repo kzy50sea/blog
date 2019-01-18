@@ -21,7 +21,7 @@ Linux内核在初始化之后会执行init程序，而init程序会挂载我们�
 
 * Linux内核2.6以前的方法是：除了内核vmlinuz之外还有一个**独立的initrd.img**映像文件，其实它就是一个文件系统映像，linux内核在初始化后会mount initrd.img作为一个临时的根文件系统，而init程序就是在initrd.img里的，然后init进程会挂载真正的根文件系统，然后umount initrd.img。
 
-* Linux内核2.6的实现方式却不太一样，虽然完成的功能是一样的。Linux2.6采用**initramfs**。它是一个cpio格式的内存文件系统，制作的方法有两个：
+* Linux内核2.6的实现方式却不太一样，虽然完成的功能是一样的。Linux2.6采用**initramfs**（当前也支持initrd）。它是一个cpio格式的内存文件系统，制作的方法有两个：
 
   * 一个是和内核vmlinuz分开的，因此我们需要在grub里写上initramfs的路径。
   
@@ -42,22 +42,12 @@ ram disk被弃用的另外一个原因是环回设备(loopback)引入。环回�
  
 ## 2.2 initrd
 
-initrd是boot loader Init ram disk缩写，是一种机制，装载一个临时根文件系统到内存中，作为Linux startup process的一部分，为实际根文件系统的加载做准备。
+initrd 的英文含义是 boot loader initialized ram disk，就是由 boot loader 初始化的内存盘。在 linux内核启动前， boot loader 会将存储介质中的 initrd 文件加载到ram disk中。内核启动时会在访问真正的根文件系统前先访问ram disk中的 initrd 文件系统。在 boot loader 配置了 initrd 的情况下，内核启动被分成了两个阶段，第一阶段先执行 initrd 文件系统中的"/linuxrc"，完成加载驱动模块等任务，第二阶段才会执行真正的根文件系统中的 /sbin/init 进程。第一阶段启动的目的是为第二阶段的启动扫清一切障爱，最主要的作用就是是加载根文件系统存储介质的驱动模块。我们知道根文件系统可以存储在包括IDE、SCSI、USB在内的多种介质上，如果将这些设备的驱动都编译进内核，可以想象内核会多么庞大、臃肿。
 
-对于2.4或更早的kernel来说，使用的是该方法。
+Linux2.4内核对 Initrd 的处理流程
 
-．什么是 Initrd
-initrd 的英文含义是 boot loader initialized RAM disk，就是由 boot loader 初始化的内存盘。在 linux内核启动前， boot loader 会将存储介质中的 initrd 文件加载到内存，内核启动时会在访问真正的根文件系统前先访问该内存中的 initrd 文件系统。在 boot loader 配置了 initrd 的情况下，内核启动被分成了两个阶段，第一阶段先执行 initrd 文件系统中的"某个文件"，完成加载驱动模块等任务，第二阶段才会执行真正的根文件系统中的 /sbin/init 进程。这里提到的"某个文件"，Linux2.6 内核会同以前版本内核的不同，所以这里暂时使用了"某个文件"这个称呼，后面会详细讲到。第一阶段启动的目的是为第二阶段的启动扫清一切障爱，最主要的是加载根文件系统存储介质的驱动模块。我们知道根文件系统可以存储在包括IDE、SCSI、USB在内的多种介质上，如果将这些设备的驱动都编译进内核，可以想象内核会多么庞大、臃肿。
-Initrd 的用途主要有以下四种：
-1. linux 发行版的必备部件
-linux 发行版必须适应各种不同的硬件架构，将所有的驱动编译进内核是不现实的，initrd 技术是解决该问题的关键技术。Linux 发行版在内核中只编译了基本的硬件驱动，在安装过程中通过检测系统硬件，生成包含安装系统硬件驱动的 initrd，无非是一种即可行又灵活的解决方案。
-2. livecd 的必备部件
-同 linux 发行版相比，livecd 可能会面对更加复杂的硬件环境，所以也必须使用 initrd。
-3. 制作 Linux usb 启动盘必须使用 initrd
-usb 设备是启动比较慢的设备，从驱动加载到设备真正可用大概需要几秒钟时间。如果将 usb 驱动编译进内核，内核通常不能成功访问 usb 设备中的文件系统。因为在内核访问 usb 设备时， usb 设备通常没有初始化完毕。所以常规的做法是，在 initrd 中加载 usb 驱动，然后休眠几秒中，等待 usb设备初始化完毕后再挂载 usb 设备中的文件系统。
-4. 在 linuxrc 脚本中可以很方便地启用个性化 bootsplash。
-2．Linux2.4内核对 Initrd 的处理流程
-为了使读者清晰的了解Linux2.6内核initrd机制的变化，在重点介绍Linux2.6内核initrd之前，先对linux2.4内核的initrd进行一个简单的介绍。Linux2.4内核的initrd的格式是文件系统镜像文件，本文将其称为image-initrd，以区别后面介绍的linux2.6内核的cpio格式的initrd。 linux2.4内核对initrd的处理流程如下：
+Linux2.4内核的initrd的格式是文件系统镜像文件， linux2.4内核对initrd的处理流程如下：
+
 1. boot loader把内核以及/dev/initrd的内容加载到内存，/dev/initrd是由boot loader初始化的设备，存储着initrd。
 2. 在内核初始化过程中，内核把 /dev/initrd 设备的内容解压缩并拷贝到 /dev/ram0 设备上。
 3. 内核以可读写的方式把 /dev/ram0 设备挂载为原始的根文件系统。
@@ -67,14 +57,15 @@ usb 设备是启动比较慢的设备，从驱动加载到设备真正可用大�
 7. 如果真正的根文件系统存在 /initrd 目录，那么 /dev/ram0 将从 / 移动到 /initrd。否则如果 /initrd 目录不存在， /dev/ram0 将被卸载。
 8. 在真正的根文件系统上进行正常启动过程 ，执行 /sbin/init。 linux2.4 内核的 initrd 的执行是作为内核启动的一个中间阶段，也就是说 initrd 的 /linuxrc 执行以后，内核会继续执行初始化代码，我们后面会看到这是 linux2.4 内核同 2.6 内核的 initrd 处理流程的一个显著区别。
 
+Linux2.6 内核对 Initrd 的处理流程
 
-3．Linux2.6 内核对 Initrd 的处理流程
 linux2.6 内核支持两种格式的 initrd，一种是前面第 3 部分介绍的 linux2.4 内核那种传统格式的文件系统镜像－image-initrd，它的制作方法同 Linux2.4 内核的 initrd 一样，其核心文件就是 /linuxrc。另外一种格式的 initrd 是 cpio 格式的，这种格式的 initrd 从 linux2.5 起开始引入，使用 cpio 工具生成，其核心文件不再是 /linuxrc，而是 /init，本文将这种 initrd 称为 cpio-initrd。尽管 linux2.6 内核对 cpio-initrd和 image-initrd 这两种格式的 initrd 均支持，但对其处理流程有着显著的区别，下面分别介绍 linux2.6 内核对这两种 initrd 的处理流程。
 cpio-initrd 的处理流程
 1． boot loader 把内核以及 initrd 文件加载到内存的特定位置。
 2． 内核判断initrd的文件格式，如果是cpio格式。
 3． 将initrd的内容释放到rootfs中。
 4． 执行initrd中的/init文件，执行到这一点，内核的工作全部结束，完全交给/init文件处理。
+
 image-initrd的处理流程
 1． boot loader把内核以及initrd文件加载到内存的特定位置。
 2． 内核判断initrd的文件格式，如果不是cpio格式，将其作为image-initrd处理。
@@ -86,9 +77,10 @@ image-initrd的处理流程
 8． /linuxrc执行完毕，常规根文件系统被挂载
 9． 如果常规根文件系统存在/initrd目录，那么/dev/ram0将从/移动到/initrd。否则如果/initrd目录不存在， /dev/ram0将被卸载。
 10． 在常规根文件系统上进行正常启动过程 ，执行/sbin/init。
+
 通过上面的流程介绍可知，Linux2.6内核对image-initrd的处理流程同linux2.4内核相比并没有显著的变化， cpio-initrd的处理流程相比于image-initrd的处理流程却有很大的区别，流程非常简单，在后面的源代码分析中，读者更能体会到处理的简捷。
 
-
+```
 initrd是linux在系统引导过程中使用的一个临时的根文件系统，用来支持两阶段的引导过程。
 
 再白话一点，initrd就是一个带有根文件系统的ramdisk，里面包含了根目录‘/’，以及其他的目录，比如：bin，dev，proc，sbin，sys等linux启动时必须的目录，以及在bin目录下加入了一下必须的可执行命令。
@@ -100,6 +92,23 @@ PC或者服务器linux内核使用这个initrd来挂载真正的根文件系统�
 然后内核会调用mount_root()函数来创建真正的跟分区文件系统，然后调用sys_mount()函数来加载真正的根文件系统，然后chdir到这个真正的根文件系统中。
 
 最后，init函数调用run_init_process函数，利用execve来启动init进程，从而进入init的运行过程。
+```
+
+
+
+Initrd 的用途主要有以下四种：
+1. linux 发行版的必备部件
+linux 发行版必须适应各种不同的硬件架构，将所有的驱动编译进内核是不现实的，initrd 技术是解决该问题的关键技术。Linux 发行版在内核中只编译了基本的硬件驱动，在安装过程中通过检测系统硬件，生成包含安装系统硬件驱动的 initrd，无非是一种即可行又灵活的解决方案。
+
+2. livecd 的必备部件
+同 linux 发行版相比，livecd 可能会面对更加复杂的硬件环境，所以也必须使用 initrd。
+
+3. 制作 Linux usb 启动盘必须使用 initrd
+usb 设备是启动比较慢的设备，从驱动加载到设备真正可用大概需要几秒钟时间。如果将 usb 驱动编译进内核，内核通常不能成功访问 usb 设备中的文件系统。因为在内核访问 usb 设备时， usb 设备通常没有初始化完毕。所以常规的做法是，在 initrd 中加载 usb 驱动，然后休眠几秒中，等待 usb设备初始化完毕后再挂载 usb 设备中的文件系统。
+4. 在 linuxrc 脚本中可以很方便地启用个性化 bootsplash。
+
+
+
 #  2 ramfs与initramfs
 ## 1.1 ramfs
 
