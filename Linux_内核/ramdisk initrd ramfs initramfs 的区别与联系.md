@@ -68,9 +68,38 @@ usb 设备是启动比较慢的设备，从驱动加载到设备真正可用大�
 8. 在真正的根文件系统上进行正常启动过程 ，执行 /sbin/init。 linux2.4 内核的 initrd 的执行是作为内核启动的一个中间阶段，也就是说 initrd 的 /linuxrc 执行以后，内核会继续执行初始化代码，我们后面会看到这是 linux2.4 内核同 2.6 内核的 initrd 处理流程的一个显著区别。
 
 
+3．Linux2.6 内核对 Initrd 的处理流程
+linux2.6 内核支持两种格式的 initrd，一种是前面第 3 部分介绍的 linux2.4 内核那种传统格式的文件系统镜像－image-initrd，它的制作方法同 Linux2.4 内核的 initrd 一样，其核心文件就是 /linuxrc。另外一种格式的 initrd 是 cpio 格式的，这种格式的 initrd 从 linux2.5 起开始引入，使用 cpio 工具生成，其核心文件不再是 /linuxrc，而是 /init，本文将这种 initrd 称为 cpio-initrd。尽管 linux2.6 内核对 cpio-initrd和 image-initrd 这两种格式的 initrd 均支持，但对其处理流程有着显著的区别，下面分别介绍 linux2.6 内核对这两种 initrd 的处理流程。
+cpio-initrd 的处理流程
+1． boot loader 把内核以及 initrd 文件加载到内存的特定位置。
+2． 内核判断initrd的文件格式，如果是cpio格式。
+3． 将initrd的内容释放到rootfs中。
+4． 执行initrd中的/init文件，执行到这一点，内核的工作全部结束，完全交给/init文件处理。
+image-initrd的处理流程
+1． boot loader把内核以及initrd文件加载到内存的特定位置。
+2． 内核判断initrd的文件格式，如果不是cpio格式，将其作为image-initrd处理。
+3． 内核将initrd的内容保存在rootfs下的/initrd.image文件中。
+4． 内核将/initrd.image的内容读入/dev/ram0设备中，也就是读入了一个内存盘中。
+5． 接着内核以可读写的方式把/dev/ram0设备挂载为原始的根文件系统。
+6． .如果/dev/ram0被指定为真正的根文件系统，那么内核跳至最后一步正常启动。
+7． 执行initrd上的/linuxrc文件，linuxrc通常是一个脚本文件，负责加载内核访问根文件系统必须的驱动， 以及加载根文件系统。
+8． /linuxrc执行完毕，常规根文件系统被挂载
+9． 如果常规根文件系统存在/initrd目录，那么/dev/ram0将从/移动到/initrd。否则如果/initrd目录不存在， /dev/ram0将被卸载。
+10． 在常规根文件系统上进行正常启动过程 ，执行/sbin/init。
+通过上面的流程介绍可知，Linux2.6内核对image-initrd的处理流程同linux2.4内核相比并没有显著的变化， cpio-initrd的处理流程相比于image-initrd的处理流程却有很大的区别，流程非常简单，在后面的源代码分析中，读者更能体会到处理的简捷。
 
 
+initrd是linux在系统引导过程中使用的一个临时的根文件系统，用来支持两阶段的引导过程。
 
+再白话一点，initrd就是一个带有根文件系统的ramdisk，里面包含了根目录‘/’，以及其他的目录，比如：bin，dev，proc，sbin，sys等linux启动时必须的目录，以及在bin目录下加入了一下必须的可执行命令。
+
+PC或者服务器linux内核使用这个initrd来挂载真正的根文件系统，然后将此initrd从内存中卸掉，这种情况下initrd其实就是一个过渡使用的东西。 当然也可以不卸载这个initrd，直接将其作为根文件系统使用，这当然是在没有硬盘的情况下了，这种情况多用在没有磁盘的超轻量级的嵌入式系统。 其实现在的大多数嵌入式系统也是有自己的磁盘的，所以，initrd在现在大多数的嵌入式系统中也作过渡使用。
+
+常用的是grub将内核解压缩并拷贝到内存中，然后内核接管了CPU开始执行，然后内核调用init()函数，注意，此init函数并不是后来的init进程！！！然后内核调用函数initrd_load()来在内存中加载initrd根文件系统。Initrd_load()函数又调用了一些其他的函数来为RAM磁盘分配空间，并计算CRC等操作。然后对RAM磁盘进行解压，并将其加载到内存中。现在，内存中就有了initrd的映象。
+
+然后内核会调用mount_root()函数来创建真正的跟分区文件系统，然后调用sys_mount()函数来加载真正的根文件系统，然后chdir到这个真正的根文件系统中。
+
+最后，init函数调用run_init_process函数，利用execve来启动init进程，从而进入init的运行过程。
 #  2 ramfs与initramfs
 ## 1.1 ramfs
 
@@ -101,19 +130,8 @@ rootfs是ramfs或tmpfs的特殊实例，**用于挂载真实文件系统**，在
 
 
 # 2 initrd和initramfs
-## 2.1 initrd
 
-initrd是linux在系统引导过程中使用的一个临时的根文件系统，用来支持两阶段的引导过程。
 
-再白话一点，initrd就是一个带有根文件系统的ramdisk，里面包含了根目录‘/’，以及其他的目录，比如：bin，dev，proc，sbin，sys等linux启动时必须的目录，以及在bin目录下加入了一下必须的可执行命令。
-
-PC或者服务器linux内核使用这个initrd来挂载真正的根文件系统，然后将此initrd从内存中卸掉，这种情况下initrd其实就是一个过渡使用的东西。 当然也可以不卸载这个initrd，直接将其作为根文件系统使用，这当然是在没有硬盘的情况下了，这种情况多用在没有磁盘的超轻量级的嵌入式系统。 其实现在的大多数嵌入式系统也是有自己的磁盘的，所以，initrd在现在大多数的嵌入式系统中也作过渡使用。
-
-常用的是grub将内核解压缩并拷贝到内存中，然后内核接管了CPU开始执行，然后内核调用init()函数，注意，此init函数并不是后来的init进程！！！然后内核调用函数initrd_load()来在内存中加载initrd根文件系统。Initrd_load()函数又调用了一些其他的函数来为RAM磁盘分配空间，并计算CRC等操作。然后对RAM磁盘进行解压，并将其加载到内存中。现在，内存中就有了initrd的映象。
-
-然后内核会调用mount_root()函数来创建真正的跟分区文件系统，然后调用sys_mount()函数来加载真正的根文件系统，然后chdir到这个真正的根文件系统中。
-
-最后，init函数调用run_init_process函数，利用execve来启动init进程，从而进入init的运行过程。
 
 
 
