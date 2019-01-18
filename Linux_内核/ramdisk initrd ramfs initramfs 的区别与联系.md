@@ -1,5 +1,5 @@
 ---
-title: ramdisk initrd ramfs initramfs 的区别与联系
+title: initrd与initramfs的区别与联系
 tags: Linux内核
 ---
 
@@ -27,7 +27,51 @@ Linux内核在初始化之后会执行init程序，而init程序会挂载我们�
   
   * 另一种方法是把内核和initramfs制作在一起成为一个文件，方法是在linux源码make menuconfig，然后General setup-->选择Initial RAM filesystem and RAM disk (initramfs/initrd) support，然后在Initramfs source file(s)里输入我们的initramfs目录，然后make bzImage。这种方法做出来的内核就只有一个文件，不需要指定initramfs了。
 
-# 1 基础知识
+
+# 2 ramdisk与initrd
+
+## 2.1 ramdisk
+ram disk是一种实现文件系统的后备存储的过时的机制，它用一个内存区域来创建一个合成块设备并使用它作为一个文件系统的后备存储。这个块设备是固定大小，因此挂载在它上面的文件系统也是固定大小的（就像一个真正的硬盘一样）。使用ram disk不需要将内存从ram disk复制到页面缓存中（以及将更改复制回来）创建和销毁dentry也类似。此外ram disk 需要文件系统驱动程序来格式化和解释这些数据。它是使用initrd所必需的。它还可以用于加密工作的临时文件系统，因为其内容在重新启动时会被擦除。
+
+与ramfs相比较，ram disk浪费了内存，也浪费了内存总线的带宽。为CPU造成了不必要的工作并污染了CPU的高速缓存。(尽管有避免污染的方法，但是非常耗费资源)。更重要的是，ramfs正在做的所有工作都是必须发生的，因为所有文件访问都要通过page和dentry缓存。ram disk根本就没必要，ramfs在内部要简单得多。
+
+ram disk被弃用的另外一个原因是环回设备(loopback)引入。环回设备提供了一种更加灵活、方便的从文件而不是从内存块中创建合成块设备的方法，有关详细信息，请参阅losetup（8）。
+
+简单说来，ramdisk就是一个基于ram的block device，是一个大小固定的内存块，可像disk一样格式化和挂载。Ramdisk像所有的block device一样，它需要一个文件系统驱动。此外还有一些弊端，比如：如果ramdisk没有满，那么它占有的额外内存不能被使用；如果满了，那么不能进行扩展。由于caching，ramdisk浪费了更多的内存。因为Linux设计为缓存所有从block device中读取或写入的文件和目录，ramdisk（实际上也是在内存里）和caching一起，浪费很多内存。
+
+ 
+## 2.2 initrd
+
+initrd是boot loader Init ram disk缩写，是一种机制，装载一个临时根文件系统到内存中，作为Linux startup process的一部分，为实际根文件系统的加载做准备。
+
+对于2.4或更早的kernel来说，使用的是该方法。
+
+．什么是 Initrd
+initrd 的英文含义是 boot loader initialized RAM disk，就是由 boot loader 初始化的内存盘。在 linux内核启动前， boot loader 会将存储介质中的 initrd 文件加载到内存，内核启动时会在访问真正的根文件系统前先访问该内存中的 initrd 文件系统。在 boot loader 配置了 initrd 的情况下，内核启动被分成了两个阶段，第一阶段先执行 initrd 文件系统中的"某个文件"，完成加载驱动模块等任务，第二阶段才会执行真正的根文件系统中的 /sbin/init 进程。这里提到的"某个文件"，Linux2.6 内核会同以前版本内核的不同，所以这里暂时使用了"某个文件"这个称呼，后面会详细讲到。第一阶段启动的目的是为第二阶段的启动扫清一切障爱，最主要的是加载根文件系统存储介质的驱动模块。我们知道根文件系统可以存储在包括IDE、SCSI、USB在内的多种介质上，如果将这些设备的驱动都编译进内核，可以想象内核会多么庞大、臃肿。
+Initrd 的用途主要有以下四种：
+1. linux 发行版的必备部件
+linux 发行版必须适应各种不同的硬件架构，将所有的驱动编译进内核是不现实的，initrd 技术是解决该问题的关键技术。Linux 发行版在内核中只编译了基本的硬件驱动，在安装过程中通过检测系统硬件，生成包含安装系统硬件驱动的 initrd，无非是一种即可行又灵活的解决方案。
+2. livecd 的必备部件
+同 linux 发行版相比，livecd 可能会面对更加复杂的硬件环境，所以也必须使用 initrd。
+3. 制作 Linux usb 启动盘必须使用 initrd
+usb 设备是启动比较慢的设备，从驱动加载到设备真正可用大概需要几秒钟时间。如果将 usb 驱动编译进内核，内核通常不能成功访问 usb 设备中的文件系统。因为在内核访问 usb 设备时， usb 设备通常没有初始化完毕。所以常规的做法是，在 initrd 中加载 usb 驱动，然后休眠几秒中，等待 usb设备初始化完毕后再挂载 usb 设备中的文件系统。
+4. 在 linuxrc 脚本中可以很方便地启用个性化 bootsplash。
+2．Linux2.4内核对 Initrd 的处理流程
+为了使读者清晰的了解Linux2.6内核initrd机制的变化，在重点介绍Linux2.6内核initrd之前，先对linux2.4内核的initrd进行一个简单的介绍。Linux2.4内核的initrd的格式是文件系统镜像文件，本文将其称为image-initrd，以区别后面介绍的linux2.6内核的cpio格式的initrd。 linux2.4内核对initrd的处理流程如下：
+1. boot loader把内核以及/dev/initrd的内容加载到内存，/dev/initrd是由boot loader初始化的设备，存储着initrd。
+2. 在内核初始化过程中，内核把 /dev/initrd 设备的内容解压缩并拷贝到 /dev/ram0 设备上。
+3. 内核以可读写的方式把 /dev/ram0 设备挂载为原始的根文件系统。
+4. 如果 /dev/ram0 被指定为真正的根文件系统，那么内核跳至最后一步正常启动。
+5. 执行 initrd 上的 /linuxrc 文件，linuxrc 通常是一个脚本文件，负责加载内核访问根文件系统必须的驱动， 以及加载根文件系统。
+6. /linuxrc 执行完毕，真正的根文件系统被挂载。
+7. 如果真正的根文件系统存在 /initrd 目录，那么 /dev/ram0 将从 / 移动到 /initrd。否则如果 /initrd 目录不存在， /dev/ram0 将被卸载。
+8. 在真正的根文件系统上进行正常启动过程 ，执行 /sbin/init。 linux2.4 内核的 initrd 的执行是作为内核启动的一个中间阶段，也就是说 initrd 的 /linuxrc 执行以后，内核会继续执行初始化代码，我们后面会看到这是 linux2.4 内核同 2.6 内核的 initrd 处理流程的一个显著区别。
+
+
+
+
+
+#  2 ramfs与initramfs
 ## 1.1 ramfs
 
 Ramfs是一个非常简单的文件系统，它将Linux的磁盘缓存机制（页面缓存和dentry缓存）导出为可动态调整大小的基于RAM的文件系统。
@@ -52,13 +96,6 @@ tmpfs是从ramfs派生出的,添加了大小的限制以及回写数据到交换
 rootfs是ramfs或tmpfs的特殊实例，**用于挂载真实文件系统**，在2.6的内核中必然存在。rootfs不能被卸载这个理由近似于你不能杀死init进程，它小巧且简单的为内核确保某些列表不能为空，而不是用特定的代码来检查和处理一个空列表。大部分其他的文件系统安装于rootfs之上。一个空白ramfs实例的空间总量占用是极小的。
 
 >tmpfs, rootfs, initramfs都是ramfs的一种,它们或者是对它的一些特殊的应用,或者是对它某一方面能力的改进加强.
-
-## 1.4 ramdisk
-
-
-"RAM disk"是一种实现文件系统的后备存储的、过时的机制(2.6不用了)，就是在一个内存空间中创建一个合成块设备并使用它作为一个文件系统的后备存储。这个块设备是固定大小的以至于挂载在它上面的文件系统也是固定大小的。ram disk的使用需要从这个假的块设备到page cache之间拷贝内存，生成和销毁dentry，而且需要文件系统的驱动来格式化和解释上面的数据。它是initrd所必需的，也是需要加载模块以访问根文件系统时使用的初始文件系统（请参阅Documentation / initrd.txt）。它还可以用于加密工作的临时文件系统，因为内容在重新启动时被擦除。
-
-与ramfs相比较，ram disk浪费了内存，也浪费了内存总线的带宽。为CPU造成了不必要的工作并污染了CPU的高速缓存。(尽管有避免污染的方法，但是非常耗费资源)。ramfs机制非常自然，因为文件访问可 以通过page cache和dentry cache全，部的工作ramfs都要执行。ram disk被弃用的另外一个原因是环回设备(loopback)引入。环回设备提供了一种更加灵活、方便的从文件而不是从内存块中创建综合块设备的方法。
 
 
 
