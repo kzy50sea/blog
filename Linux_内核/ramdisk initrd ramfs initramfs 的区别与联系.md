@@ -12,6 +12,21 @@ tags: Linux内核
 <style>table{word-break:initial;}</style>
 
 
+
+
+# 1 概述
+
+
+Linux内核在初始化之后会执行init程序，而init程序会挂载我们的根文件系统，但由于init程序也是在根文件系统上的，所以这就有了悖论。为解决该问题，Linux采用两步走的方法，内核开发者建立了内核命令列表选项"root="，用来制定根文件系统存在于哪个设备上。
+
+* Linux内核2.6以前的方法是：除了内核vmlinuz之外还有一个**独立的initrd.img**映像文件，其实它就是一个文件系统映像，linux内核在初始化后会mount initrd.img作为一个临时的根文件系统，而init程序就是在initrd.img里的，然后init进程会挂载真正的根文件系统，然后umount initrd.img。
+
+* Linux内核2.6的实现方式却不太一样，虽然完成的功能是一样的。Linux2.6采用**initramfs**。它是一个cpio格式的内存文件系统，制作的方法有两个：
+
+  * 一个是和内核vmlinuz分开的，因此我们需要在grub里写上initramfs的路径。
+  
+  * 另一种方法是把内核和initramfs制作在一起成为一个文件，方法是在linux源码make menuconfig，然后General setup-->选择Initial RAM filesystem and RAM disk (initramfs/initrd) support，然后在Initramfs source file(s)里输入我们的initramfs目录，然后make bzImage。这种方法做出来的内核就只有一个文件，不需要指定initramfs了。
+
 # 1 基础知识
 ## 1.1 ramfs
 
@@ -76,7 +91,7 @@ rootfs可以被打包为一个cpio压缩包，并通过initrd=命令行参数传
 
 # 4 initramfs与initrd的区别
 
-Linux内核在初始化之后会执行init进程，而init进程会挂载我们的根文件系统，但由于init程序也是在根文件系统上的，所以这就有了悖论。Linux采用两步走的方法来解决这个问题。Linux2.6版以前的方法是：除了内核vmlinuz之外还有一个独立的initrd.img映像文件，其实它就是一个文件系统映像，linux内核在初始化后会mount initrd.img作为一个临时的根文件系统，而init进程就是在initrd.img里的，然后init进程会挂载真正的根文件系统，然后umount initrd.img。但Linux2.6内核的实现方式却不太一样，虽然完成的功能是一样的。Linux2.6采用initramfs。它是一个cpio格式的内存文件系统，制作的方法有两个，一个是和内核vmlinuz分开的，因此我们需要在grub里写上initramfs的路径。而另一种方法是把内核和initramfs制作在一起成为一个文件，方法是在linux源码make menuconfig，然后General setup-->选择Initial RAM filesystem and RAM disk (initramfs/initrd) support，然后在Initramfs source file(s)里输入我们的initramfs目录，然后make bzImage。这种方法做出来的内核就只有一个文件，不需要指定initramfs了。
+
 
 initrd和initramfs是两种概念，initrd出现在initramfs之前，它也是一种ramfs镜像文件，但它不会被作为rootfs的，它是用来在启动过程中初始化系统的，它可以被卸载。
 
