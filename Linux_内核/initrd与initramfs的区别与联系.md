@@ -77,13 +77,15 @@ linux2.4 内核的 initrd 的执行是作为内核启动的一个中间阶段，
 5. 接着内核以可读写的方式把/dev/ram0设备挂载为原始的根文件系统。
 6. 如果/dev/ram0被指定为真正的根文件系统，那么内核跳至最后一步正常启动。
 7. 执行initrd上的/linuxrc文件，linuxrc通常是一个脚本文件，负责加载内核访问根文件系统必须的驱动， 以及加载根文件系统。
-8.  /linuxrc执行完毕，常规根文件系统被挂载
-9. 如果常规根文件系统存在/initrd目录，那么/dev/ram0将从/移动到/initrd。否则如果/initrd目录不存在， /dev/ram0将被卸载。
-10. 在常规根文件系统上进行正常启动过程 ，执行/sbin/init。
+8.  /linuxrc执行完毕，真正根文件系统被挂载
+9. 如果真正根文件系统存在/initrd目录，那么/dev/ram0将从/移动到/initrd。否则如果/initrd目录不存在， /dev/ram0将被卸载。
+10. 在真正根文件系统上进行正常启动过程 ，执行/sbin/init。
 
 通过上面的流程介绍可知，Linux2.6内核对image-initrd的处理流程同linux2.4内核相比并没有显著的变化， cpio-initrd的处理流程相比于image-initrd的处理流程却有很大的区别，流程非常简单，在后面的源代码分析中，读者更能体会到处理的简捷。
 
 linux2.6 内核支持两种格式的 initrd，一种是前面第 3 部分介绍的 linux2.4 内核那种传统格式的文件系统镜像－image-initrd，它的制作方法同 Linux2.4 内核的 initrd 一样，其核心文件就是 /linuxrc。另外一种格式的 initrd 是 cpio 格式的，这种格式的 initrd 从 linux2.5 起开始引入，使用 cpio 工具生成，其核心文件不再是 /linuxrc，而是 /init，本文将这种 initrd 称为 cpio-initrd。尽管 linux2.6 内核对 cpio-initrd和 image-initrd 这两种格式的 initrd 均支持，但对其处理流程有着显著的区别，下面分别介绍 linux2.6 内核对这两种 initrd 的处理流程。
+
+
 cpio-initrd 的处理流程
 1． boot loader 把内核以及 initrd 文件加载到内存的特定位置。
 2． 内核判断initrd的文件格式，如果是cpio格式。
