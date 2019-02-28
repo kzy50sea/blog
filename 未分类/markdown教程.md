@@ -823,7 +823,7 @@ sub(right)->op
 ```
 
 
-```flow！
+```flow!
 st=>start: START:>www.baidu.com
 e=>end: END
 in=>inputoutput: input
