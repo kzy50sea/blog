@@ -1005,7 +1005,7 @@ gantt
     dateFormat YYYY-MM-DD
     title 项目开发流程
     section 项目确定
-        需求分析       :done,a1, 2016-06-22, 3d
+        需求分析       :done,a1, 2016-06-22, 14d
         可行性报告     :after a1, 5d
         概念验证       :crit,5d
     section 项目实施
@@ -1027,6 +1027,7 @@ gantt
         需求分析       :done,a1, 2016-06-22, 3d
         可行性报告     :after a1, 5d
         概念验证       :crit,5d
+		
     section 项目实施
         概要设计      :2016-07-05, 5d
         详细设计      :2016-07-08, 10d
