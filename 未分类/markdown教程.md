@@ -424,7 +424,7 @@ $$
 |\\{\ \}|$\{\}$|
 |a\,b|$a\,b$|a\;b|$a\;b$|
 |a\quadb|$a\quad b$|a\qquadb|$a\qquad b$|
-|`\$`|$\$$|\\_|$\_$|
+|`\$`|$\$ $|\\_|$\_$|
 |\backslash|$\backslash$|a\\\b|$a\\b$|
 |{n+1 \choose 2k}|${n+1 \choose 2k}$|\binom{n+1}{2k}|$\binom{n+1}{2k}$|
 |a\equiv b\pmod n|$a\equiv b\pmod n$|\tag x|$\tag x$|
