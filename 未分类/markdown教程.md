@@ -120,8 +120,156 @@ tags: 其它
 -  [x] 已完成
 -  [X] 已完成
 
-## 2.2 LaTeX数学公式
-### 2.2.1 基本语法
+
+## 2.2 增强代码块
+
+* 在行首使用 \` \` \`代码块 \` \` \`表示代码块，在第一行的三个\` \` \` 后面可以添加对应语言关键字来实现语法高亮，此时语言关键字后面不需要加感叹号`！`，如：
+````markdown
+```cpp 
+int a = 10 ;
+int b = 20; 
+
+```
+````
+显示如：
+```cpp
+  int a = 10 ;
+  int b = 20;
+```
+* 支持是否显示行号，默认会显示：
+````markdown
+```语言关键字?linenums[=true|]false
+... ...
+... ...
+
+```
+````
+
+* 支持设置起始行号：
+````markdown
+```语言关键字?linenums=起始行号
+... ...
+... ...
+
+```
+````
+*  单独高亮某些行：
+````markdown
+```语言关键字?linenums&fancy=行号列表
+... ...
+... ...
+
+```
+````
+
+
+
+|语言|关键字|语言|关键字|
+|--|--|--|--
+|AppleScript|	applescript|普通文本|text , plain
+|ActionScript 3.0|	actionscript3 , as3|Python|	py , python|
+|Shell	|bash , shell|Ruby|	ruby , rails , ror , rb
+|ColdFusion	|coldfusion , cf|SASS&SCSS|	sass , scss
+|C|	cpp , c|Scala|	scala
+|C#	|c# , c-sharp , csharp|SQL|	sql
+|CSS|	css|Visual Basic|	vb , vbnet
+|Delphi|	delphi , pascal , pas|XML|	xml , xhtml , xslt , html
+|diff&patch|	diff patch|Objective C|	objc , obj-c
+|Erlang|	erl , erlang|F#	|f# f-sharp , fsharp
+|Groovy|	groovy|R|	r , s , splus
+|Java|	java|matlab|	matlab
+|JavaFX|	jfx , javafx|swift|	swift
+|JavaScript	|js , jscript , javascript|GO	|go , golang
+|Perl|	perl , pl , Perl
+|PHP|	php
+
+* 增强代码块还支持根据特定的命令关键字实现特定的功能。此时，关键字后要加上感叹号`！`
+
+|命令关键字|作用|
+|--|--|
+|mathjax|数学公式|
+|flow|流程图|
+|plot|统计图|
+|sequence|序列图|
+|mermaid|mermaid流程图、序列图、甘特图
+|mindmap|思维导图
+
+
+
+
+
+
+## 2.3 生成目录
+ * 可以在**新行**用 `[TOC]`生成目录。如：
+
+[TOC]
+
+
+* 支持显示成思维脑图大纲:`[toc!]`,显示如下：
+
+![4](https://www.github.com/liao20081228/blog/raw/master/图片/markdown教程/4.jpg)
+
+* 支持带参数 depth, 显示最深到几层`[toc!?depth=2]`，显示如下：
+
+![5](https://www.github.com/liao20081228/blog/raw/master/图片/markdown教程/5.jpg)
+
+
+
+
+## 2.4 页内跳转
+* **页面跳转**： `[页内跳转](#页内文字)`，比如：`[跳到开头](#基本语法)`，显示如下：
+
+
+*  **锚点跳转**:这是html 的语法， `<span id='idname'>跳转文字</span>`设置锚点，在其他地方就可以使用`[跳转处](#idname)` 跳转。
+
+## 2.5 缩进
+缩进使用html的语法`&emsp;`表示缩进一个中文字符`&ensp;`表示缩进一个英文字符。
+
+## 2.6 脚注
+
+脚注语法: `内容[^id] ` ，然后在任意行首使用  `[^id]:脚注内容`。
+
+## 2.7 文字格式
+
+* **下划线**：`++文本++`表示下划线 ，如：++文本++
+* **文本高亮**：`==文本==`来做颜色标记，如：==文本==
+* **上标文字**
+	* `文字^上角^`，显示如：文字^上角^
+	*  `文字<sup>上角</sup>`，显示如：文字<sup>上角</sup>
+* **文字下标**
+	* `文字~下角~`，显示如：文字~下角~
+	* `文字<sub>下角</sub>`，显示如：文字<sub>下角</sub>
+* **对齐**
+	* 文字左对齐: `:>文字居左<-`
+	* 文字右对齐: `->文字居右<:`
+	* 文字两端对齐: `:>两端对齐的文字<:`
+	* 文字居中: `->文字居中<-`
+
+* **字体、颜色、大小**：用`<font face="字体名" size=大小 color=颜色>文本内容</font>`来设置字体、颜色、大小。
+*  **段代码文字格式** 
+    * `var >>~~hello~~<< = 'hello world'`
+  	* `var >>==hello==<< = 'hello world'`
+ 	* `var >>**hello**<< = 'hello world'`
+ 	* `var >>++hello++<< = 'hello world'`
+
+	* 显示如下：
+![6](https://www.github.com/liao20081228/blog/raw/master/图片/markdown教程/6.jpg)
+
+
+## 2.8 标签
+标签分类，在新行使用`tags：标签1 标签2...`或`TAGS：标签名 标签2...`，可以给文章贴上标签。
+
+
+
+## 2.9 多媒体
+* 音频：`~[文件名](URL)`
+* 视频: `%[文件名](URL)`
+* 附件: `=[文件名](URL)`
+
+
+
+## 2.10 LaTeX数学公式
+### 2.10.1 基本语法
 
 * `$数学公式$`——表示行内数学公式，如` $a^+b^2 $`,显示效果： $a^+b^2 $；
 * `$$数学公式$$`—— 表示整行数学公式，如`$$a^2+b^2 =c^2$$`，显示效果：$$a^2+b^2 =c^2$$
@@ -134,7 +282,7 @@ tags: 其它
 数学公式1
 ```
 ````
-### 2.2.2  公式对齐
+### 2.10.2  公式对齐
 * `\begin{align} ... \end{align}`，使用&表示对齐位置，\\\表示换行，\tag{n}标签序号。
 
 
@@ -168,7 +316,7 @@ $$
 
 ![2](https://www.github.com/liao20081228/blog/raw/master/图片/markdown教程/2.jpg)
 
-### 2.2.3  矩阵
+### 2.10.3  矩阵
 
 * 简单矩阵—— `$$\begin{matrix}…\end{matrix}$$`来生成矩阵，其中... 表示的是LaTeX 的矩阵命令，矩阵命令中每一行以  \   \\ 结束，矩阵的元素之间用&来分隔开。
 ```markdown
@@ -356,7 +504,7 @@ $$
 ```
 &emsp;&emsp;显示如下：![3](https://www.github.com/liao20081228/blog/raw/master/图片/markdown教程/3.jpg)
 
-### 2.2.4 数学符号
+### 2.10.4 数学符号
 * 希腊字母——如果使用大写的希腊字母，把命令的首字母变成大写即可，例如 \Gamma 输出的是 $\Gamma$。如果使用斜体大写希腊字母，再在大写希腊字母的LaTeX命令前加上var，例如\varGamma 生成$\varGamma$。
 
 |命令|	显示|命令|	显示|命令|	显示|命令|	显示|
@@ -468,152 +616,11 @@ $$
 
 * 分组：同一个元素如果有个多个普通字符，使用大括号括起来表示同组：`{a+b}`
 
-## 2.3 增强代码块
 
-* 在行首使用 \` \` \`代码块 \` \` \`表示代码块，在第一行的三个\` \` \` 后面可以添加对应语言关键字来实现语法高亮，此时语言关键字后面不需要加感叹号`！`，如：
-````markdown
-```cpp 
-int a = 10 ;
-int b = 20; 
-
-```
-````
-显示如：
-```cpp
-  int a = 10 ;
-  int b = 20;
-```
-* 支持是否显示行号，默认会显示：
-````markdown
-```语言关键字?linenums[=true|]false
-... ...
-... ...
-
-```
-````
-
-* 支持设置起始行号：
-````markdown
-```语言关键字?linenums=起始行号
-... ...
-... ...
-
-```
-````
-*  单独高亮某些行：
-````markdown
-```语言关键字?linenums&fancy=行号列表
-... ...
-... ...
-
-```
-````
-
-
-
-|语言|关键字|语言|关键字|
-|--|--|--|--
-|AppleScript|	applescript|普通文本|text , plain
-|ActionScript 3.0|	actionscript3 , as3|Python|	py , python|
-|Shell	|bash , shell|Ruby|	ruby , rails , ror , rb
-|ColdFusion	|coldfusion , cf|SASS&SCSS|	sass , scss
-|C|	cpp , c|Scala|	scala
-|C#	|c# , c-sharp , csharp|SQL|	sql
-|CSS|	css|Visual Basic|	vb , vbnet
-|Delphi|	delphi , pascal , pas|XML|	xml , xhtml , xslt , html
-|diff&patch|	diff patch|Objective C|	objc , obj-c
-|Erlang|	erl , erlang|F#	|f# f-sharp , fsharp
-|Groovy|	groovy|R|	r , s , splus
-|Java|	java|matlab|	matlab
-|JavaFX|	jfx , javafx|swift|	swift
-|JavaScript	|js , jscript , javascript|GO	|go , golang
-|Perl|	perl , pl , Perl
-|PHP|	php
-
-* 增强代码块还支持根据特定的命令关键字实现特定的功能。此时，关键字后要加上感叹号`！`
-
-|命令关键字|作用|
-|--|--|
-|mathjax|数学公式|
-|flow|流程图|
-|plot|统计图|
-|sequence|序列图|
-|mermaid|mermaid流程图、序列图、甘特图
-|mindmap|思维导图
-
-
-
-## 2.4 生成目录
- * 可以在**新行**用 `[TOC]`生成目录。如：
-
-[TOC]
-
-
-* 支持显示成思维脑图大纲:`[toc!]`,显示如下：
-
-![4](https://www.github.com/liao20081228/blog/raw/master/图片/markdown教程/4.jpg)
-
-* 支持带参数 depth, 显示最深到几层`[toc!?depth=2]`，显示如下：
-
-![5](https://www.github.com/liao20081228/blog/raw/master/图片/markdown教程/5.jpg)
-
-
-
-
-## 2.5 页内跳转
-* **页面跳转**： `[页内跳转](#页内文字)`，比如：`[跳到开头](#基本语法)`，显示如下：
-
-
-*  **锚点跳转**:这是html 的语法， `<span id='idname'>跳转文字</span>`设置锚点，在其他地方就可以使用`[跳转处](#idname)` 跳转。
-
-## 2.7 缩进
-缩进使用html的语法`&emsp;`表示缩进一个中文字符，`&ensp;`表示缩进一个英文字符。
-
-## 2.8 脚注
-
-脚注语法: `内容[^id] ` ，然后在任意行首使用  `[^id]:脚注内容`。
-
-## 2.9 文字格式
-
-* **下划线**：`++文本++`表示下划线 ，如：++文本++
-* **文本高亮**：`==文本==`来做颜色标记，如：==文本==
-* **上标文字**
-	* `文字^上角^`，显示如：文字^上角^
-	*  `文字<sup>上角</sup>`，显示如：文字<sup>上角</sup>
-* **下角下标**
-	* `文字~下角~`，显示如：文字~下角~
-	* `文字<sub>下角</sub>`，显示如：文字<sub>下角</sub>
-* **对齐**
-	* 文字左对齐: `:>文字居左<-`
-	* 文字右对齐: `->文字居右<:`
-	* 文字两端对齐: `:>两端对齐的文字<:`
-	* 文字居中: `->文字居中<-`
-
-* **字体、颜色、大小**：用`<font face="字体名" size=大小 color=颜色>文本内容</font>`来设置字体、颜色、大小。
-*  **段代码文字格式** 
-    * `var >>~~hello~~<< = 'hello world'`
-  	* `var >>==hello==<< = 'hello world'`
- 	* `var >>**hello**<< = 'hello world'`
- 	* `var >>++hello++<< = 'hello world'`
-
-	* 显示如下：
-![6](https://www.github.com/liao20081228/blog/raw/master/图片/markdown教程/6.jpg)
-
-
-## 2.10 标签
-标签分类，在新行使用`tags：标签1 标签2...`或`TAGS：标签名 标签2...`，可以给文章贴上标签。
-
-
-
-## 2.11 多媒体
-* 音频：`~[文件名](URL)`
-* 视频: `%[文件名](URL)`
-* 附件: `=[文件名](URL)`
-
-## 2.12 序列图
+## 2.11 序列图
 * 定义序列图:
 ````markdown
-````mermaid!
+```mermaid!
 sequenceDiagram
 ... ...
 ... ...
@@ -766,7 +773,7 @@ B-->>D:
 end
 ```
 
- ## 2.13 统计图
+ ## 2.12 统计图
 语法格式为：
 
 ````markdown
@@ -780,9 +787,9 @@ end
 显示如图：
 
 ![7](https://www.github.com/liao20081228/blog/raw/master/图片/markdown教程/7.jpg)
-## 2.14 流程图
+## 2.13 流程图
 
-### 2.14.1 flow
+### 2.13.1 flow
 * 定义流程图：
 ```markdown
 ```flow!
@@ -838,7 +845,7 @@ cond(yes)->out->e
 cond(no)->sub
 sub(right)->op
 ```
-### 3.14.2 graph
+### 3.13.2 graph
 
 * 定义流程图： 
 ````markdown
@@ -940,7 +947,7 @@ click H "http://www.baidu.com" "This is a link"
 
 
 
-## 2.15 甘特图
+## 2.14 甘特图
 
 * 定义甘特图： 
 ````markdown
@@ -1040,8 +1047,8 @@ gantt
 
 
 
-## 2.16 表格
-### 2.16.1 基本表格
+## 2.15 表格
+### 2.15.1 基本表格
 ```markdown
 |姓名|年龄|体重|
 |:--|:--:|--:| 
@@ -1057,7 +1064,7 @@ gantt
 * 可以在最后一行使用`&emsp;`或`&ensp`来控制列宽。
 
 
-### 2.16.2 扩展表格
+### 2.15.2 扩展表格
 
 ```markdown
  姓名|年龄|体重
@@ -1070,7 +1077,7 @@ gantt
  :--|:--:|--:
  张三|100|20
 
-### 3.16.3 增强表格
+### 2.15.3 增强表格
 提供增强型表格语法扩展功能，支持带标题表格，多表头，多表身，及行单元格合并。语法格式为显示效果：:
 
 ```markdown
@@ -1089,7 +1096,7 @@ Content Cell  | Content Cell| Content Cell|
 
 ![8](https://www.github.com/liao20081228/blog/raw/master/图片/markdown教程/8.jpg)
 
-### 2.16.4 html表格
+### 2.15.4 html表格
 * `<table>...</table>` 定义表格
 * `<caption>...</caption>`定义表格标题
 *  `<tr>...</tr>`定义行
@@ -1170,7 +1177,7 @@ Content Cell  | Content Cell| Content Cell|
 
 ---
 
-## 2.17 定义列表
+## 2.16 定义列表
 
 ```markdown
 苹果
@@ -1189,11 +1196,11 @@ Content Cell  | Content Cell| Content Cell|
 桔子
 :	一种水果
 
-## 2.18 表情
+## 2.17 表情
 * 格式：`:表情名:`,如`:wink:, :crush:, :cry:, :tear:, :laughing:, :yum:`
 * 显示如下：![11](https://www.github.com/liao20081228/blog/raw/master/图片/markdown教程/11.jpg)
   
- ## 2.19  注音标示 
+ ## 2.18  注音标示 
 语法格式为：
 ```markdown
 {需要被注音标示的内容}(注音标示)
@@ -1207,7 +1214,7 @@ Content Cell  | Content Cell| Content Cell|
   显示效果： ![10](https://www.github.com/liao20081228/blog/raw/master/图片/markdown教程/10.jpg)
 
 
- ## 2.20 思维导图 
+ ## 2.19 思维导图 
 语法格式为：
 
 ````markdown
