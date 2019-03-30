@@ -327,6 +327,44 @@ mysqld.exe --console
 |TimeStamp	|时间戳，它可用于自动记录操作时间
 
 
+# 6  权限
+
+|权限|作用|级别|
+|:--|:--|:--|
+|ALL|在指定访问级别的所有权限，除了 GRANT OPTION 和PROXY|
+|ALTER|允许使用ALTER TABLE。|全局、数据库、表|
+|ALTER ROUTINE|允许更改或删除已存储的例程。|全局、数据库、例程|
+|CREATE|启用创建数据库和表。|全局、数据库、表|
+|CREATE ROUTINE|启用创建已存储的例程。|全局，数据库|
+|CREATE TABLESPACE|允许创建、修改或删除表空间和日志文件组。|全局|
+|CREATE TEMPORARY TABLES|	允许使用CREATE TEMPORARY TABLE. |全局，数据库|
+|CREATE USER|	允许使用CREATE USER, DROP USER, RENAME USER, and REVOKE ALL PRIVILEGES. |全局|
+|CREATE VIEW|	允许视图被创建和修改 |全局、数据库、表|
+|DELETE|	允许使用 DELETE.|全局、数据库、表|
+|DROP|	允许删除数据库，表和视图|全局、数据库、表|
+|EVENT	|允许时间调度器使用事件|全局，数据库|
+|EXECUTE|允许用户执行已存储的例程|全局、数据库、例程|
+|FILE|	允许用户让服务器输出或输入文件|全局|
+|GRANT OPTION	|允许为其他账户授予或移除权限| 全局、数据库、表、例程、代理|
+|INDEX|允许删除和创建索引 | 全局、数据库、表|
+|INSERT|允许使用INSERT|	 全局、数据库、表、列|
+|LOCK TABLES	|允许在具有SELECt权限的表上使用 LOCK TABLES|全局、数据库|
+|PROCESS|	允许使用SHOW PROCESSLIST| 全局|
+|PROXY|	允许用户代理|用户到用户|
+|REFERENCES	|允许创建外键| 全局、数据库、表、列|
+|RELOAD|	允许使用FLUSH 操作|全局|
+|REPLICATION CLIENT|允许用户询问主或从服务器在哪里|全局|
+|REPLICATION SLAVE|	允许复制从机从主服务器读取二进制日志的事件。|全局|
+|SELECT	|允许使用SELECT|全局、数据库、表、列|
+|SHOW DATABASES	|允许使用SHOW DATABASES|全局|
+|SHOW VIEW	|允许使用SHOW CREATE VIEW.|全局、数据库、表
+|SHUTDOWN	|允许使用mysqladmin shutdown| 全局|
+|SUPER	|允许使用奇谭管理操作，如 CHANGE MASTER TO, KILL, PURGE BINARY LOGS, SET GLOBA,和 mysqladmin debug 命令|全局
+|TRIGGER|允许触发器操作|	全局、数据库、表|
+|UPDATE|	允许使用UPDATE| 全局、数据库、表、列|
+|USAGE|没有任何权限|
+
+
 
 # 6 基本SQL语句
 ## 6.1 数据库管理语句 
