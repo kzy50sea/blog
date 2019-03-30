@@ -327,7 +327,15 @@ mysqld.exe --console
 |TimeStamp	|时间戳，它可用于自动记录操作时间
 
 
-# 6  权限
+# 6  访问管理与权限控制
+## 6.1 两步验证
+* 第一步：根据用户（包括用户名和主机）和密码，查询mysql.user，若匹配则允许连接。
+* 第二步：根据用户指令和作用对象，查询user、db、tables_priv、columns_priv、procs_priv、proxies_priv表，如果匹配则执行用户指令。
+
+
+
+## 6.2 mysql提供的权限
+
 
 |权限|作用|级别|
 |:--|:--|:--|
@@ -364,16 +372,15 @@ mysqld.exe --console
 |UPDATE|	允许使用UPDATE| 全局、数据库、表、列|
 |USAGE|没有任何权限|
 
->* mysql中 % 表示任意个字符，_ 表示一个字符
->* 表示对数据库、表、列、程序等的通配。
 
->* 全局级：\*.\*全局权限
->* 数据库级：db_name.\* 或 \*  ,会被全局级覆盖。
->* 表级：db_name.table_name，能被全局和数据库级覆盖
->* 列级：能被全局，数据库级，表级覆盖
->* 程序级：主要针对函数和过程，能被全局，数据库级，表级覆盖|
->* 代理级： 针对代理
->* 用户到用户级 ：针对用户
+
+>* 全局级：\*.\*，全局权限， 存放在mysql.user
+>* 数据库级：db_name.\* 或 \*  ,会被全局级覆盖, 存放在mysql.db。
+>* 表级：db_name.table_name，能被全局和数据库级覆盖, 存放在mysql.tables_priv
+>* 列级：privileges(i)，能被全局、数据库、表级覆盖, 存放在mysql.columns_priv
+>* 程序级：主要针对函数和过程，能被全局，数据库级，表级覆盖, 存放在mysql.procs_priv
+>* 代理级： 针对代理, 存放在mysql.proxies_priv
+
 
 
 |全局|数据库|表|列|程序|代理|用户对用户|
@@ -408,6 +415,10 @@ mysqld.exe --console
 |SUPER||||||
 |TRIGGER|TRIGGER|TRIGGER||||
 |UPDATE|UPDATE|UPDATE|UPDATE|||
+
+>补充：
+>* mysql中 % 表示任意个字符，_ 表示一个字符
+>* 表示对数据库、表、列、程序等的通配。
 # 7 基本SQL语句
 ## 7.1 数据库管理语句 
 ### 7.1.1 账户管理语句
