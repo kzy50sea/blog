@@ -368,13 +368,46 @@ mysqld.exe --console
 >* 表示对数据库、表、列、程序等的通配。
 
 >* 全局级：\*.\*全局权限
->* 数据库级：db_name.\* ,会被全局级覆盖。
+>* 数据库级：db_name.\* 或 \*  ,会被全局级覆盖。
 >* 表级：db_name.table_name，能被全局和数据库级覆盖
 >* 列级：能被全局，数据库级，表级覆盖
->* 程序级：主要针对函数和过程，能被全局，数据库级，表级覆盖
+>* 程序级：主要针对函数和过程，能被全局，数据库级，表级覆盖|
+>* 代理级： 针对代理
+>* 用户到用户级 ：针对用户
 
 
-
+|全局|数据库|表|列|程序|代理|用户对用户|
+|:--|:--|:--|:--|:--|:--|:--|
+|ALTER|ALTER|ALTER|||
+|ALTER ROUTINE|ALTER ROUTINE|||ALTER ROUTINE||
+|CREATE|CREATE|CREATE||||
+|CREATE ROUTINE|CREATE ROUTINE|||||
+|CREATE TABLESPACE||||||
+|CREATE TEMPORARY TABLES|CREATE TEMPORARY TABLES|||||
+|CREATE USER||||||
+|CREATE VIEW|CREATE VIEW|CREATE VIEW||||
+|DELETE|DELETE|DELETE||||
+|DROP|DROP|DROP||||
+|EVENT|EVENT|||||
+|EXECUTE|EXECUTE|||EXECUTE||
+|FILE||||||
+|GRANT OPTION|GRANT OPTION|GRANT OPTION||GRANT OPTION|GRANT OPTION|
+|INDEX|INDEX|INDEX||||
+|INSERT|INSERT|INSERT|INSERT|||
+|LOCK TABLES|LOCK TABLES|||||
+|PROCESS||||||
+|||||||PROXY|
+|REFERENCES|REFERENCES|REFERENCES|REFERENCES|||
+|RELOAD||||||
+|REPLICATION CLIENT||||||
+|REPLICATION SLAVE||||||
+|SELECT|SELECT|SELECT|SELECT|||
+|SHOW DATABASES||||||
+|SHOW VIEW|SHOW VIEW|SHOW VIEW||||
+|SHUTDOWN||||||
+|SUPER||||||
+|TRIGGER|TRIGGER|TRIGGER||||
+|UPDATE|UPDATE|UPDATE|UPDATE|||
 # 7 基本SQL语句
 ## 7.1 数据库管理语句 
 ### 7.1.1 账户管理语句
