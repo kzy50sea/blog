@@ -333,9 +333,9 @@ mysqld.exe --console
 |:--|:--|:--|
 |ALL|在指定访问级别的所有权限，除了 GRANT OPTION 和PROXY|
 |ALTER|允许使用ALTER TABLE。|全局、数据库、表|
-|ALTER ROUTINE|允许更改或删除已存储的例程。|全局、数据库、例程|
+|ALTER ROUTINE|允许更改或删除已存储的程序。|全局、数据库、程序|
 |CREATE|启用创建数据库和表。|全局、数据库、表|
-|CREATE ROUTINE|启用创建已存储的例程。|全局，数据库|
+|CREATE ROUTINE|启用创建已存储的程序。|全局，数据库|
 |CREATE TABLESPACE|允许创建、修改或删除表空间和日志文件组。|全局|
 |CREATE TEMPORARY TABLES|	允许使用CREATE TEMPORARY TABLE. |全局，数据库|
 |CREATE USER|	允许使用CREATE USER, DROP USER, RENAME USER, and REVOKE ALL PRIVILEGES. |全局|
@@ -343,9 +343,9 @@ mysqld.exe --console
 |DELETE|	允许使用 DELETE.|全局、数据库、表|
 |DROP|	允许删除数据库，表和视图|全局、数据库、表|
 |EVENT	|允许时间调度器使用事件|全局，数据库|
-|EXECUTE|允许用户执行已存储的例程|全局、数据库、例程|
+|EXECUTE|允许用户执行已存储的程序|全局、数据库、程序|
 |FILE|	允许用户让服务器输出或输入文件|全局|
-|GRANT OPTION	|允许为其他账户授予或移除权限| 全局、数据库、表、例程、代理|
+|GRANT OPTION	|允许为其他账户授予或移除权限| 全局、数据库、表、程序、代理|
 |INDEX|允许删除和创建索引 | 全局、数据库、表|
 |INSERT|允许使用INSERT|	 全局、数据库、表、列|
 |LOCK TABLES	|允许在具有SELECt权限的表上使用 LOCK TABLES|全局、数据库|
@@ -364,11 +364,20 @@ mysqld.exe --console
 |UPDATE|	允许使用UPDATE| 全局、数据库、表、列|
 |USAGE|没有任何权限|
 
+>* mysql中 % 表示任意个字符，_ 表示一个字符
+>* 表示对数据库、表、列、程序等的通配。
+
+>* 全局级：\*.\*全局权限
+>* 数据库级：db_name.\* ,会被全局级覆盖。
+>* 表级：db_name.table_name，能被全局和数据库级覆盖
+>* 列级：能被全局，数据库级，表级覆盖
+>* 程序级：主要针对函数和过程，能被全局，数据库级，表级覆盖
 
 
-# 6 基本SQL语句
-## 6.1 数据库管理语句 
-### 6.1.1 账户管理语句
+
+# 7 基本SQL语句
+## 7.1 数据库管理语句 
+### 7.1.1 账户管理语句
 
 |账户管理语句|描述|
 |:--|:--|
@@ -379,7 +388,7 @@ mysqld.exe --console
 |**GRANT**|授予帐户权限，包括全局、数据库、表、列、路径、代理的权限。如果用户不存在则建立用户。|
 |**REVOKE**|撤消MySQL帐户的权限。
 |**SET PASSWORD** |为指定账户设置密码
-### 6.1.2 表维护语句
+### 7.1.2 表维护语句
 |SQL语句|描述|
 |:--|:--|
 | ANALYZE TABLE |执行密钥分发分析，存储表分布。对 MYISA表，等效于myisamchk --analyze.。
@@ -387,7 +396,7 @@ mysqld.exe --console
 |  CHECKSUM TABLE|报告表的内容的校验和。
 | OPTIMIZE TABLE|重新组织表数据的物理存储，重新关联索引，以节约存储和提升IO效率。
 | REPAIR TABLE |修复可能损坏的表，仅用于某些存储引擎。|
-### 6.1.3 插件和自定义函数语句
+### 7.1.3 插件和自定义函数语句
 |SQL语句|描述|
 |:--|:--|
 |CREATE FUNCTION|创建自定义函数
@@ -395,14 +404,14 @@ mysqld.exe --console
 |INSTALL PLUGIN|安装服务器插件
 |UNINSTALL PLUGIN|删除已安装的服务器插件
 
-### 6.1.4 SET语句
+### 7.1.4 SET语句
 |SQL语句|描述|
 |:--|:--|
 |  **SET**|变量赋值|
 |  **SET CHARACTER SET**|设置字符集|
 |  SET NAMES|设置字符集 |
 
-### 6.1.5 SHOW语句
+### 7.1.5 SHOW语句
 |SQL语句|描述|
 |:--|:--|
 |SHOW BINARY | MASTER LOGS|列出服务器上的二进制日志文件。|
@@ -445,7 +454,7 @@ mysqld.exe --console
 |SHOW TRIGGERS|列出数据库中的表定义的触发器。
 |SHOW VARIABLES|显示MySQL系统变量的值
 |SHOW WARNINGS|显示有关在当前会话中执行语句所产生的错误，警告和注释的信息。
-### 6.1.6 其他管理语句
+### 7.1.6 其他管理语句
 |SQL语句|描述|
 |:--|:--|
 |BINLOG|一个内部使用声明。它由mysqlbinlog 程序生成，作为二进制日志文件中某些事件的可打印表示。
@@ -456,7 +465,7 @@ mysqld.exe --console
 |RESET |用于清除各种服务器操作的状态。|
 |SHUTDOWN|停止MySQL服务器。|
 
-## 6.2 数据定义语句
+## 7.2 数据定义语句
 |SQL语句|描述|
 |:--|:--|
 |**{CREATE \| DROP \| ALTER} DATABASE**|创建 \| 删除 \| 更改 数据库|
@@ -475,7 +484,7 @@ mysqld.exe --console
 
 
 
-## 6.3 数据操作语句
+## 7.3 数据操作语句
 |SQL语句|描述|
 |:--|:--|
 |**INSERT**|新行插入现有表中|
@@ -489,7 +498,7 @@ mysqld.exe --console
 |LOAD XML|将数据从XML文件读入表。|
 |**SELECT** |查询表|
 
-## 6.4 实用程序语句
+## 7.4 实用程序语句
 * **DESCRIBE | DESC**
 获取表结构
 
